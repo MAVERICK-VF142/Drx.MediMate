@@ -1,0 +1,35 @@
+# Configuration for auto-assign GitHub action
+# This file defines who should be automatically assigned to issues and pull requests
+
+# Set to true to add reviewers to pull requests
+addReviewers: true
+
+# Set to true to add assignees to pull requests  
+addAssignees: true
+
+# Set to true to add assignees to issues
+addAssigneesToIssues: true
+
+# A list of reviewers to be added to pull requests (GitHub user name)
+reviewers: 
+  - MAVERICK-VF142
+  - akshat-2600
+
+# A list of assignees to be added to pull requests (GitHub user name)
+assignees:
+  - MAVERICK-VF142
+  - akshat-2600
+
+# A list of assignees to be added to issues (GitHub user name)
+assigneesToIssues:
+  - MAVERICK-VF142
+  - akshat-2600
+
+# Number of reviewers to add to each pull request (default: 0, add all)
+numberOfReviewers: 0
+
+# Number of assignees to add to each pull request (default: 0, add all)
+numberOfAssignees: 0
+
+# Number of assignees to add to each issue (default: 0, add all)
+numberOfAssigneesToIssues: 0
