@@ -89,6 +89,36 @@
 
 ---
 
+## 📊 Logging, Timeout & Retry
+
+Aditi now includes robust observability features to improve reliability and debugging:
+
+### ✅ Logging
+
+- All API calls, AI prompts/responses, errors, and exceptions are logged.
+- Logs are saved to both the console and a file.
+
+📍 **Log File Location:** `logs/app.log`
+
+> 💡 Create the `logs/` directory manually before running the app:
+```bash
+mkdir logs
+```
+
+### ✅ Timeout
+
+- All Gemini API calls are limited to 10 seconds maximum.
+- If Gemini does not respond in this time, the request is retried.
+
+### ✅ Retry Logic
+
+- Failed or timed-out Gemini API calls are retried up to **3 times**.
+- **Exponential backoff is used**: delays of `2s`, `4s`, and `8s` between retries.
+
+This helps prevent app freezes due to slow network or external API issues.
+
+---
+
 ## 🛠️ Contributing
 
 Contributions are welcome! Follow these steps to contribute:
