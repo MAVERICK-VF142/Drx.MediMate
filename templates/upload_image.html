@@ -1,191 +1,719 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Upload Medicine Image</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Upload Medicine Image - Aditi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <style>
-    body {
-      background-color: #f0f8ff;
-      font-family: 'Segoe UI', sans-serif;
-    }
-    .card {
-      border-radius: 20px;
-      border: none;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-      background-color: #ffffff;
-    }
-    .btn-med {
-      background-color: #008cba;
-      color: white;
-      font-weight: 500;
-      border-radius: 12px;
-      padding: 10px 20px;
-      transition: background-color 0.3s ease;
-    }
-    .btn-med:hover {
-      background-color: #007399;
-    }
-    .btn-success {
-      border-radius: 12px;
-      font-weight: 500;
-      padding: 10px;
-    }
-    #video {
-      width: 100%;
-      border-radius: 12px;
-      border: 2px solid #008cba;
-    }
-    .preview {
-      width: 100%;
-      margin-top: 15px;
-      border: 2px dashed #008cba;
-      border-radius: 12px;
-      padding: 4px;
-    }
-    h2 {
-      font-weight: 600;
-    }
-    .result-box {
-      margin-top: 20px;
-      background-color: #e6f7ff;
-      border-left: 5px solid #008cba;
-      padding: 15px;
-      border-radius: 10px;
-      white-space: pre-wrap;
-      font-family: 'Courier New', monospace;
-    }
-    .spinner-border {
-      width: 1.2rem;
-      height: 1.2rem;
-      margin-left: 8px;
-      vertical-align: text-bottom;
-    }
-  </style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header - EXACT SAME AS DRUG_INFO */
+        .header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .breadcrumb {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        /* Profile - EXACT SAME AS DRUG_INFO */
+        .profile-container {
+            position: relative;
+        }
+
+        #profileButton {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        #profileButton:hover {
+            background: #1d4ed8;
+        }
+
+        .profile-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            min-width: 250px;
+            display: none;
+        }
+
+        .profile-menu.show {
+            display: block;
+        }
+
+        .user-info {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #1f2937;
+        }
+
+        .user-email {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        #logout {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        #logout:hover {
+            background: #b91c1c;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .page-subtitle {
+            color: #6b7280;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .camera-section {
+            background: #f9fafb;
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        #video {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 2px solid #3b82f6;
+        }
+
+        #preview {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 2px solid #10b981;
+        }
+
+        .d-none {
+            display: none !important;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-med {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            min-width: 140px;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-med:hover {
+            background: #2563eb;
+        }
+
+        .btn-outline {
+            background: white;
+            color: #3b82f6;
+            border: 1px solid #3b82f6;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            min-width: 140px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-outline:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-success:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .spinner-border {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .result-section {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            border-left: 4px solid #3b82f6;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .result-header {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .result-box {
+            color: #4b5563;
+            line-height: 1.7;
+            padding: 1rem;
+            background: #eff6ff;
+            border-radius: 8px;
+            border: 1px solid #bfdbfe;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .status-message {
+            text-align: center;
+            color: #6b7280;
+            font-style: italic;
+            padding: 3rem;
+            position: absolute;
+            width: 100%;
+        }
+
+        .camera-error {
+            color: #dc2626;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 1rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-med, .btn-outline {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container py-5">
-    <h2 class="text-center text-primary mb-5">📸 Capture Medicine Image</h2>
-
-    <div class="card p-4 mx-auto" style="max-width: 600px;">
-      <div class="mb-3">
-        <video id="video" autoplay playsinline></video>
-        <img id="preview" class="preview d-none" alt="Captured Image Preview">
-      </div>
-
-      <div class="d-grid gap-2 d-md-flex justify-content-md-center mb-3">
-        <button class="btn btn-med" onclick="captureImage()">📸 Capture Image</button>
-        <button class="btn btn-outline-primary" onclick="switchCamera()">🔄 Switch Camera</button>
-      </div>
-
-      <form id="uploadForm" method="POST" action="/process-upload" enctype="multipart/form-data" onsubmit="return handleSubmit(event)">
-        <input type="hidden" name="image_data" id="imageDataInput">
-        <div class="d-grid">
-          <button id="analyzeBtn" type="submit" class="btn btn-success mt-3">
-            🔍 Analyze with Gemini Vision
-          </button>
+    <!-- Header - EXACT SAME AS DRUG_INFO -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">🏥 Aditi</div>
+            <div class="breadcrumb">
+                <a href="index.html">🏠 Home</a> / Medicine Scanner
+            </div>
+            <div class="profile-container">
+                <button id="profileButton" onclick="toggleProfileMenu()">Profile</button>
+                <div id="profileMenu" class="profile-menu">
+                    <div class="user-info">
+                        <div class="user-name">
+                            <span id="loggedUserFName"></span> <span id="loggedUserLName"></span>
+                        </div>
+                        <div class="user-email" id="loggedUserEmail"></div>
+                    </div>
+                    <button id="logout">Logout</button>
+                </div>
+            </div>
         </div>
-      </form>
-
-      <div id="resultBox" class="result-box mt-4" style="display: none;">
-        <h5 class="text-primary">🧠 AI Result:</h5>
-        <div id="resultText">Thinking...</div>
-      </div>
     </div>
-  </div>
 
-  <script>
-    const video = document.getElementById('video');
-    const canvas = document.createElement('canvas');
-    const preview = document.getElementById('preview');
-    const imageDataInput = document.getElementById('imageDataInput');
-    const analyzeBtn = document.getElementById('analyzeBtn');
-    const resultBox = document.getElementById('resultBox');
-    const resultText = document.getElementById('resultText');
+    <div class="container">
+        <h1 class="page-title">📸 Capture Medicine Image</h1>
+        <p class="page-subtitle">Upload a medicine photo to get full details</p>
 
-    let stream;
-    let usingFrontCamera = false;
+        <div class="card">
+            <div class="camera-section" id="cameraSection">
+                <video id="video" autoplay playsinline muted></video>
+                <img id="preview" class="d-none" alt="Captured Image Preview">
+                <div id="cameraStatus" class="status-message">
+                    📷 Click "Start Camera" to begin
+                </div>
+            </div>
 
-    async function startCamera(facingMode = "environment") {
-      stopCamera();
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: { exact: facingMode } },
-          audio: false
+            <div class="controls">
+                <button class="btn-med" onclick="initializeCamera()" id="startCameraBtn">
+                    🎥 Start Camera
+                </button>
+                <button class="btn-med" onclick="captureImage()" id="captureBtn" style="display: none;">
+                    📸 Capture Image
+                </button>
+                <button class="btn-outline" onclick="switchCamera()" id="switchBtn" style="display: none;">
+                    🔄 Switch Camera
+                </button>
+                <button class="btn-outline" onclick="resetCamera()" id="resetBtn" style="display: none;">
+                    🔃 Reset
+                </button>
+            </div>
+
+            <form id="uploadForm" method="POST" action="/process-upload" enctype="multipart/form-data" onsubmit="return handleSubmit(event)">
+                <input type="hidden" name="image_data" id="imageDataInput">
+                <button id="analyzeBtn" type="submit" class="btn-success" disabled>
+                    🔍 Analyze with Gemini Vision
+                </button>
+            </form>
+        </div>
+
+        <div id="resultBox" class="result-section hidden">
+            <div class="result-header">🧠 AI Result:</div>
+            <div class="result-box" id="resultText"></div>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"></script>
+    <script src="../static/js/auth.js"></script>
+    <script src="../static/js/main.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+        import { getFirestore, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+      
+        const firebaseConfig = {
+          apiKey: "AIzaSyDa6_47neFJAH-I4i-ZCU0elY4cRmpyotg",
+          authDomain: "aditi-pharmaceutical-assistant.firebaseapp.com",
+          projectId: "aditi-pharmaceutical-assistant",
+          storageBucket: "aditi-pharmaceutical-assistant.firebasestorage.app",
+          messagingSenderId: "241653252150",
+          appId: "1:241653252150:web:ce83fa898dc2f77a669897",
+          measurementId: "G-HMJ6SD9Q9H"
+        };
+      
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const db = getFirestore();
+      
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            const uid = user.uid;
+            try {
+              const docRef = doc(db, "users", uid);
+              const docSnap = await getDoc(docRef);
+      
+              if (docSnap.exists()) {
+                const userData = docSnap.data();
+                document.getElementById('loggedUserFName').innerText = userData.firstName || '';
+                document.getElementById('loggedUserLName').innerText = userData.lastName || '';
+                document.getElementById('loggedUserEmail').innerText = userData.email || '';
+              }
+            } catch (error) {
+              console.error("Error fetching user document:", error);
+            }
+          } else {
+            window.location.href = "/";
+          }
         });
-        video.srcObject = stream;
-      } catch (err) {
-        console.error("Camera error:", err);
-        alert("Camera access failed. Try switching the camera or reload.");
-      }
-    }
+      
+        document.getElementById('logout').addEventListener('click', () => {
+          signOut(auth)
+            .then(() => {
+              window.location.href = "/";
+            })
+            .catch((error) => {
+              console.error("Error signing out:", error);
+            });
+        });
+    </script>
 
-    function stopCamera() {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-        video.srcObject = null;
-      }
-    }
+    <script>
+        // Profile menu toggle - EXACT SAME AS DRUG_INFO
+        function toggleProfileMenu() {
+            const profileMenu = document.getElementById('profileMenu');
+            profileMenu.classList.toggle('show');
+        }
 
-    function captureImage() {
-      const context = canvas.getContext('2d');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        // Close profile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const profileContainer = document.querySelector('.profile-container');
+            if (!profileContainer.contains(e.target)) {
+                document.getElementById('profileMenu').classList.remove('show');
+            }
+        });
 
-      const dataURL = canvas.toDataURL('image/jpeg', 0.7);
-      imageDataInput.value = dataURL;
+        const video = document.getElementById('video');
+        const canvas = document.createElement('canvas');
+        const preview = document.getElementById('preview');
+        const imageDataInput = document.getElementById('imageDataInput');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const resultBox = document.getElementById('resultBox');
+        const resultText = document.getElementById('resultText');
+        const cameraStatus = document.getElementById('cameraStatus');
 
-      preview.src = dataURL;
-      preview.classList.remove('d-none');
-      video.classList.add('d-none');
+        // Button elements
+        const startCameraBtn = document.getElementById('startCameraBtn');
+        const captureBtn = document.getElementById('captureBtn');
+        const switchBtn = document.getElementById('switchBtn');
+        const resetBtn = document.getElementById('resetBtn');
 
-      stopCamera();
-    }
+        let stream;
+        let usingFrontCamera = false;
+        let cameraInitialized = false;
 
-    function switchCamera() {
-      usingFrontCamera = !usingFrontCamera;
-      const mode = usingFrontCamera ? "user" : "environment";
-      startCamera(mode);
-      video.classList.remove('d-none');
-      preview.classList.add('d-none');
-    }
+        async function initializeCamera() {
+            startCameraBtn.style.display = 'none';
+            cameraStatus.innerHTML = '📷 Starting camera...';
+            
+            try {
+                await startCamera("environment");
+                cameraInitialized = true;
+                
+                // Show camera controls
+                captureBtn.style.display = 'inline-block';
+                switchBtn.style.display = 'inline-block';
+                resetBtn.style.display = 'inline-block';
+                
+            } catch (error) {
+                console.error("Failed to initialize camera:", error);
+                startCameraBtn.style.display = 'inline-block';
+                showCameraError("Failed to start camera. Please check permissions and try again.");
+            }
+        }
 
-    function handleSubmit(event) {
-      event.preventDefault();
+        async function startCamera(facingMode = "environment") {
+            try {
+                await stopCamera();
+                
+                const constraints = {
+                    video: {
+                        facingMode: facingMode,
+                        width: { ideal: 1280, max: 1920 },
+                        height: { ideal: 720, max: 1080 }
+                    },
+                    audio: false
+                };
 
-      resultText.innerHTML = `⏳ Analyzing image with Gemini Vision... <span class="spinner-border spinner-border-sm"></span>`;
-      resultBox.style.display = "block";
+                stream = await navigator.mediaDevices.getUserMedia(constraints);
+                video.srcObject = stream;
+                
+                video.onloadedmetadata = () => {
+                    video.play();
+                    cameraStatus.classList.add('d-none');
+                    video.classList.remove('d-none');
+                    preview.classList.add('d-none');
+                };
 
-      analyzeBtn.disabled = true;
-      analyzeBtn.innerHTML = `Analyzing... <span class="spinner-border spinner-border-sm"></span>`;
+            } catch (err) {
+                console.error("Camera error:", err);
+                throw err;
+            }
+        }
 
-      const formData = new FormData(document.getElementById('uploadForm'));
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => {
+                    track.stop();
+                });
+                video.srcObject = null;
+            }
+        }
 
-      fetch("/process-upload", {
-        method: "POST",
-        body: formData
-      })
-      .then(res => res.json())
-      .then(data => {
-        const formatted = (data.result || "No result returned from AI.").replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-        resultText.innerHTML = formatted;
-      })
-      .catch(err => {
-        console.error(err);
-        resultText.innerHTML = "❌ An error occurred while analyzing the image.";
-      })
-      .finally(() => {
-        analyzeBtn.disabled = false;
-        analyzeBtn.innerHTML = "🔍 Analyze with Gemini Vision";
-      });
+        function showCameraError(message) {
+            cameraStatus.innerHTML = `❌ ${message}`;
+            cameraStatus.className = 'status-message camera-error';
+        }
 
-      return false;
-    }
+        function captureImage() {
+            if (!stream) {
+                alert("Camera not started. Please start camera first.");
+                return;
+            }
 
-    window.onload = () => startCamera("environment");
-  </script>
+            try {
+                const context = canvas.getContext('2d');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                const dataURL = canvas.toDataURL('image/jpeg', 0.8);
+                imageDataInput.value = dataURL;
+
+                preview.src = dataURL;
+                preview.classList.remove('d-none');
+                video.classList.add('d-none');
+                cameraStatus.classList.add('d-none');
+
+                // Enable analyze button
+                analyzeBtn.disabled = false;
+                analyzeBtn.style.backgroundColor = '#10b981';
+
+                stopCamera();
+
+            } catch (error) {
+                console.error("Capture error:", error);
+                alert("Failed to capture image. Please try again.");
+            }
+        }
+
+        function switchCamera() {
+            usingFrontCamera = !usingFrontCamera;
+            const mode = usingFrontCamera ? "user" : "environment";
+            
+            cameraStatus.innerHTML = '🔄 Switching camera...';
+            cameraStatus.classList.remove('d-none');
+            video.classList.add('d-none');
+            
+            startCamera(mode).catch(error => {
+                console.error("Switch camera error:", error);
+                showCameraError("Failed to switch camera.");
+            });
+        }
+
+        function resetCamera() {
+            stopCamera();
+            
+            // Reset UI
+            video.classList.add('d-none');
+            preview.classList.add('d-none');
+            cameraStatus.classList.remove('d-none');
+            cameraStatus.className = 'status-message';
+            cameraStatus.innerHTML = '📷 Click "Start Camera" to begin';
+            
+            // Reset buttons
+            startCameraBtn.style.display = 'inline-block';
+            captureBtn.style.display = 'none';
+            switchBtn.style.display = 'none';
+            resetBtn.style.display = 'none';
+            
+            // Reset form
+            imageDataInput.value = '';
+            analyzeBtn.disabled = true;
+            analyzeBtn.style.backgroundColor = '#9ca3af';
+            resultBox.classList.add('hidden');
+            
+            cameraInitialized = false;
+            usingFrontCamera = false;
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            if (!imageDataInput.value) {
+                alert("Please capture an image first");
+                return false;
+            }
+
+            resultText.innerHTML = `⏳ Analyzing image with Gemini Vision... <span class="spinner-border"></span>`;
+            resultBox.classList.remove('hidden');
+
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = `Analyzing... <span class="spinner-border"></span>`;
+
+            const formData = new FormData(document.getElementById('uploadForm'));
+
+            fetch("/process-upload", {
+                method: "POST",
+                body: formData
+            })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                return res.json();
+            })
+            .then(data => {
+                const formatted = (data.result || "No result returned from AI.").replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+                resultText.innerHTML = formatted;
+                
+                // Scroll to results
+                setTimeout(() => {
+                    resultBox.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start' 
+                    });
+                }, 300);
+            })
+            .catch(err => {
+                console.error(err);
+                resultText.innerHTML = `
+                    <div style="text-align: center; color: #dc2626;">
+                        <strong>❌ Analysis Failed</strong><br>
+                        An error occurred while analyzing the image. Please try again.
+                    </div>
+                `;
+            })
+            .finally(() => {
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = "🔍 Analyze with Gemini Vision";
+                analyzeBtn.style.backgroundColor = '#10b981';
+            });
+
+            return false;
+        }
+
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && cameraInitialized) {
+                stopCamera();
+            }
+        });
+
+        // Clean up on page unload
+        window.addEventListener('beforeunload', () => {
+            stopCamera();
+        });
+
+        // Check for camera support
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            showCameraError("Camera not supported in this browser.");
+            startCameraBtn.style.display = 'none';
+        }
+    </script>
 </body>
 </html>

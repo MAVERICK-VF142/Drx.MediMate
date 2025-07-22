@@ -1,107 +1,457 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>🩺 Symptom Checker</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      background-color: #f4fcff;
-      font-family: 'Segoe UI', sans-serif;
-    }
-    .card {
-      border-radius: 16px;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
-      border: none;
-    }
-    .btn-checker {
-      background-color: #00a896;
-      color: white;
-      border-radius: 10px;
-      font-weight: 600;
-      position: relative;
-    }
-    .btn-checker:disabled {
-      background-color: #009688;
-      cursor: not-allowed;
-    }
-    .spinner-border {
-      width: 1.2rem;
-      height: 1.2rem;
-      margin-left: 8px;
-      vertical-align: text-bottom;
-    }
-    .result-box {
-      white-space: pre-wrap;
-      border-left: 4px solid #00a896;
-      padding: 15px;
-      background-color: #f8fdfa;
-      border-radius: 10px;
-      font-family: 'Courier New', monospace;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Symptom Checker - Aditi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header - EXACT SAME AS DRUG_INFO */
+        .header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .breadcrumb {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        /* Profile - EXACT SAME AS DRUG_INFO */
+        .profile-container {
+            position: relative;
+        }
+
+        #profileButton {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        #profileButton:hover {
+            background: #1d4ed8;
+        }
+
+        .profile-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            min-width: 250px;
+            display: none;
+        }
+
+        .profile-menu.show {
+            display: block;
+        }
+
+        .user-info {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #1f2937;
+        }
+
+        .user-email {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        #logout {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        #logout:hover {
+            background: #b91c1c;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .page-subtitle {
+            color: #6b7280;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .btn-checker {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-checker:hover {
+            background: #059669;
+        }
+
+        .btn-checker:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .spinner-border {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .result-section {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            border-left: 4px solid #10b981;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .result-header {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .result-box {
+            color: #4b5563;
+            line-height: 1.7;
+            padding: 1rem;
+            background: #f8fdfa;
+            border-radius: 8px;
+            border: 1px solid #d1fae5;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 1rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container py-5">
-    <h2 class="text-center text-success mb-4">🩺 Symptom Checker</h2>
-    <p class="text-center text-muted">Enter symptoms to get safe OTC recommendations (AI-powered)</p>
-
-    <div class="card p-4 mx-auto" style="max-width: 700px;">
-      <div class="mb-3">
-        <label for="symptoms" class="form-label"><strong>Describe the symptoms:</strong></label>
-        <textarea id="symptoms" class="form-control" rows="5" placeholder="e.g. sore throat, mild fever, headache..."></textarea>
-      </div>
-      <div class="d-grid gap-2">
-        <button id="analyzeBtn" class="btn btn-checker" onclick="checkSymptoms()">🔍 Analyze Symptoms</button>
-      </div>
+    <!-- Header - EXACT SAME AS DRUG_INFO -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">🏥 Aditi</div>
+            <div class="breadcrumb">
+                <a href="index.html">🏠 Home</a> / Symptom Checker
+            </div>
+            <div class="profile-container">
+                <button id="profileButton" onclick="toggleProfileMenu()">Profile</button>
+                <div id="profileMenu" class="profile-menu">
+                    <div class="user-info">
+                        <div class="user-name">
+                            <span id="loggedUserFName"></span> <span id="loggedUserLName"></span>
+                        </div>
+                        <div class="user-email" id="loggedUserEmail"></div>
+                    </div>
+                    <button id="logout">Logout</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div id="result" class="mt-4" style="display:none;">
-      <h5 class="text-primary">🧠 AI Recommendation:</h5>
-      <div class="result-box mt-2" id="aiResponse"></div>
-    </div>
-  </div>
+    <div class="container">
+        <h1 class="page-title">🩺 Symptom Checker</h1>
+        <p class="page-subtitle">Enter symptoms to get safe OTC recommendations (AI-powered)</p>
 
-  <script>
-    function checkSymptoms() {
-      const symptoms = document.getElementById("symptoms").value;
-      const button = document.getElementById("analyzeBtn");
-      const resultDiv = document.getElementById("result");
-      const aiResponse = document.getElementById("aiResponse");
-  
-      if (!symptoms.trim()) {
-        alert("Please enter some symptoms.");
-        return;
-      }
-  
-      // Show loading state
-      button.disabled = true;
-      button.innerHTML = `Analyzing... <span class="spinner-border spinner-border-sm"></span>`;
-      resultDiv.style.display = "none";
-      aiResponse.innerHTML = "";
-  
-      fetch("/symptom_checker", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ symptoms })
-      })
-      .then(res => res.json())
-      .then(data => {
-        // Replace **text** with <strong>text</strong>
-        const formatted = data.response.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-        aiResponse.innerHTML = formatted;
-        resultDiv.style.display = "block";
-      })
-      .catch(err => {
-        aiResponse.innerHTML = "❌ An error occurred while analyzing symptoms.";
-        resultDiv.style.display = "block";
-      })
-      .finally(() => {
-        button.disabled = false;
-        button.innerHTML = "🔍 Analyze Symptoms";
-      });
-    }
-  </script>
+        <div class="card">
+            <div class="form-group">
+                <label for="symptoms"><strong>Describe the symptoms:</strong></label>
+                <textarea 
+                    id="symptoms" 
+                    placeholder="e.g. sore throat, mild fever, headache..."
+                ></textarea>
+            </div>
+            <button id="analyzeBtn" class="btn-checker" onclick="checkSymptoms()">
+                🔍 Analyze Symptoms
+            </button>
+        </div>
+
+        <div id="result" class="result-section hidden">
+            <div class="result-header">🧠 AI Recommendation:</div>
+            <div class="result-box" id="aiResponse"></div>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"></script>
+    <script src="../static/js/auth.js"></script>
+    <script src="../static/js/main.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+        import { getFirestore, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+      
+        const firebaseConfig = {
+          apiKey: "AIzaSyDa6_47neFJAH-I4i-ZCU0elY4cRmpyotg",
+          authDomain: "aditi-pharmaceutical-assistant.firebaseapp.com",
+          projectId: "aditi-pharmaceutical-assistant",
+          storageBucket: "aditi-pharmaceutical-assistant.firebasestorage.app",
+          messagingSenderId: "241653252150",
+          appId: "1:241653252150:web:ce83fa898dc2f77a669897",
+          measurementId: "G-HMJ6SD9Q9H"
+        };
+      
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const db = getFirestore();
+      
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            const uid = user.uid;
+            try {
+              const docRef = doc(db, "users", uid);
+              const docSnap = await getDoc(docRef);
+      
+              if (docSnap.exists()) {
+                const userData = docSnap.data();
+                document.getElementById('loggedUserFName').innerText = userData.firstName || '';
+                document.getElementById('loggedUserLName').innerText = userData.lastName || '';
+                document.getElementById('loggedUserEmail').innerText = userData.email || '';
+              }
+            } catch (error) {
+              console.error("Error fetching user document:", error);
+            }
+          } else {
+            window.location.href = "/";
+          }
+        });
+      
+        document.getElementById('logout').addEventListener('click', () => {
+          signOut(auth)
+            .then(() => {
+              window.location.href = "/";
+            })
+            .catch((error) => {
+              console.error("Error signing out:", error);
+            });
+        });
+    </script>
+
+    <script>
+        // Profile menu toggle - EXACT SAME AS DRUG_INFO
+        function toggleProfileMenu() {
+            const profileMenu = document.getElementById('profileMenu');
+            profileMenu.classList.toggle('show');
+        }
+
+        // Close profile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const profileContainer = document.querySelector('.profile-container');
+            if (!profileContainer.contains(e.target)) {
+                document.getElementById('profileMenu').classList.remove('show');
+            }
+        });
+
+        function checkSymptoms() {
+            const symptoms = document.getElementById("symptoms").value;
+            const button = document.getElementById("analyzeBtn");
+            const resultDiv = document.getElementById("result");
+            const aiResponse = document.getElementById("aiResponse");
+    
+            if (!symptoms.trim()) {
+                alert("Please enter some symptoms.");
+                return;
+            }
+    
+            // Show loading state
+            button.disabled = true;
+            button.innerHTML = `Analyzing... <span class="spinner-border"></span>`;
+            resultDiv.classList.add('hidden');
+            aiResponse.innerHTML = "";
+    
+            fetch("/symptom_checker", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ symptoms })
+            })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                return res.json();
+            })
+            .then(data => {
+                const formatted = data.response.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+                aiResponse.innerHTML = formatted;
+                resultDiv.classList.remove('hidden');
+                
+                // Scroll to results
+                resultDiv.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            })
+            .catch(err => {
+                console.error('Error:', err);
+                aiResponse.innerHTML = `
+                    <div style="text-align: center; color: #dc2626;">
+                        <strong>❌ Analysis Failed</strong><br>
+                        An error occurred while analyzing symptoms. Please try again.
+                    </div>
+                `;
+                resultDiv.classList.remove('hidden');
+            })
+            .finally(() => {
+                button.disabled = false;
+                button.innerHTML = "🔍 Analyze Symptoms";
+            });
+        }
+
+        // Enter key support
+        document.getElementById('symptoms').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                checkSymptoms();
+            }
+        });
+    </script>
 </body>
 </html>
