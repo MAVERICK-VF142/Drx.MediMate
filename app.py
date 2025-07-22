@@ -135,7 +135,13 @@ def get_symptom_recommendation(symptoms):
         return f"❌ Error: {str(e)}"
         
 def translate_output(text, target_language):
-    prompt = f"Translate the following into {target_language}:\n\n{text}"
+    if target_language not in INDIAN_LANGUAGES:
+        logging.warning(f"❌ Invalid target language: {target_language}")
+        return "❌ Invalid target language specified."
+    
+    from html import escape
+    sanitized_text = escape(text)
+    prompt = f"Translate the following into {target_language}:\n\n{sanitized_text}"
     response = gemini_generate_with_retry(prompt)
     if response and hasattr(response, 'text'):
         return response.text.strip()
