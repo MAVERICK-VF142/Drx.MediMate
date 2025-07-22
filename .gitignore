@@ -46,7 +46,6 @@ coverage.xml
 .pytest_cache/
 
 # Environment variables
-venv_medimate
 .env
 .venv
 env/

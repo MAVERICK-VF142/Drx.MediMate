@@ -1,9 +1,0 @@
-2025-07-22 16:14:17,055 [INFO] Starting Flask server...
-2025-07-22 16:14:17,063 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on http://127.0.0.1:5000
-2025-07-22 16:14:17,063 [INFO] [33mPress CTRL+C to quit[0m
-2025-07-22 16:14:21,469 [INFO] 127.0.0.1 - - [22/Jul/2025 16:14:21] "GET / HTTP/1.1" 200 -
-2025-07-22 16:14:21,497 [INFO] 127.0.0.1 - - [22/Jul/2025 16:14:21] "[33mGET /static/js/firebaseauth.js HTTP/1.1[0m" 404 -
-2025-07-22 16:14:21,506 [INFO] 127.0.0.1 - - [22/Jul/2025 16:14:21] "GET /static/css/sisu.css HTTP/1.1" 200 -
-2025-07-22 16:14:21,520 [INFO] 127.0.0.1 - - [22/Jul/2025 16:14:21] "GET /static/js/auth.js HTTP/1.1" 200 -
-2025-07-22 16:14:22,711 [INFO] 127.0.0.1 - - [22/Jul/2025 16:14:22] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
