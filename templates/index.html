@@ -44,6 +44,27 @@
             color: #2563eb;
         }
 
+        /* Account Link - from main branch */
+        .account-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 999;
+            background: #3498db;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s ease;
+        }
+
+        .account-link:hover {
+            background: #2c80b4;
+            color: white;
+        }
+
         .logout-btn {
             background: #dc2626;
             color: white;
@@ -166,6 +187,9 @@
     </style>
 </head>
 <body>
+    <!-- Account Link - from main branch -->
+    <a href="/my-account" class="account-link">My Account</a>
+
     <!-- Header -->
     <div class="header">
         <div class="header-content">
