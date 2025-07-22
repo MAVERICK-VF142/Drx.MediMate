@@ -23,7 +23,11 @@ document.getElementById('translate-form').addEventListener('submit', async funct
         body: JSON.stringify({ text, language })
     });
 
-    const data = await response.json();
-    document.getElementById('translated-output').innerText = data.response;
+    if (response.ok) {
+        const data = await response.json();
+        document.getElementById('translated-output').innerText = data.response;
+    } else {
+        document.getElementById('translated-output').innerText = 'Error: Unable to translate. Please try again.';
+    }
 });
 </script>
