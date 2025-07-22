@@ -3,33 +3,431 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drug Information - Aditi Pharmaceutical Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
 
-    <title>Aditi - Pharmaceutical Assistant</title>
-    <link rel="stylesheet" href="../static/css/styles.css">
+        /* Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .breadcrumb {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        /* Profile */
+        .profile-container {
+            position: relative;
+        }
+
+        #profileButton {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        #profileButton:hover {
+            background: #1d4ed8;
+        }
+
+        .profile-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            min-width: 250px;
+            display: none;
+        }
+
+        .profile-menu.show {
+            display: block;
+        }
+
+        .user-info {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #1f2937;
+        }
+
+        .user-email {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        #logout {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        #logout:hover {
+            background: #b91c1c;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .page-subtitle {
+            color: #6b7280;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .search-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .search-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .search-examples {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .search-examples strong {
+            color: #374151;
+        }
+
+        /* Chat Section */
+        .chat-section {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .chat-avatar {
+            width: 50px;
+            height: 50px;
+            background: #8b5cf6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .chat-info h3 {
+            color: #1f2937;
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .chat-status {
+            color: #10b981;
+            font-size: 0.875rem;
+        }
+
+        .message-container {
+            height: 350px;
+            overflow-y: auto;
+            padding: 1rem;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-message {
+            text-align: center;
+            color: #6b7280;
+            font-style: italic;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+
+        .message.user {
+            background: #2563eb;
+            color: white;
+            margin-left: auto;
+        }
+
+        .message.assistant {
+            background: white;
+            color: #1f2937;
+            border: 1px solid #e5e7eb;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        #userInput {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        #userInput:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .send-button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .send-button:hover {
+            background: #1d4ed8;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 1rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .chat-section {
+                padding: 1.5rem;
+            }
+            
+            .message-container {
+                height: 250px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Aditi - Your Pharmaceutical Assistant</h1>
-        
-
-
-        <div id="chatbox" class="message-container"></div>
-        <div class="input-container">
-            <input type="text" id="userInput" placeholder="Ask Aditi..." autofocus>
-            <button onclick="sendMessage()">Send</button>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">🏥 Aditi</div>
+            <div class="breadcrumb">
+                <a href="index.html">🏠 Home</a> / Drug Information
+            </div>
+            <div class="profile-container">
+                <button id="profileButton" onclick="toggleProfileMenu()">Profile</button>
+                <div id="profileMenu" class="profile-menu">
+                    <div class="user-info">
+                        <div class="user-name">
+                            <span id="loggedUserFName"></span> <span id="loggedUserLName"></span>
+                        </div>
+                        <div class="user-email" id="loggedUserEmail"></div>
+                    </div>
+                    <button id="logout">Logout</button>
+                </div>
+            </div>
         </div>
     </div>
-        <!-- Profile Button -->
-        <div class="profile-container">
-          <button id="profileButton" onclick="toggleProfileMenu()">Profile</button>
-          <div id="profileMenu" class="profile-menu">
-          <div class="">Name: &nbsp; <span id="loggedUserFName"></span>&nbsp; <span id="loggedUserLName"></span></div>
-          <div class="">Email:&nbsp; <span id="loggedUserEmail"></span></div>
-          <P></P>
-          <button id="logout">Logout</button>
-          </div>
-      </div></div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <h1 class="page-title">💊 Drug Information</h1>
+        <p class="page-subtitle">Search comprehensive drug database for detailed information</p>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="search-form">
+                <input type="text" class="search-input" id="drugSearch" placeholder="Enter drug name (e.g., Paracetamol, Ibuprofen, Amoxicillin...)">
+                <button class="search-btn" id="searchBtn" onclick="searchDrug()">
+                    🔍 Search
+                </button>
+            </div>
+            <div class="search-examples">
+                <strong>Examples:</strong> Aspirin, Metformin, Lisinopril, Atorvastatin
+            </div>
+        </div>
+
+        <!-- Chat Section -->
+        <div class="chat-section">
+            <div class="chat-header">
+                <div class="chat-avatar">💊</div>
+                <div class="chat-info">
+                    <h3>Drug Information Assistant</h3>
+                    <div class="chat-status">Ready to help with drug information</div>
+                </div>
+            </div>
+
+            <div id="chatbox" class="message-container">
+                <div class="welcome-message">
+                    <strong>Welcome to Drug Information Center!</strong><br>
+                    Search for any drug above or ask me about medications, dosages, interactions, side effects, and more.
+                </div>
+            </div>
+
+            <div class="input-container">
+                <input type="text" id="userInput" placeholder="Ask about drug interactions, dosages, side effects..." autofocus>
+                <button class="send-button" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"></script>
@@ -41,7 +439,6 @@
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
         import { getFirestore, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
       
-        // Firebase configuration
         const firebaseConfig = {
           apiKey: "AIzaSyDa6_47neFJAH-I4i-ZCU0elY4cRmpyotg",
           authDomain: "aditi-pharmaceutical-assistant.firebaseapp.com",
@@ -58,7 +455,6 @@
       
         onAuthStateChanged(auth, async (user) => {
           if (user) {
-            // Get the user's UID directly from Firebase Auth
             const uid = user.uid;
             try {
               const docRef = doc(db, "users", uid);
@@ -66,23 +462,19 @@
       
               if (docSnap.exists()) {
                 const userData = docSnap.data();
-                document.getElementById('loggedUserFName').innerText = userData.firstName;
-                document.getElementById('loggedUserLName').innerText = userData.lastName;
-                document.getElementById('loggedUserEmail').innerText = userData.email;
-              } else {
-                console.log("No user document found in Firestore.");
+                document.getElementById('loggedUserFName').innerText = userData.firstName || '';
+                document.getElementById('loggedUserLName').innerText = userData.lastName || '';
+                document.getElementById('loggedUserEmail').innerText = userData.email || '';
               }
             } catch (error) {
               console.error("Error fetching user document:", error);
             }
           } else {
-            // No user is signed in, redirect to home page
             window.location.href = "/";
           }
         });
       
-        const logoutButton = document.getElementById('logout');
-        logoutButton.addEventListener('click', () => {
+        document.getElementById('logout').addEventListener('click', () => {
           signOut(auth)
             .then(() => {
               window.location.href = "/";
@@ -91,8 +483,86 @@
               console.error("Error signing out:", error);
             });
         });
-      </script>
+    </script>
 
-    
+    <script>
+        // Profile menu toggle
+        function toggleProfileMenu() {
+            const profileMenu = document.getElementById('profileMenu');
+            profileMenu.classList.toggle('show');
+        }
+
+        // Close profile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const profileContainer = document.querySelector('.profile-container');
+            if (!profileContainer.contains(e.target)) {
+                document.getElementById('profileMenu').classList.remove('show');
+            }
+        });
+
+        // Drug search functionality
+        function searchDrug() {
+            const drugName = document.getElementById('drugSearch').value.trim();
+            const searchBtn = document.getElementById('searchBtn');
+            
+            if (!drugName) {
+                alert('Please enter a drug name');
+                return;
+            }
+
+            // Add search result as message
+            addMessageToChat('user', `Search for: ${drugName}`);
+            
+            // Show loading
+            searchBtn.disabled = true;
+            searchBtn.innerHTML = `Searching... <span class="loading"></span>`;
+            
+            // Simulate API call - replace with your actual backend
+            setTimeout(() => {
+                addMessageToChat('assistant', `Here's information about ${drugName}: This is a simulated response. In your implementation, this would contain detailed drug information from your backend.`);
+                searchBtn.disabled = false;
+                searchBtn.innerHTML = '🔍 Search';
+                document.getElementById('drugSearch').value = '';
+            }, 2000);
+        }
+
+        // Chat functionality
+        function sendMessage() {
+            const userInput = document.getElementById('userInput');
+            const message = userInput.value.trim();
+            
+            if (message) {
+                addMessageToChat('user', message);
+                userInput.value = '';
+                
+                // Simulate response - replace with actual API call
+                setTimeout(() => {
+                    addMessageToChat('assistant', `I understand you're asking about: "${message}". Let me provide you with relevant drug information.`);
+                }, 1000);
+            }
+        }
+
+        function addMessageToChat(sender, message) {
+            const chatbox = document.getElementById('chatbox');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.textContent = message;
+            chatbox.appendChild(messageDiv);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        // Enter key functionality
+        document.getElementById('drugSearch').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchDrug();
+            }
+        });
+
+        document.getElementById('userInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
 </body>
 </html>
