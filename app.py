@@ -10,6 +10,13 @@ import logging
 import time
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeout
 
+INDIAN_LANGUAGES = [
+    "English", "Assamese", "Bengali", "Bodo", "Dogri", "Gujarati", "Hindi", "Kannada",
+    "Kashmiri", "Konkani", "Maithili", "Malayalam", "Manipuri", "Marathi", "Nepali", 
+    "Odia", "Punjabi", "Sanskrit", "Santali", "Sindhi", "Tamil", "Telugu", "Urdu"
+]
+
+
 # ---------------------------
 # Configuration & Setup
 # ---------------------------
@@ -125,6 +132,13 @@ def get_symptom_recommendation(symptoms):
     except Exception as e:
         logging.error(f"❌ Exception in get_symptom_recommendation: {str(e)}")
         return f"❌ Error: {str(e)}"
+        
+def translate_output(text, target_language):
+    prompt = f"Translate the following into {target_language}:\n\n{text}"
+    response = gemini_generate_with_retry(prompt)
+    if response and hasattr(response, 'text'):
+        return response.text.strip()
+    return "❌ Translation failed or no response."
 
 def analyze_image_with_gemini(image_data):
     try:
@@ -219,6 +233,24 @@ def symptom_check():
     except Exception as e:
         logging.error(f"❌ Exception in /symptom_checker: {str(e)}")
         return api_response(f'❌ Error during analysis: {str(e)}', 500)
+
+@app.route('/translate', methods=['POST'])
+def translate_text():
+    logging.info("API /translate called")
+    try:
+        data = request.get_json()
+        logging.info(f"Request JSON: {data}")
+        text = data.get('text')
+        language = data.get('language')
+        if not text or not language:
+            return api_response('❌ Text and language are required.', 400)
+        
+        translated = translate_output(text, language)
+        return api_response(translated)
+    except Exception as e:
+        logging.error(f"❌ Error in /translate: {str(e)}")
+        return api_response(f"❌ Translation failed: {str(e)}", 500)
+
 
 @app.route('/process-upload', methods=['POST'])
 def process_upload():
