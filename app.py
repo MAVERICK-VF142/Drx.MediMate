@@ -199,6 +199,8 @@ def upload_image_page():
 
 @app.route('/show-translate')
 def show_translate():
+    if 'last_output' not in session:
+        session['last_output'] = ''  # Initialize with a default value if not set
     result = session.get('last_output', '')  
     return render_template("translate.html", indian_languages=INDIAN_LANGUAGES, result=result)
 
