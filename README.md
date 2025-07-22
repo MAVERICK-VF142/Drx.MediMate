@@ -32,6 +32,7 @@
 
 ## 📚 Table of Contents
 
+- [Project Structure](#project-structure)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
@@ -39,6 +40,30 @@
 - [Contributors](#contributors)
 
 <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="900">
+
+---
+
+## 📂 Project Structure
+
+The project now follows a modular Flask application structure, enhancing maintainability, scalability, and clarity. Key directories and their responsibilities are:
+
+-   **`app/`**: Contains the core Flask application logic.
+    -   `__init__.py`: Initializes the Flask app and registers the main application components.
+    -   `config.py`: Manages application-wide settings and environment configurations.
+    -   `models.py`: (Currently empty) Reserved for future database model definitions.
+    -   **Blueprints (Feature Modules):** Each main feature is organized into its own Blueprint sub-directory:
+        -   `drug_info/`: Handles routes and logic for retrieving and displaying drug information using Gemini AI.
+        -   `image_processing/`: Manages routes and services for uploading and analyzing medicine images with Gemini Vision AI.
+        -   `main/`: Contains general application pages, including the homepage and dashboard routes.
+        -   `symptom_checker/`: Manages routes and logic for providing symptom-based drug recommendations via Gemini AI.
+    -   `utils/`: Houses reusable helper functions, like API response formatting.
+-   **`static/`**: Stores static web assets such as CSS stylesheets and JavaScript files.
+-   **`templates/`**: Contains all HTML templates, organized into subdirectories (e.g., `main/`, `drugs/`) that correspond to application features.
+-   **`tests/`**: (If applicable) Contains automated tests for the application.
+-   **`venv/`**: The Python virtual environment for isolated dependencies.
+-   **`.env`**: (Ignored by Git) Used for local environment variables like API keys.
+-   **`wsgi.py`**: The main entry point for running the Flask application.
+-   `Procfile`, `vercel.json`, `requirements.txt`, `LICENSE`, `README.md`: Other standard project files.
 
 ---
 
