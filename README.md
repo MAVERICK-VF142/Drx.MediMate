@@ -86,6 +86,15 @@
 3. **Symptom Checker**: `POST /symptom_checker`
    - Input: JSON payload with `symptoms`.
    - Output: JSON response with recommended drugs and safety information.
+   
+---
+
+## 📊 Logging, Timeout & Retry
+
+- All logs are streamed to the console (stdout) and available via provider dashboards (e.g., Vercel logs).
+- No log files or directories are created for maximum compatibility in serverless environments.
+- Gemini API requests use a 10-second timeout and will retry up to 3 times if needed.
+- Logged events include all API calls, gemini prompts, errors, and exception details.
 
 ---
 
