@@ -143,6 +143,16 @@ def process_upload():
         return render_template("upload_image.html", result=result)
     return render_template("upload_image.html", result="❌ No image data received.")
 
+###############################################
+@app.route('/my-account')
+def my_account():
+    return render_template('my_account.html', user={
+        "name": "Demo User",
+        "email": "demo@example.com",
+        "notifications": True
+    })
+###############################################
+
 # ---------------------------
 # Run app
 # ---------------------------
