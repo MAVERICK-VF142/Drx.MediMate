@@ -9,6 +9,7 @@ import google.generativeai as genai
 import logging
 import time
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeout
+from flask import session
 
 INDIAN_LANGUAGES = [
     "English", "Assamese", "Bengali", "Bodo", "Dogri", "Gujarati", "Hindi", "Kannada",
@@ -195,6 +196,12 @@ def symptom_checker_page():
 @app.route('/upload-image-page')
 def upload_image_page():
     return render_template('upload_image.html')
+
+@app.route('/show-translate')
+def show_translate():
+    result = session.get('last_output', '')  
+    return render_template("translate.html", indian_languages=INDIAN_LANGUAGES, result=result)
+
 
 # ---------------------------
 # API Endpoints (AJAX/JS)
