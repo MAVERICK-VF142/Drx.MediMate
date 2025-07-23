@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medicine Reminders</title>
+  <link rel="stylesheet" href="/static/css/reminders.css" />
+</head>
+<body>
+  <header>
+    <h1>Medicine Reminder System</h1>
+    <nav>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/logout">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Set a New Reminder</h2>
+      <form id="reminderForm">
+        <label for="medicine_name">Medicine Name:</label>
+        <input type="text" id="medicine_name" name="medicine_name" required />
+
+        <label for="dosage">Dosage:</label>
+        <input type="text" id="dosage" name="dosage" required />
+
+        <label for="time">Time:</label>
+        <input type="time" id="time" name="time" required />
+
+        <button type="submit">Set Reminder</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Your Reminders</h2>
+      <ul id="reminderList"></ul>
+    </section>
+  </main>
+
+  <script>
+    const email = "{{ user_email }}"; // provided from Flask context
+    document.getElementById('reminderForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        email,
+        medicine_name: document.getElementById('medicine_name').value,
+        dosage: document.getElementById('dosage').value,
+        time: document.getElementById('time').value
+      };
+
+      const res = await fetch('/set-reminder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) loadReminders();
+    });
+
+    async function loadReminders() {
+      const res = await fetch(`/get-reminders?email=${email}`);
+      const reminders = await res.json();
+      const list = document.getElementById('reminderList');
+      list.innerHTML = '';
+      reminders.forEach(r => {
+        const li = document.createElement('li');
+        li.textContent = `${r.medicine_name} - ${r.dosage} at ${r.time}`;
+        list.appendChild(li);
+      });
+    }
+
+    window.onload = loadReminders;
+  </script>
+</body>
+</html>

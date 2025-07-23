@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patient Dashboard</title>
+  <link rel="stylesheet" href="/static/css/dashboard.css" />
+</head>
+<body>
+  <header>
+    <h1>Welcome, {{ user_name }}</h1>
+    <nav>
+      <a href="/upload">Upload Report</a>
+      <a href="/symptom-checker">Symptom Checker</a>
+      <a href="/reminders">Medicine Reminders</a>
+      <a href="/logout">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Your Medical Summary</h2>
+      <p>Blood Group: {{ blood_group }}</p>
+      <p>Allergies: {{ allergies }}</p>
+      <p>Chronic Diseases: {{ chronic_diseases }}</p>
+      <p>Last Appointment: {{ last_appointment }}</p>
+    </section>
+
+    <section>
+      <h2>Actions</h2>
+      <button onclick="window.location.href='/reminders'">Manage Reminders</button>
+      <button onclick="window.location.href='/upload'">Upload Medical Report</button>
+    </section>
+  </main>
+
+  <script src="/static/js/patient-dashboard.js"></script>
+</body>
+</html>
