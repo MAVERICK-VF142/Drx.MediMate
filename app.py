@@ -233,6 +233,10 @@ def symptom_checker_page():
 def upload_image_page():
     return render_template('upload_image.html')
 
+@app.route('/account')
+def account():
+    return render_template('my_account.html')
+
 # ---------------------------
 # API Endpoints (AJAX/JS)
 # ---------------------------

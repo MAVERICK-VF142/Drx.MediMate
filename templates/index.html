@@ -1,269 +1,438 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aditi - Pharmaceutical Assistant</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drx.MediMate - Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
-        }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f0f4f8;
+      color: #1e293b;
+      overflow-x: hidden;
+    }
 
-        /* Header */
-        .header {
-            background: white;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 240px;
+      background: #1e3a8a;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem 1rem;
+      z-index: 1000;
+    }
 
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-        }
+    .sidebar h1 {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      color: #93c5fd;
+    }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #2563eb;
-        }
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 1rem;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+    .nav-link:hover {
+      background: #2563eb;
+    }
 
-        /* Account Link - from main branch */
-        .account-link {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 999;
-            background: #3498db;
-            color: white;
-            padding: 10px 18px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-            transition: background 0.3s ease;
-        }
+    .main {
+      margin-left: 240px;
+      padding: 2rem;
+      min-height: 100vh;
+      transition: margin-left 0.4s;
+    }
 
-        .account-link:hover {
-            background: #2c80b4;
-            color: white;
-        }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      border-radius: 12px;
+    }
 
-        .logout-btn {
-            background: #dc2626;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
+    .welcome {
+      font-size: 1.6rem;
+      font-weight: 600;
+    }
 
-        .logout-btn:hover {
-            background: #b91c1c;
-        }
+    .logout-btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+    .logout-btn:hover {
+      background: #dc2626;
+    }
 
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
+    .carousel-container {
+      margin-top: 3rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+    .carousel {
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 450px;
+      overflow: hidden;
+    }
+    .carousel-cards {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      transition: transform 0.5s ease;
+    }
+    .card {
+      width: 260px;
+      height: 370px;
+      background-color: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      margin: 0 10px;
+      position: absolute;
+      transition: transform 0.4s ease, opacity 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: center;
+      padding: 24px 20px 20px 20px;
+      border: 2px solid #1e3a8a;
+    }
+    .card.center {
+      transform: translateX(0) scale(1.1);
+      z-index: 2;
+      opacity: 1;
+    }
+    .card.left {
+      transform: translateX(-120%) scale(0.9);
+      opacity: 0.6;
+      z-index: 1;
+    }
+    .card.right {
+      transform: translateX(120%) scale(0.9);
+      opacity: 0.6;
+      z-index: 1;
+    }
+    .card.hidden {
+      display: none;
+    }
 
-        .dashboard-title {
-            font-size: 2.5rem;
-            color: #1f2937;
-            text-align: center;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-        }
+    /* Card image circle - shifted up */
+    .card-image {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-bottom: 0.6rem;
+      margin-top: -20px;
+      border: 2px solid #1e3a8a;
+      background: #f1f7ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(60,120,220,0.07);
+    }
+    .card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    /* Card content */
+    .card-info h3 {
+      font-size: 1.25rem;
+      margin: 0.8rem 0 0.4rem 0;
+      color: #111827;
+      font-weight: 700;
+    }
+    .card-info p {
+      font-size: 1rem;
+      color: #475569;
+      margin-top: 0;
+      margin-bottom: 0.6rem;
+    }
+    .card-info ul {
+      margin: 0.3rem 0 0 0;
+      padding-left: 1.2rem;
+      color: #64748b;
+      font-size: 0.95rem;
+      text-align: left;
+    }
+    .card-info ul li {
+      margin-bottom: 0.4rem;
+      list-style-type: disc;
+    }
+    /* Carousel arrows (responsive) */
+    .carousel-button {
+      font-size: 2rem;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: #2563eb;
+      transition: transform 0.2s ease;
+      z-index: 5;
+      position: relative;
+    }
+    .carousel-button.left {
+      left: 18px;
+    }
+    .carousel-button.right {
+      right: 18px;
+    }
+    .carousel-button:hover {
+      transform: scale(1.15);
+    }
 
-        .brand-highlight {
-            color: #2563eb;
-        }
+    /* Responsive Styles */
+    @media (max-width: 1100px) {
+      .carousel { max-width: 90vw; }
+    }
+    @media (max-width: 900px) {
+      .main { padding: 1.1rem; }
+      .carousel { height: 410px; }
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 1.2rem 0.5rem;
+      }
+      .main {
+        margin-left: 0;
+        margin-top: 92px;
+        padding: 1rem;
+      }
+      .topbar {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .card-image {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-bottom: 0.6rem;
+      margin-top: 5px !important;
+      position: relative;
+      top: 20px;
+      border: 2px solid #1e3a8a;
+      background: #f1f7ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(60,120,220,0.07);
+      padding:10px;
+    }
+    .card-info ul{
+      display:None;
+    }
+    
+    .carousel-cards{
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      margin:auto;
+    }
+    .card{
+       border : 2px solid #1e3a8a
 
-        .subtitle {
-            color: #6b7280;
-            font-size: 1.1rem;
-            text-align: center;
-            margin-bottom: 3rem;
-        }
+    }
 
-        /* Cards Grid */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .feature-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            border-color: #2563eb;
-        }
-
-        .card-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .drug-icon { color: #8b5cf6; }
-        .symptom-icon { color: #10b981; }
-        .camera-icon { color: #3b82f6; }
-
-        .card-title {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 0.5rem;
-        }
-
-        .card-description {
-            color: #6b7280;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        /* Hidden content shown after auth */
-        #dashboardContent {
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        #dashboardContent.show {
-            opacity: 1;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header-content {
-                padding: 0 1rem;
-            }
-            
-            .container {
-                padding: 1rem;
-            }
-            
-            .dashboard-title {
-                font-size: 2rem;
-            }
-            
-            .cards-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-        }
-    </style>
+    }
+    @media (max-width: 550px) {
+      .sidebar { flex-direction: column; padding: 1rem 0.3rem; }
+      .main { margin-top: 70px; }
+      .carousel { height: 320px; }
+      .card { width: 98vw; max-width: 320px; min-width: 170px; height: 300px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); padding: 12px 7px 14px 7px; }
+      .card-image { margin-top: -18px; }
+      .card-info h3 { font-size: 1.08rem; margin: 0.65rem 0; }
+      .card-info p, .card-info ul { font-size: 0.92rem; }
+    }
+    @media (max-width: 400px) {
+      .main { padding: 0.3rem; }
+      .carousel { height: 220px; }
+      .card { height: 185px; }
+    }
+  </style>
 </head>
 <body>
-    <!-- Account Link - from main branch -->
-    <a href="/my-account" class="account-link">My Account</a>
-
-    <!-- Header -->
-    <div class="header">
-        <div class="header-content">
-            <div class="logo">🏥 Aditi</div>
-            <button id="logout" class="logout-btn">Logout</button>
-        </div>
+  <nav class="sidebar">
+    <h1>Drx.MediMate</h1>
+    <a href="/drug-info-page" class="nav-link"><i class="fas fa-pills"></i> Drug Info</a>
+    <a href="/symptom-checker-page" class="nav-link"><i class="fas fa-stethoscope"></i> Symptom Checker</a>
+    <a href="/upload-image-page" class="nav-link"><i class="fas fa-camera"></i> Medicine Image</a>
+    <a href="/account" class="nav-link"><i class="fas fa-user"></i> My Account</a>
+  </nav>
+  <main class="main">
+    <div class="topbar">
+      <div class="welcome">👋 Welcome back, Aditi!</div>
+      <button id="logout" class="logout-btn">Logout</button>
     </div>
-
-    <!-- Main Container -->
-    <div class="container" id="dashboardContent">
-        <h2 class="dashboard-title">Welcome to <span class="brand-highlight">Drx.MediMate</span> Dashboard</h2>
-        <p class="subtitle">Your intelligent pharmaceutical assistant</p>
-        
-        <div class="cards-grid">
-            <a href="drug-info-page" class="feature-card">
-                <div class="card-icon drug-icon">💊</div>
-                <h5 class="card-title">Drug Information</h5>
-                <p class="card-description">Look up clinical drug info powered by Gemini AI.</p>
-            </a>
-
-            <a href="symptom-checker-page" class="feature-card">
-                <div class="card-icon symptom-icon">🩺</div>
-                <h5 class="card-title">Symptom Checker</h5>
-                <p class="card-description">Suggest safe OTC drugs based on symptoms.</p>
-            </a>
-
-            <a href="upload-image-page" class="feature-card">
-                <div class="card-icon camera-icon">📷</div>
-                <h5 class="card-title">Medicine Image</h5>
-                <p class="card-description">Upload a medicine photo to get full details.</p>
-            </a>
-        </div>
+    <div class="carousel-container">
+      <div class="carousel">
+        <button class="carousel-button left" onclick="prevCard()">&lt;</button>
+        <div class="carousel-cards" id="carouselCards"></div>
+        <button class="carousel-button right" onclick="nextCard()">&gt;</button>
+      </div>
     </div>
+  </main>
+  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDa6_47neFJAH-I4i-ZCU0elY4cRmpyotg",
+      authDomain: "aditi-pharmaceutical-assistant.firebaseapp.com",
+      projectId: "aditi-pharmaceutical-assistant",
+      storageBucket: "aditi-pharmaceutical-assistant.appspot.com",
+      messagingSenderId: "241653252150",
+      appId: "1:241653252150:web:ce83fa898dc2f77a669897",
+      measurementId: "G-HMJ6SD9Q9H"
+    };
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDa6_47neFJAH-I4i-ZCU0elY4cRmpyotg",
-            authDomain: "aditi-pharmaceutical-assistant.firebaseapp.com",
-            projectId: "aditi-pharmaceutical-assistant",
-            storageBucket: "aditi-pharmaceutical-assistant.appspot.com",
-            messagingSenderId: "241653252150",
-            appId: "1:241653252150:web:ce83fa898dc2f77a669897",
-            measurementId: "G-HMJ6SD9Q9H"
-        };
+    onAuthStateChanged(auth, (user) => {
+      if (!user) window.location.href = "/";
+    });
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth();
+    document.getElementById("logout").addEventListener("click", () => {
+      signOut(auth).then(() => {
+        localStorage.removeItem("loggedInUserId");
+        window.location.href = "/";
+      });
+    });
+  </script>
+  <script>
+    const cardsData = [
+      {
+        title: 'Drug Information',
+        img: 'https://cdn-icons-png.flaticon.com/512/10434/10434371.png',
+        info: `Look up clinical drug details, including usage, side effects, and all powered by Gemini AI.`,
+        bullets: [
+          'Search both generic and brand medicines',
+          'Get evidence-based insights for patient safety',
+         
+        ]
+      },
+      {
+        title: 'Symptom Checker',
+        img: 'https://cdn-icons-png.flaticon.com/512/7329/7329077.png',
+        info: `Enter symptoms and receive trustworthy suggestions for safe over-the-counter medicines.`,
+        bullets: [
+          'Personalized triaging and recommendations',
+          'Quick access to medical guidance day or night',
+          
+        ]
+      },
+      {
+        title: 'Medicine Image',
+        img: 'https://cdn-icons-png.flaticon.com/512/3210/3210053.png',
+        info: `Upload a clear photo of any medicine to instantly receive its verified composition, usage, and safety details.`,
+        bullets: [
+          'AI-powered image recognition of medicines',
+          'Stay updated on recalls and bans',
+        ]
+      }
+    ];
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('dashboardContent').classList.add('show');
-            } else {
-                window.location.href = "/";
-            }
-        });
+    let currentIndex = 0;
 
-        const logoutBtn = document.getElementById('logout');
-        logoutBtn.addEventListener('click', () => {
-            signOut(auth)
-                .then(() => {
-                    localStorage.removeItem('loggedInUserId');
-                    window.location.href = "/";
-                })
-                .catch((error) => {
-                    console.error("Logout error:", error);
-                });
-        });
-    </script>
+    function renderCarousel() {
+      const carouselContainer = document.getElementById('carouselCards');
+      carouselContainer.innerHTML = '';
+      cardsData.forEach((card, index) => {
+        const cardDiv = document.createElement('div');
+        cardDiv.classList.add('card');
+        if (index === currentIndex) {
+          cardDiv.classList.add('center');
+        } else if (index === (currentIndex - 1 + cardsData.length) % cardsData.length) {
+          cardDiv.classList.add('left');
+        } else if (index === (currentIndex + 1) % cardsData.length) {
+          cardDiv.classList.add('right');
+        } else {
+          cardDiv.classList.add('hidden');
+        }
+        cardDiv.innerHTML = `
+          <div class="card-image">
+            <img src="${card.img}" alt="${card.title}">
+          </div>
+          <div class="card-info">
+            <h3>${card.title}</h3>
+            <p>${card.info}</p>
+            <ul>
+              ${card.bullets.map(bullet => `<li>${bullet}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+        if (index === currentIndex) {
+          cardDiv.style.cursor = 'pointer';
+          if(index === 0) cardDiv.addEventListener('click', () => window.location.href='drug-info-page');
+          if(index === 1) cardDiv.addEventListener('click', () => window.location.href='symptom-checker-page');
+          if(index === 2) cardDiv.addEventListener('click', () => window.location.href='upload-image-page');
+        }
+        carouselContainer.appendChild(cardDiv);
+      });
+    setTimeout(function () {
+      const cards = document.querySelectorAll('.carousel-cards .card');
+      cards.forEach(function(card) {
+        card.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
+      });
+    }, 50);
+    }
+
+    function nextCard() {
+      currentIndex = (currentIndex + 1) % cardsData.length;
+      renderCarousel();
+    }
+
+    function prevCard() {
+      currentIndex = (currentIndex - 1 + cardsData.length) % cardsData.length;
+      renderCarousel();
+    }
+
+    window.onload = renderCarousel;
+  </script>
 </body>
 </html>
