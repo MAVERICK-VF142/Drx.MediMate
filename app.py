@@ -1,7 +1,7 @@
 import os
 import json
 import base64
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_cors import CORS
 from PIL import Image
 from io import BytesIO
@@ -10,67 +10,86 @@ import markdown
 import logging
 import time
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeout
+from models import db, MedicineReminder
+from datetime import datetime, timedelta
+from flask_mail import Mail, Message
+from apscheduler.schedulers.background import BackgroundScheduler
 
 # ---------------------------
 # Configuration & Setup
 # ---------------------------
 
-# Load Gemini API key from environment variable
 api_key = os.getenv("GEMINI_KEY")
 if not api_key:
     raise EnvironmentError("❌ GEMINI_KEY environment variable not set.")
 genai.configure(api_key=api_key)
-
-# Load Gemini model
 model = genai.GenerativeModel("gemini-2.5-flash")
 
-# Initialize Flask app
 app = Flask(__name__)
-CORS(app)  # Enable Cross-Origin Resource Sharing
+CORS(app)
+app.secret_key = 'supersecretkey'
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s"
-)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///medimate.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
+app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
+
+mail = Mail(app)
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+
+with app.app_context():
+    db.init_app(app)
+    db.create_all()
+
+reminders = []
+
+scheduler = BackgroundScheduler()
+@scheduler.scheduled_job('interval', minutes=1)
+def check_reminders():
+    now = datetime.now()
+    for reminder in reminders:
+        if not reminder['sent'] and now >= reminder['time']:
+            try:
+                msg = Message('Medicine Reminder 💊',
+                              sender=app.config['MAIL_USERNAME'],
+                              recipients=[reminder['email']])
+                msg.body = f"Hello! Time to take your medicine: {reminder['med_name']}"
+                mail.send(msg)
+                reminder['sent'] = True
+            except Exception as e:
+                print(f"Error sending email: {e}")
+
+scheduler.start()
 
 # ---------------------------
 # Retry Helper Function
 # ---------------------------
 
 def gemini_generate_with_retry(prompt, max_retries=3, delay=2, timeout=10):
-    """
-    Calls Gemini API with timeout and retry logic.
-    - Retries failed calls (with exponential backoff)
-    - Aborts slow responses gracefully
-    """
     attempt = 0
     while attempt < max_retries:
         try:
             logging.info(f"🌐 Gemini API Call Attempt {attempt + 1}")
-            
-            # Set up timeout using ThreadPoolExecutor
             with ThreadPoolExecutor(max_workers=1) as executor:
                 future = executor.submit(model.generate_content, prompt)
-                response = future.result(timeout=timeout)  # Timeout in seconds
-
-            # Check if response is valid
+                response = future.result(timeout=timeout)
             if response and hasattr(response, 'text') and response.text.strip():
                 logging.info("✅ Gemini API call successful.")
                 return response
             else:
                 logging.warning("⚠️ Empty or malformed response. Retrying...")
-
         except FuturesTimeout:
             logging.error(f"⏰ Gemini API call timed out after {timeout} seconds.")
         except Exception as e:
             logging.error(f"❌ Gemini API error: {str(e)}")
-
-        # Backoff delay before retry
-        wait_time = delay * (2 ** attempt)  # 2s, 4s, 8s...
+        wait_time = delay * (2 ** attempt)
         logging.info(f"⏳ Waiting {wait_time}s before retry attempt {attempt + 2}")
         time.sleep(wait_time)
         attempt += 1
-
     logging.critical("❌ All Gemini API retry attempts failed.")
     return None
 
@@ -79,16 +98,12 @@ def gemini_generate_with_retry(prompt, max_retries=3, delay=2, timeout=10):
 # ---------------------------
 
 def api_response(message, status=200):
-    """Standard JSON response helper"""
     return jsonify({'response': message}), status
 
 def format_markdown_response(text):
-    """Convert Markdown text to HTML for consistent, readable output"""
     if not text or text.startswith("❌"):
-        return text  # Return error messages as-is
-    # Convert Markdown to HTML
+        return text
     html = markdown.markdown(text, extensions=['extra', 'fenced_code'])
-    # Wrap in a styled div for better presentation
     return f'<div class="markdown-content">{html}</div>'
 
 # ---------------------------
@@ -112,7 +127,6 @@ def get_drug_information(drug_name):
         "- List significant drug interactions\n"
         "Use concise bullet points. Ensure clarity and professional tone."
     )
-
     logging.info(f"Prompt to Gemini: {prompt}")
     try:
         response = gemini_generate_with_retry(prompt)
@@ -141,7 +155,6 @@ def get_symptom_recommendation(symptoms):
         "If symptoms suggest a medical emergency or severe condition, clearly state: **'Seek immediate medical attention.'** "
         "Use concise bullet points in Markdown format. Avoid disclaimers."
     )
-
     logging.info(f"Prompt to Gemini for symptom check: {prompt}")
     try:
         response = gemini_generate_with_retry(prompt)
@@ -161,12 +174,10 @@ def analyze_image_with_gemini(image_data):
         if not image_data.startswith("data:image/"):
             logging.warning("❌ Invalid image format received.")
             return "❌ Invalid image format uploaded."
-
         logging.info("Decoding and processing image for AI analysis...")
         image_base64 = image_data.split(',')[1]
         image_bytes = base64.b64decode(image_base64)
         image = Image.open(BytesIO(image_bytes))
-
         prompt = (
             "Analyze this image of a medicine or drug packaging. Provide the response in Markdown format:\n"
             "## Drug Information\n"
@@ -181,10 +192,8 @@ def analyze_image_with_gemini(image_data):
             "- **Important Interactions**: List significant interactions\n"
             "If the image is blurry or unclear, respond with: **'Please retake the image for better clarity.'**"
         )
-
         logging.info("Sending prompt and image to Gemini AI.")
         response = gemini_generate_with_retry([prompt, image])
-        
         if response and hasattr(response, 'text'):
             text = response.text.strip()
             logging.info("AI analysis complete.")
@@ -192,19 +201,44 @@ def analyze_image_with_gemini(image_data):
         else:
             logging.warning("❌ Analysis failed or empty AI response.")
             return "❌ Analysis failed or empty response from AI."
-
     except Exception as e:
         logging.error(f"❌ Error during image analysis: {str(e)}")
         return f"❌ Error during image analysis: {str(e)}"
 
 # ---------------------------
-# Authentication & Dashboard Routes
+# Dashboard & Feature Routes
 # ---------------------------
 
 @app.route('/')
 def index_redirect():
-    # Redirect to login page
     return render_template('sisu.html')
+
+@app.route('/patient-dashboard', methods=['GET', 'POST'])
+def patient_dashboard_reminders():
+    if request.method == 'POST':
+        email = request.form['email']
+        med_name = request.form['med_name']
+        time_str = request.form['reminder_time']
+        try:
+            hour, minute = map(int, time_str.split(':'))
+            now = datetime.now()
+            reminder_time = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+            if reminder_time < now:
+                reminder_time += timedelta(days=1)
+            reminders.append({
+                'email': email,
+                'med_name': med_name,
+                'time': reminder_time,
+                'sent': False
+            })
+            return redirect(url_for('reminders_page'))
+        except Exception as e:
+            return f"Invalid time format: {e}"
+    return render_template('patient-dashboard.html')
+
+@app.route('/reminders')
+def reminders_page():
+    return render_template('reminders.html', reminders=reminders)
 
 @app.route('/sisu.html')
 def sisu():
@@ -214,12 +248,10 @@ def sisu():
 def index():
     return render_template('index.html')
 
-# Alternative route for index
 @app.route('/dashboard')
 def dashboard():
     return render_template('index.html')
 
-# Role-specific Dashboard Routes
 @app.route('/doctor-dashboard.html')
 def doctor_dashboard():
     return render_template('doctor-dashboard.html')
@@ -231,15 +263,6 @@ def pharmacist_dashboard():
 @app.route('/student-dashboard.html')
 def student_dashboard():
     return render_template('student-dashboard.html')
-
-@app.route('/patient-dashboard.html')
-def patient_dashboard():
-    return render_template('patient-dashboard.html')
-
-
-# ---------------------------
-# Feature Page Routes
-# ---------------------------
 
 @app.route('/drug-info-page')
 def drug_info_page():
@@ -255,13 +278,8 @@ def upload_image_page():
 
 @app.route('/my-account')
 def my_account():
-    return render_template('my_account.html', user={
-        "name": "Demo User",
-        "email": "demo@example.com",
-        "notifications": True
-    })
+    return render_template('my_account.html', user={"name": "Demo User", "email": "demo@example.com", "notifications": True})
 
-# Additional feature routes that may be referenced in the dashboard
 @app.route('/inventory-management')
 def inventory_management():
     return render_template('inventory_management.html')
@@ -282,10 +300,6 @@ def educational_resources():
 def medication_tracker():
     return render_template('medication_tracker.html')
 
-# ---------------------------
-# API Endpoints (AJAX/JS)
-# ---------------------------
-
 @app.route('/get_drug_info', methods=['POST'])
 def get_drug_info():
     logging.info("API /get_drug_info called")
@@ -296,7 +310,6 @@ def get_drug_info():
         if not drug_name:
             logging.warning("No drug name provided in request")
             return api_response('❌ No drug name provided.', 400)
-        logging.info(f"Calling get_drug_information with drug_name: {drug_name}")
         response = get_drug_information(drug_name)
         return api_response(response)
     except Exception as e:
@@ -308,12 +321,10 @@ def symptom_check():
     logging.info("API /symptom_checker called")
     try:
         data = request.get_json()
-        logging.info(f"Request JSON: {data}")
         symptoms = data.get('symptoms')
         if not symptoms:
             logging.warning("❌ No symptoms provided.")
             return api_response('❌ No symptoms provided.', 400)
-        logging.info(f"Calling get_symptom_recommendation with symptoms: {symptoms}")
         result = get_symptom_recommendation(symptoms)
         return api_response(result)
     except Exception as e:
@@ -322,19 +333,12 @@ def symptom_check():
 
 @app.route('/process-upload', methods=['POST'])
 def process_upload():
-    logging.info("API /process-upload called")
     image_data = request.form.get("image_data")
     if image_data:
-        logging.info("Image data received for analysis")
         result = analyze_image_with_gemini(image_data)
         return render_template("upload_image.html", result=result)
     else:
-        logging.warning("❌ No image data received in request")
-    return render_template("upload_image.html", result="❌ No image data received.")
-
-# ---------------------------
-# Error Handlers
-# ---------------------------
+        return render_template("upload_image.html", result="❌ No image data received.")
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -343,10 +347,6 @@ def page_not_found(e):
 @app.errorhandler(500)
 def internal_server_error(e):
     return render_template('500.html'), 500
-
-# ---------------------------
-# Run App
-# ---------------------------
 
 if __name__ == '__main__':
     logging.info("Starting Flask server...")

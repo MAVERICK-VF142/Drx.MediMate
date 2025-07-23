@@ -1,6 +1,9 @@
-python-dotenv
 Flask
 flask-cors
+flask-mail
+flask-sqlalchemy
+python-dotenv
 Pillow
 google-generativeai
 markdown
+apscheduler
