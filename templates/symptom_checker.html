@@ -1,458 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Symptom Checker - Aditi</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <title>Symptom Checker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
-        }
+    .container {
+      width: 80%;
+      margin: auto;
+      overflow: hidden;
+    }
 
-        /* Header - EXACT SAME AS DRUG_INFO */
-        .header {
-            background: white;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
+    header {
+      background: #50b3a2;
+      color: #fff;
+      padding-top: 30px;
+      min-height: 70px;
+      border-bottom: #e8491d 3px solid;
+    }
 
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-        }
+    header h1 {
+      text-align: center;
+      text-transform: uppercase;
+      margin: 0;
+    }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #2563eb;
-        }
+    form {
+      background: #fff;
+      padding: 20px;
+      margin-top: 30px;
+      border-radius: 5px;
+    }
 
-        .breadcrumb {
-            color: #6b7280;
-            font-size: 0.9rem;
-        }
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
 
-        .breadcrumb a {
-            color: #2563eb;
-            text-decoration: none;
-        }
+    .mic-btn {
+      background-color: #50b3a2;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
 
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
+    .mic-btn:hover {
+      background-color: #3a8d7c;
+    }
 
-        /* Profile - EXACT SAME AS DRUG_INFO */
-        .profile-container {
-            position: relative;
-        }
+    input[type="submit"] {
+      background-color: #e8491d;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
 
-        #profileButton {
-            background: #2563eb;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
+    input[type="submit"]:hover {
+      background-color: #cf3e13;
+    }
 
-        #profileButton:hover {
-            background: #1d4ed8;
-        }
+    #result {
+      margin-top: 20px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
 
-        .profile-menu {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            margin-top: 0.5rem;
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 1.5rem;
-            min-width: 250px;
-            display: none;
-        }
-
-        .profile-menu.show {
-            display: block;
-        }
-
-        .user-info {
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .user-name {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-            color: #1f2937;
-        }
-
-        .user-email {
-            color: #6b7280;
-            font-size: 0.875rem;
-        }
-
-        #logout {
-            background: #dc2626;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        #logout:hover {
-            background: #b91c1c;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .page-title {
-            font-size: 2.5rem;
-            color: #1f2937;
-            margin-bottom: 0.5rem;
-            text-align: center;
-        }
-
-        .page-subtitle {
-            color: #6b7280;
-            font-size: 1.1rem;
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #1f2937;
-        }
-
-        textarea {
-            width: 100%;
-            min-height: 120px;
-            padding: 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-family: inherit;
-            resize: vertical;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: #10b981;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-        }
-
-        .btn-checker {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 0.875rem 2rem;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-            width: 100%;
-            font-weight: 600;
-            transition: background-color 0.2s ease;
-        }
-
-        .btn-checker:hover {
-            background: #059669;
-        }
-
-        .btn-checker:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
-        }
-
-        .spinner-border {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid #ffffff;
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 1s ease-in-out infinite;
-            margin-left: 0.5rem;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .result-section {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 2rem;
-            border-left: 4px solid #10b981;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .result-header {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 1rem;
-        }
-
-        .result-box {
-            color: #4b5563;
-            line-height: 1.7;
-            padding: 1rem;
-            background: #f8fdfa;
-            border-radius: 8px;
-            border: 1px solid #d1fae5;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header-content {
-                padding: 0 1rem;
-            }
-            
-            .container {
-                padding: 1rem;
-            }
-            
-            .page-title {
-                font-size: 2rem;
-            }
-            
-            .card {
-                padding: 1.5rem;
-            }
-        }
-    </style>
+    .markdown-content {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+  </style>
 </head>
 <body>
-    <!-- Header - EXACT SAME AS DRUG_INFO -->
-    <div class="header">
-        <div class="header-content">
-            <div class="logo">🏥 Aditi</div>
-            <div class="breadcrumb">
-                <a href="index.html">🏠 Home</a> / Symptom Checker
-            </div>
-            <div class="profile-container">
-                <button id="profileButton" onclick="toggleProfileMenu()">Profile</button>
-                <div id="profileMenu" class="profile-menu">
-                    <div class="user-info">
-                        <div class="user-name">
-                            <span id="loggedUserFName"></span> <span id="loggedUserLName"></span>
-                        </div>
-                        <div class="user-email" id="loggedUserEmail"></div>
-                    </div>
-                    <button id="logout">Logout</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+  <header>
     <div class="container">
-        <h1 class="page-title">🩺 Symptom Checker</h1>
-        <p class="page-subtitle">Enter symptoms to get safe OTC recommendations (AI-powered)</p>
-
-        <div class="card">
-            <div class="form-group">
-                <label for="symptoms"><strong>Describe the symptoms:</strong></label>
-                <textarea 
-                    id="symptoms" 
-                    placeholder="e.g. sore throat, mild fever, headache..."
-                ></textarea>
-            </div>
-            <button id="analyzeBtn" class="btn-checker" onclick="checkSymptoms()">
-                🔍 Analyze Symptoms
-            </button>
-        </div>
-
-        <div id="result" class="result-section hidden">
-            <div class="result-header">🧠 AI Recommendation:</div>
-            <div class="result-box" id="aiResponse"></div>
-        </div>
+      <h1>Symptom Checker</h1>
     </div>
+  </header>
 
-    <!-- Firebase Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"></script>
-    <script src="../static/js/auth.js"></script>
-    <script src="../static/js/main.js"></script>
+  <div class="container">
+    <form id="symptom-form">
+      <label for="symptoms">Enter your symptoms:</label><br>
+      <textarea id="symptoms" name="symptoms" placeholder="E.g. fever, cough, headache"></textarea>
+      <button type="button" id="start-btn" class="mic-btn">🎤</button><br><br>
+      <input type="submit" value="Check">
+    </form>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-        import { getFirestore, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
-      
-        const firebaseConfig = {
-          apiKey: "AIzaSyDa6_47neFJAH-I4i-ZCU0elY4cRmpyotg",
-          authDomain: "aditi-pharmaceutical-assistant.firebaseapp.com",
-          projectId: "aditi-pharmaceutical-assistant",
-          storageBucket: "aditi-pharmaceutical-assistant.firebasestorage.app",
-          messagingSenderId: "241653252150",
-          appId: "1:241653252150:web:ce83fa898dc2f77a669897",
-          measurementId: "G-HMJ6SD9Q9H"
-        };
-      
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth();
-        const db = getFirestore();
-      
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            const uid = user.uid;
-            try {
-              const docRef = doc(db, "users", uid);
-              const docSnap = await getDoc(docRef);
-      
-              if (docSnap.exists()) {
-                const userData = docSnap.data();
-                document.getElementById('loggedUserFName').innerText = userData.firstName || '';
-                document.getElementById('loggedUserLName').innerText = userData.lastName || '';
-                document.getElementById('loggedUserEmail').innerText = userData.email || '';
-              }
-            } catch (error) {
-              console.error("Error fetching user document:", error);
-            }
-          } else {
-            window.location.href = "/";
-          }
+    <div id="result"></div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+
+  <script>
+    // Firebase config — replace with YOUR config
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        alert("Please log in to use the Symptom Checker.");
+        window.location.href = "/sisu.html";
+      }
+    });
+  </script>
+
+  <script>
+    // 🎤 Speech recognition
+    const micBtn = document.getElementById("start-btn");
+    const textarea = document.getElementById("symptoms");
+
+    let recognition;
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      micBtn.onclick = () => {
+        micBtn.innerText = "🎙️ Listening...";
+        recognition.start();
+      };
+
+      recognition.onresult = event => {
+        const transcript = event.results[0][0].transcript;
+        textarea.value += (textarea.value.trim() ? ", " : "") + transcript;
+        micBtn.innerText = "🎤";
+      };
+
+      recognition.onerror = event => {
+        alert("Speech recognition error: " + event.error);
+        micBtn.innerText = "🎤";
+      };
+
+      recognition.onend = () => {
+        micBtn.innerText = "🎤";
+      };
+    } else {
+      alert("Speech Recognition not supported in this browser.");
+      micBtn.disabled = true;
+    }
+
+    // ✅ Form submit to Flask backend
+    document.getElementById("symptom-form").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const symptoms = textarea.value.trim();
+      if (!symptoms) {
+        alert("Please enter symptoms.");
+        return;
+      }
+
+      document.getElementById("result").innerHTML = "⏳ Processing...";
+
+      try {
+        const response = await fetch("/symptom_checker", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ symptoms: symptoms })
         });
-      
-        document.getElementById('logout').addEventListener('click', () => {
-          signOut(auth)
-            .then(() => {
-              window.location.href = "/";
-            })
-            .catch((error) => {
-              console.error("Error signing out:", error);
-            });
-        });
-    </script>
 
-    <script>
-        // Profile menu toggle - EXACT SAME AS DRUG_INFO
-        function toggleProfileMenu() {
-            const profileMenu = document.getElementById('profileMenu');
-            profileMenu.classList.toggle('show');
-        }
-
-        // Close profile menu when clicking outside
-        document.addEventListener('click', (e) => {
-            const profileContainer = document.querySelector('.profile-container');
-            if (!profileContainer.contains(e.target)) {
-                document.getElementById('profileMenu').classList.remove('show');
-            }
-        });
-
-        function checkSymptoms() {
-            const symptoms = document.getElementById("symptoms").value;
-            const button = document.getElementById("analyzeBtn");
-            const resultDiv = document.getElementById("result");
-            const aiResponse = document.getElementById("aiResponse");
-    
-            if (!symptoms.trim()) {
-                alert("Please enter some symptoms.");
-                return;
-            }
-    
-            // Show loading state
-            button.disabled = true;
-            button.innerHTML = `Analyzing... <span class="spinner-border"></span>`;
-            resultDiv.classList.add('hidden');
-            aiResponse.innerHTML = "";
-    
-            fetch("/symptom_checker", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ symptoms })
-            })
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
-                }
-                return res.json();
-            })
-            .then(data => {
-                const formatted = data.response.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-                aiResponse.innerHTML = formatted;
-                resultDiv.classList.remove('hidden');
-                
-                // Scroll to results
-                resultDiv.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'start' 
-                });
-            })
-            .catch(err => {
-                console.error('Error:', err);
-                aiResponse.innerHTML = `
-                    <div style="text-align: center; color: #dc2626;">
-                        <strong>❌ Analysis Failed</strong><br>
-                        An error occurred while analyzing symptoms. Please try again.
-                    </div>
-                `;
-                resultDiv.classList.remove('hidden');
-            })
-            .finally(() => {
-                button.disabled = false;
-                button.innerHTML = "🔍 Analyze Symptoms";
-            });
-        }
-
-        // Enter key support
-        document.getElementById('symptoms').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && e.ctrlKey) {
-                checkSymptoms();
-            }
-        });
-    </script>
+        const data = await response.json();
+        document.getElementById("result").innerHTML = data.response;
+      } catch (error) {
+        console.error("❌ Error:", error);
+        document.getElementById("result").innerText = "❌ Error contacting server.";
+      }
+    });
+  </script>
 </body>
 </html>
-
