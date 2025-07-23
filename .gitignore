@@ -73,4 +73,4 @@ Thumbs.db
 
 # Temporary files
 tempCodeRunnerFile.*
-temp*
+temp*/  # Ignore folders that start with "temp", not files/folders like "templates"
