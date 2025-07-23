@@ -282,8 +282,6 @@ def educational_resources():
 @app.route('/medication-tracker')
 def medication_tracker():
     return render_template('medication_tracker.html')
->>
->>>>> main
 # ---------------------------
 # API Endpoints (AJAX/JS)
 # ---------------------------
