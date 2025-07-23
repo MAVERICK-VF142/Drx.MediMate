@@ -33,8 +33,10 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s"
 )
 
+# ---------------------------
 # Retry Helper Function
-# gemini_generate_with_retry() supports both string and list prompts
+# ---------------------------
+
 def gemini_generate_with_retry(prompt, max_retries=3, delay=2, timeout=10):
     """
     Calls Gemini API with timeout and retry logic.
@@ -73,7 +75,7 @@ def gemini_generate_with_retry(prompt, max_retries=3, delay=2, timeout=10):
     return None
 
 # ---------------------------
-# Utility
+# Utility Functions
 # ---------------------------
 
 def api_response(message, status=200):
@@ -111,23 +113,19 @@ def get_drug_information(drug_name):
         "Use concise bullet points. Ensure clarity and professional tone."
     )
 
-    response = model.generate_content(prompt)
-    text = response.text.strip() if response and hasattr(response, 'text') else "❌ No response from AI."
-    return format_markdown_response(text)
-
     logging.info(f"Prompt to Gemini: {prompt}")
     try:
         response = gemini_generate_with_retry(prompt)
-        logging.info("Received response from Gemini AI.")
         if response and hasattr(response, 'text'):
-            return response.text.strip()
+            text = response.text.strip()
+            logging.info("Received response from Gemini AI.")
+            return format_markdown_response(text)
         else:
             logging.warning("No text in AI response.")
             return "❌ No response from AI."
     except Exception as e:
         logging.error(f"Exception in get_drug_information: {str(e)}")
         return f"❌ Error: {str(e)}"
-
 
 def get_symptom_recommendation(symptoms):
     prompt = (
@@ -144,23 +142,19 @@ def get_symptom_recommendation(symptoms):
         "Use concise bullet points in Markdown format. Avoid disclaimers."
     )
 
-    response = model.generate_content(prompt)
-    text = response.text.strip() if response and hasattr(response, 'text') else "❌ No response from AI."
-    return format_markdown_response(text)
-
     logging.info(f"Prompt to Gemini for symptom check: {prompt}")
     try:
         response = gemini_generate_with_retry(prompt)
-        logging.info("Received response from Gemini for symptoms.")
         if response and hasattr(response, 'text'):
-            return response.text.strip()
+            text = response.text.strip()
+            logging.info("Received response from Gemini for symptoms.")
+            return format_markdown_response(text)
         else:
             logging.warning("❌ No text in AI response for symptoms.")
             return "❌ No response from AI."
     except Exception as e:
         logging.error(f"❌ Exception in get_symptom_recommendation: {str(e)}")
         return f"❌ Error: {str(e)}"
-
 
 def analyze_image_with_gemini(image_data):
     try:
@@ -188,38 +182,64 @@ def analyze_image_with_gemini(image_data):
             "If the image is blurry or unclear, respond with: **'Please retake the image for better clarity.'**"
         )
 
-
-        response = model.generate_content([prompt, image])
-        text = response.text.strip() if response and hasattr(response, 'text') else "❌ Analysis failed or empty response from AI."
-        return format_markdown_response(text)
-
         logging.info("Sending prompt and image to Gemini AI.")
-        # gemini_generate_with_retry() supports both string and list prompts
         response = gemini_generate_with_retry([prompt, image])
-        text = response.text.strip() if response and hasattr(response, 'text') else None
-        if not text:
+        
+        if response and hasattr(response, 'text'):
+            text = response.text.strip()
+            logging.info("AI analysis complete.")
+            return format_markdown_response(text)
+        else:
             logging.warning("❌ Analysis failed or empty AI response.")
             return "❌ Analysis failed or empty response from AI."
-        
-        logging.info("AI analysis complete.")
-        return text
-
 
     except Exception as e:
         logging.error(f"❌ Error during image analysis: {str(e)}")
         return f"❌ Error during image analysis: {str(e)}"
 
 # ---------------------------
-# Routes (Pages)
+# Authentication & Dashboard Routes
 # ---------------------------
 
 @app.route('/')
+def index_redirect():
+    # Redirect to login page
+    return render_template('sisu.html')
+
+@app.route('/sisu.html')
 def sisu():
     return render_template('sisu.html')
 
 @app.route('/index.html')
 def index():
     return render_template('index.html')
+
+# Alternative route for index
+@app.route('/dashboard')
+def dashboard():
+    return render_template('index.html')
+
+# Role-specific Dashboard Routes
+@app.route('/doctor-dashboard.html')
+def doctor_dashboard():
+    return render_template('doctor-dashboard.html')
+
+@app.route('/pharmacist-dashboard.html')
+def pharmacist_dashboard():
+    return render_template('pharmacist-dashboard.html')
+
+@app.route('/student-dashboard.html')
+def student_dashboard():
+    return render_template('student-dashboard.html')
+
+@app.route('/patient-dashboard.html')
+def patient_dashboard():
+    return render_template('patient-dashboard.html')
+
+
+# ---------------------------
+# Feature Page Routes
+# ---------------------------
 
 @app.route('/drug-info-page')
 def drug_info_page():
@@ -233,10 +253,37 @@ def symptom_checker_page():
 def upload_image_page():
     return render_template('upload_image.html')
 
-@app.route('/account')
-def account():
-    return render_template('my_account.html')
 
+@app.route('/my-account')
+def my_account():
+    return render_template('my_account.html', user={
+        "name": "Demo User",
+        "email": "demo@example.com",
+        "notifications": True
+    })
+
+# Additional feature routes that may be referenced in the dashboard
+@app.route('/inventory-management')
+def inventory_management():
+    return render_template('inventory_management.html')
+
+@app.route('/prescription-processing')
+def prescription_processing():
+    return render_template('prescription_processing.html')
+
+@app.route('/patient-records')
+def patient_records():
+    return render_template('patient_records.html')
+
+@app.route('/educational-resources')
+def educational_resources():
+    return render_template('educational_resources.html')
+
+@app.route('/medication-tracker')
+def medication_tracker():
+    return render_template('medication_tracker.html')
+>>
+>>>>> main
 # ---------------------------
 # API Endpoints (AJAX/JS)
 # ---------------------------
@@ -287,23 +334,22 @@ def process_upload():
         logging.warning("❌ No image data received in request")
     return render_template("upload_image.html", result="❌ No image data received.")
 
-@app.route('/my-account')
-def my_account():
-    return render_template('my_account.html', user={
-        "name": "Demo User",
-        "email": "demo@example.com",
-        "notifications": True
-    })
+# ---------------------------
+# Error Handlers
+# ---------------------------
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html'), 500
 
 # ---------------------------
-# Run app
+# Run App
 # ---------------------------
 
 if __name__ == '__main__':
-    # Use FLASK_DEBUG=true in your environment to enable debug mode
-
-    app.run(debug=os.getenv("FLASK_DEBUG", "false").lower() == "true")
-
     logging.info("Starting Flask server...")
     app.run(debug=os.getenv("FLASK_DEBUG", "false").lower() == "true")
-

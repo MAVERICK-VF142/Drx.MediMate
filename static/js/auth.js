@@ -1,4 +1,4 @@
-// Form switching functionality
+// Enhanced Form switching functionality with role-based features
 document.addEventListener('DOMContentLoaded', function() {
     const signInForm = document.getElementById('signIn');
     const signUpForm = document.getElementById('signup');
@@ -121,6 +121,41 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Role selection handling
+    const roleRadios = document.querySelectorAll('input[name="userRole"]');
+    roleRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            // Hide all role-specific fields
+            document.querySelectorAll('.role-specific-fields').forEach(field => {
+                field.style.display = 'none';
+                // Clear fields when hiding
+                field.querySelectorAll('input').forEach(input => {
+                    if (input.type !== 'radio' && input.type !== 'checkbox') {
+                        input.removeAttribute('required');
+                    }
+                });
+            });
+            
+            // Show selected role's fields
+            const selectedRole = this.value;
+            const roleFields = document.getElementById(`${selectedRole}Fields`);
+            if (roleFields) {
+                roleFields.style.display = 'block';
+                // Add required attribute to visible role-specific fields
+                const requiredFields = roleFields.querySelectorAll('input[data-required="true"]');
+                requiredFields.forEach(input => {
+                    input.setAttribute('required', 'required');
+                });
+            }
+
+            // Update role cards visual state
+            document.querySelectorAll('.role-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            this.nextElementSibling.classList.add('selected');
+        });
+    });
+    
     function checkPasswordStrength(password) {
         const requirements = {
             length: password.length >= 8,
@@ -182,10 +217,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const password = document.getElementById('rPassword').value;
             const firstName = document.getElementById('fName').value;
             const lastName = document.getElementById('lName').value;
+            const selectedRole = document.querySelector('input[name="userRole"]:checked');
             const agreeTerms = document.getElementById('agreeTerms').checked;
             
             if (!email || !password || !firstName || !lastName) {
                 showMessage('Please fill in all required fields.', 'signUpMessage', 'warning');
+                return false;
+            }
+            
+            if (!selectedRole) {
+                showMessage('Please select your role.', 'signUpMessage', 'warning');
                 return false;
             }
             
@@ -198,6 +239,18 @@ document.addEventListener('DOMContentLoaded', function() {
             if (strength.score < 3) {
                 showMessage('Please choose a stronger password.', 'signUpMessage', 'error');
                 return false;
+            }
+            
+            // Validate role-specific required fields
+            const roleFields = document.getElementById(`${selectedRole.value}Fields`);
+            if (roleFields) {
+                const requiredFields = roleFields.querySelectorAll('input[required]');
+                for (let field of requiredFields) {
+                    if (!field.value.trim()) {
+                        showMessage(`Please fill in all required fields for ${selectedRole.value}.`, 'signUpMessage', 'warning');
+                        return false;
+                    }
+                }
             }
             
             if (!agreeTerms) {
@@ -229,19 +282,96 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     };
     
-    // Keyboard navigation
+    // Role-based features initialization
+    function initializeRoleFeatures() {
+        // Add visual feedback for role selection
+        const roleCards = document.querySelectorAll('.role-card');
+        roleCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                if (!this.classList.contains('selected')) {
+                    this.style.transform = 'translateY(-2px)';
+                }
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('selected')) {
+                    this.style.transform = 'translateY(0)';
+                }
+            });
+        });
+    }
+    
+    // Security enhancement: Clear sensitive data on page unload
+    window.addEventListener('beforeunload', function() {
+        // Clear password fields
+        document.querySelectorAll('input[type="password"]').forEach(input => {
+            input.value = '';
+        });
+    });
+    
+    // Keyboard navigation enhancement
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             const activeForm = document.querySelector('.form-container.active');
             if (activeForm) {
                 const submitButton = activeForm.querySelector('button[type="submit"], button[id^="submit"]');
-                if (submitButton) {
+                if (submitButton && !submitButton.disabled) {
                     submitButton.click();
                 }
             }
         }
+        
+        // Tab navigation for role selection
+        if (e.key === 'Tab') {
+            const focusedElement = document.activeElement;
+            if (focusedElement && focusedElement.classList.contains('role-card')) {
+                e.preventDefault();
+                const roleCards = Array.from(document.querySelectorAll('.role-card'));
+                const currentIndex = roleCards.indexOf(focusedElement);
+                const nextIndex = e.shiftKey ? 
+                    (currentIndex - 1 + roleCards.length) % roleCards.length :
+                    (currentIndex + 1) % roleCards.length;
+                roleCards[nextIndex].focus();
+            }
+        }
     });
+    
+    // Initialize role features
+    initializeRoleFeatures();
     
     // Initialize with sign-in form
     showForm(signInForm);
 });
+
+// Role-based utility functions
+window.RoleUtils = {
+    getRoleDisplayName: function(role) {
+        const roleNames = {
+            pharmacist: 'Pharmacist',
+            doctor: 'Doctor',
+            student: 'Student',
+            patient: 'Patient'
+        };
+        return roleNames[role] || 'User';
+    },
+    
+    getRoleIcon: function(role) {
+        const roleIcons = {
+            pharmacist: 'fas fa-pills',
+            doctor: 'fas fa-stethoscope',
+            student: 'fas fa-graduation-cap',
+            patient: 'fas fa-user-injured'
+        };
+        return roleIcons[role] || 'fas fa-user';
+    },
+    
+    getRolePermissions: function(role) {
+        const permissions = {
+            pharmacist: ['inventory', 'prescriptions', 'reports', 'patients'],
+            doctor: ['prescriptions', 'patients', 'reports', 'consultations'],
+            student: ['learning', 'resources', 'progress', 'assignments'],
+            patient: ['profile', 'medications', 'history', 'appointments']
+        };
+        return permissions[role] || [];
+    }
+};

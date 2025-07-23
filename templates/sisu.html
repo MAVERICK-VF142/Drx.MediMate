@@ -67,7 +67,6 @@
                             <p>Intelligent automation and decision support</p>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -169,6 +168,114 @@
                             <i class="fas fa-envelope input-icon"></i>
                             <input type="email" id="rEmail" class="form-input" placeholder="Enter your email" required
                                 autocomplete="email">
+                        </div>
+                    </div>
+
+                    <!-- NEW: Role Selection -->
+                    <div class="form-group">
+                        <label for="userRole" class="form-label">Select Your Role</label>
+                        <div class="role-selection">
+                            <div class="role-grid">
+                                <div class="role-option" data-role="pharmacist">
+                                    <input type="radio" id="rolePharmacist" name="userRole" value="pharmacist" required>
+                                    <label for="rolePharmacist" class="role-card">
+                                        <div class="role-icon">
+                                            <i class="fas fa-pills"></i>
+                                        </div>
+                                        <div class="role-info">
+                                            <h4>Pharmacist</h4>
+                                            <p>Manage prescriptions and inventory</p>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <div class="role-option" data-role="doctor">
+                                    <input type="radio" id="roleDoctor" name="userRole" value="doctor" required>
+                                    <label for="roleDoctor" class="role-card">
+                                        <div class="role-icon">
+                                            <i class="fas fa-stethoscope"></i>
+                                        </div>
+                                        <div class="role-info">
+                                            <h4>Doctor</h4>
+                                            <p>Prescribe medications and patient care</p>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <div class="role-option" data-role="student">
+                                    <input type="radio" id="roleStudent" name="userRole" value="student" required>
+                                    <label for="roleStudent" class="role-card">
+                                        <div class="role-icon">
+                                            <i class="fas fa-graduation-cap"></i>
+                                        </div>
+                                        <div class="role-info">
+                                            <h4>Student</h4>
+                                            <p>Learn and access educational resources</p>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <div class="role-option" data-role="patient">
+                                    <input type="radio" id="rolePatient" name="userRole" value="patient" required>
+                                    <label for="rolePatient" class="role-card">
+                                        <div class="role-icon">
+                                            <i class="fas fa-user-injured"></i>
+                                        </div>
+                                        <div class="role-info">
+                                            <h4>Patient</h4>
+                                            <p>Track medications and health records</p>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional role-specific fields -->
+                    <div class="form-group role-specific-fields" id="pharmacistFields" style="display:none;">
+                        <label for="licenseNumber" class="form-label">Pharmacy License Number</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-certificate input-icon"></i>
+                            <input type="text" id="licenseNumber" class="form-input" placeholder="Enter license number">
+                        </div>
+                    </div>
+
+                    <div class="form-group role-specific-fields" id="doctorFields" style="display:none;">
+                        <label for="medicalLicense" class="form-label">Medical License Number</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-id-card input-icon"></i>
+                            <input type="text" id="medicalLicense" class="form-input" placeholder="Enter medical license">
+                        </div>
+                        <label for="specialization" class="form-label">Specialization</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user-md input-icon"></i>
+                            <input type="text" id="specialization" class="form-input" placeholder="e.g., Cardiology">
+                        </div>
+                    </div>
+
+                    <div class="form-group role-specific-fields" id="studentFields" style="display:none;">
+                        <label for="institution" class="form-label">Institution</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-university input-icon"></i>
+                            <input type="text" id="institution" class="form-input" placeholder="University/College name">
+                        </div>
+                        <label for="studentId" class="form-label">Student ID</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-id-badge input-icon"></i>
+                            <input type="text" id="studentId" class="form-input" placeholder="Student ID number">
+                        </div>
+                    </div>
+
+                    <div class="form-group role-specific-fields" id="patientFields" style="display:none;">
+                        <label for="dateOfBirth" class="form-label">Date of Birth</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-calendar input-icon"></i>
+                            <input type="date" id="dateOfBirth" class="form-input">
+                        </div>
+                        <label for="phoneNumber" class="form-label">Phone Number</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-phone input-icon"></i>
+                            <input type="tel" id="phoneNumber" class="form-input" placeholder="Phone number">
                         </div>
                     </div>
 
@@ -286,7 +393,6 @@
     <script type="module" src="../static/js/firebaseauth.js"></script>
 
     <script type="module">
-        // Your existing Firebase code with enhancements
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
         import {
             getAuth,
@@ -301,7 +407,8 @@
         import {
             getFirestore,
             setDoc,
-            doc
+            doc,
+            getDoc
         } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -347,20 +454,74 @@
             document.getElementById('loadingOverlay').style.display = 'none';
         }
 
-        onAuthStateChanged(auth, (user) => {
+        // Role-based redirection
+        function redirectBasedOnRole(userRole) {
+            const roleRoutes = {
+                pharmacist: 'pharmacist-dashboard.html',
+                doctor: 'doctor-dashboard.html',
+                student: 'student-dashboard.html',
+                patient: 'patient-dashboard.html'
+            };
+            
+            const route = roleRoutes[userRole] || 'index.html';
+            window.location.href = route;
+        }
+
+        // Check authentication state and redirect
+        onAuthStateChanged(auth, async (user) => {
             if (user && user.emailVerified) {
-                window.location.href = "index.html";
+                try {
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        localStorage.setItem('userRole', userData.role);
+                        localStorage.setItem('loggedInUserId', user.uid);
+                        redirectBasedOnRole(userData.role);
+                    }
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                }
             }
         });
 
-        // Sign Up
+        // Role selection handling
+        document.querySelectorAll('input[name="userRole"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Hide all role-specific fields
+                document.querySelectorAll('.role-specific-fields').forEach(field => {
+                    field.style.display = 'none';
+                });
+                
+                // Show selected role's fields
+                const selectedRole = this.value;
+                const roleFields = document.getElementById(`${selectedRole}Fields`);
+                if (roleFields) {
+                    roleFields.style.display = 'block';
+                }
+
+                // Update role cards visual state
+                document.querySelectorAll('.role-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                this.nextElementSibling.classList.add('selected');
+            });
+        });
+
+        // Enhanced Sign Up with role data
         document.getElementById('submitSignUp').addEventListener('click', (event) => {
             event.preventDefault();
+            
             const email = document.getElementById('rEmail').value;
             const password = document.getElementById('rPassword').value;
             const firstName = document.getElementById('fName').value;
             const lastName = document.getElementById('lName').value;
+            const selectedRole = document.querySelector('input[name="userRole"]:checked');
             const agreeTerms = document.getElementById('agreeTerms').checked;
+
+            if (!selectedRole) {
+                showMessage('Please select your role.', 'signUpMessage', 'warning');
+                return;
+            }
 
             if (!agreeTerms) {
                 showMessage('Please agree to the Terms of Service and Privacy Policy.', 'signUpMessage', 'warning');
@@ -369,13 +530,48 @@
 
             showLoading();
 
+            // Collect role-specific data
+            const roleData = {
+                role: selectedRole.value,
+                email,
+                firstName,
+                lastName,
+                createdAt: new Date().toISOString(),
+                emailVerified: false
+            };
+
+            // Add role-specific fields
+            switch (selectedRole.value) {
+                case 'pharmacist':
+                    const licenseNumber = document.getElementById('licenseNumber').value;
+                    if (licenseNumber) roleData.licenseNumber = licenseNumber;
+                    break;
+                case 'doctor':
+                    const medicalLicense = document.getElementById('medicalLicense').value;
+                    const specialization = document.getElementById('specialization').value;
+                    if (medicalLicense) roleData.medicalLicense = medicalLicense;
+                    if (specialization) roleData.specialization = specialization;
+                    break;
+                case 'student':
+                    const institution = document.getElementById('institution').value;
+                    const studentId = document.getElementById('studentId').value;
+                    if (institution) roleData.institution = institution;
+                    if (studentId) roleData.studentId = studentId;
+                    break;
+                case 'patient':
+                    const dateOfBirth = document.getElementById('dateOfBirth').value;
+                    const phoneNumber = document.getElementById('phoneNumber').value;
+                    if (dateOfBirth) roleData.dateOfBirth = dateOfBirth;
+                    if (phoneNumber) roleData.phoneNumber = phoneNumber;
+                    break;
+            }
+
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
                     sendEmailVerification(user)
                         .then(() => {
-                            const userData = { email, firstName, lastName };
-                            setDoc(doc(db, "users", user.uid), userData)
+                            setDoc(doc(db, "users", user.uid), roleData)
                                 .then(() => {
                                     hideLoading();
                                     showMessage('Account created successfully! Please check your email for verification.', 'signUpMessage', 'success');
@@ -405,7 +601,7 @@
                 });
         });
 
-        // Sign In
+        // Enhanced Sign In with role-based redirection
         document.getElementById('submitSignIn').addEventListener('click', (event) => {
             event.preventDefault();
             const email = document.getElementById('email').value;
@@ -414,14 +610,30 @@
             showLoading();
 
             signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
+                .then(async (userCredential) => {
                     const user = userCredential.user;
                     if (user.emailVerified) {
-                        showMessage('Login successful!', 'signInMessage', 'success');
-                        localStorage.setItem('loggedInUserId', user.uid);
-                        setTimeout(() => {
-                            window.location.href = "index.html";
-                        }, 1000);
+                        try {
+                            const userDoc = await getDoc(doc(db, "users", user.uid));
+                            if (userDoc.exists()) {
+                                const userData = userDoc.data();
+                                showMessage('Login successful!', 'signInMessage', 'success');
+                                localStorage.setItem('loggedInUserId', user.uid);
+                                localStorage.setItem('userRole', userData.role);
+                                
+                                setTimeout(() => {
+                                    redirectBasedOnRole(userData.role);
+                                }, 1000);
+                            } else {
+                                hideLoading();
+                                showMessage('User profile not found. Please contact support.', 'signInMessage', 'error');
+                                auth.signOut();
+                            }
+                        } catch (error) {
+                            hideLoading();
+                            console.error("Error fetching user data:", error);
+                            showMessage('Error retrieving user data. Please try again.', 'signInMessage', 'error');
+                        }
                     } else {
                         hideLoading();
                         showMessage('Please verify your email before logging in.', 'signInMessage', 'warning');
@@ -459,27 +671,29 @@
                 });
         });
 
-        // Google Sign In
+        // Google Sign In - Role selection for new users
         document.getElementById('googleSignIn').addEventListener('click', (event) => {
             event.preventDefault();
             showLoading();
 
             signInWithPopup(auth, provider)
-                .then((result) => {
+                .then(async (result) => {
                     const user = result.user;
-                    const nameParts = user.displayName ? user.displayName.split(' ') : ["", ""];
-
-                    const userRef = doc(db, "users", user.uid);
-                    setDoc(userRef, {
-                        email: user.email,
-                        firstName: nameParts[0],
-                        lastName: nameParts[1]
-                    }, { merge: true });
-
-                    localStorage.setItem('loggedInUserId', user.uid);
-                    setTimeout(() => {
-                        window.location.href = "index.html";
-                    }, 1000);
+                    
+                    // Check if user already exists
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    
+                    if (userDoc.exists()) {
+                        // Existing user - redirect based on role
+                        const userData = userDoc.data();
+                        localStorage.setItem('loggedInUserId', user.uid);
+                        localStorage.setItem('userRole', userData.role);
+                        redirectBasedOnRole(userData.role);
+                    } else {
+                        // New user - show modal for role selection
+                        hideLoading();
+                        showRoleSelectionModal(user);
+                    }
                 })
                 .catch((error) => {
                     hideLoading();
@@ -487,6 +701,90 @@
                     showMessage("Google sign-in failed. Try again.", 'signInMessage');
                 });
         });
+
+        // Function to show role selection modal for Google users
+        function showRoleSelectionModal(user) {
+            // Create modal dynamically
+            const modal = document.createElement('div');
+            modal.className = 'role-modal-overlay';
+            modal.innerHTML = `
+                <div class="role-modal">
+                    <h3>Select Your Role</h3>
+                    <p>Please select your role to complete the registration:</p>
+                    <div class="role-grid">
+                        <div class="role-option" data-role="pharmacist">
+                            <div class="role-card">
+                                <i class="fas fa-pills"></i>
+                                <span>Pharmacist</span>
+                            </div>
+                        </div>
+                        <div class="role-option" data-role="doctor">
+                            <div class="role-card">
+                                <i class="fas fa-stethoscope"></i>
+                                <span>Doctor</span>
+                            </div>
+                        </div>
+                        <div class="role-option" data-role="student">
+                            <div class="role-card">
+                                <i class="fas fa-graduation-cap"></i>
+                                <span>Student</span>
+                            </div>
+                        </div>
+                        <div class="role-option" data-role="patient">
+                            <div class="role-card">
+                                <i class="fas fa-user-injured"></i>
+                                <span>Patient</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="confirmRole" class="btn-primary" disabled>Continue</button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            let selectedRole = null;
+            
+            // Handle role selection
+            modal.querySelectorAll('.role-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    modal.querySelectorAll('.role-card').forEach(card => card.classList.remove('selected'));
+                    option.querySelector('.role-card').classList.add('selected');
+                    selectedRole = option.dataset.role;
+                    document.getElementById('confirmRole').disabled = false;
+                });
+            });
+            
+            // Handle role confirmation
+            document.getElementById('confirmRole').addEventListener('click', async () => {
+                if (selectedRole) {
+                    showLoading();
+                    
+                    const nameParts = user.displayName ? user.displayName.split(' ') : ["", ""];
+                    
+                    const userData = {
+                        email: user.email,
+                        firstName: nameParts[0],
+                        lastName: nameParts[1] || "",
+                        role: selectedRole,
+                        createdAt: new Date().toISOString(),
+                        emailVerified: true
+                    };
+                    
+                    try {
+                        await setDoc(doc(db, "users", user.uid), userData);
+                        localStorage.setItem('loggedInUserId', user.uid);
+                        localStorage.setItem('userRole', selectedRole);
+                        document.body.removeChild(modal);
+                        redirectBasedOnRole(selectedRole);
+                    } catch (error) {
+                        hideLoading();
+                        console.error("Error saving user data:", error);
+                        showMessage("Error completing registration. Please try again.", 'signInMessage', 'error');
+                    }
+                }
+            });
+        }
 
         // Google Sign Up (same as sign in)
         document.getElementById('googleSignUp').addEventListener('click', (event) => {

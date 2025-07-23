@@ -1,26 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Drx.MediMate - Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f0f4f8;
-      color: #1e293b;
-      overflow-x: hidden;
-    }
-
-    .sidebar {
+   <title>Aditi - Pharmaceutical Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .sidebar {
       position: fixed;
       top: 0;
       left: 0;
@@ -291,10 +284,490 @@
       .carousel { height: 220px; }
       .card { height: 185px; }
     }
-  </style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        /* User Info Section */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 0.9rem;
+        }
+
+        .role-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .role-pharmacist { background: #ddd6fe; color: #7c3aed; }
+        .role-doctor { background: #dcfce7; color: #16a34a; }
+        .role-student { background: #dbeafe; color: #2563eb; }
+        .role-patient { background: #fef3c7; color: #d97706; }
+
+        .logout-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            background: #b91c1c;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-title {
+            font-size: 2.5rem;
+            color: #1f2937;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .brand-highlight {
+            color: #2563eb;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        /* Role-specific welcome message */
+        .role-welcome {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .role-welcome h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .role-welcome p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #2563eb;
+        }
+
+        .feature-card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .drug-icon { color: #8b5cf6; }
+        .symptom-icon { color: #10b981; }
+        .camera-icon { color: #3b82f6; }
+        .education-icon { color: #f59e0b; }
+        .inventory-icon { color: #ef4444; }
+        .prescription-icon { color: #06b6d4; }
+        .consultation-icon { color: #84cc16; }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
+            color: #6b7280;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .access-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .access-allowed {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .access-restricted {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50vh;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e5e7eb;
+            border-top: 4px solid #2563eb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Hidden content shown after auth */
+        #dashboardContent {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #dashboardContent.show {
+            opacity: 1;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .quick-actions h3 {
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 0.75rem 1.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: white;
+            color: #374151;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            background: #f9fafb;
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+
+        /* Dashboard Navigation Button */
+        .dashboard-nav-btn {
+            background: #2563eb;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 1rem auto;
+        }
+
+        .dashboard-nav-btn:hover {
+            background: #1d4ed8;
+            color: white;
+        }
+
+        /* Role Selection Modal for Google Users */
+        .role-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .role-modal {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .role-modal h3 {
+            margin: 0 0 0.5rem 0;
+            color: #1f2937;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .role-modal p {
+            margin: 0 0 2rem 0;
+            color: #6b7280;
+        }
+
+        .role-modal .cards-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .role-modal .feature-card {
+            padding: 1.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .role-modal .feature-card:hover {
+            transform: translateY(-2px);
+            border-color: #2563eb;
+        }
+
+        .role-modal .feature-card.selected {
+            border-color: #2563eb;
+            background: #f0f9ff;
+        }
+
+        .role-modal .card-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .role-modal .card-title {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .role-modal .card-description {
+            font-size: 0.8rem;
+        }
+
+        .role-confirm-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+
+        .role-confirm-btn:hover:not(:disabled) {
+            background: #1d4ed8;
+        }
+
+        .role-confirm-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 1rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .dashboard-title {
+                font-size: 2rem;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .user-details {
+                display: none;
+            }
+
+            .action-buttons {
+                justify-content: center;
+            }
+
+            .role-modal .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-  <nav class="sidebar">
+    <!-- Loading State -->
+    <div id="loadingState" class="loading">
+        <div class="spinner"></div>
+        <p>Loading your dashboard...</p>
+    </div>
+
+    <!-- Header -->
+    <div class="header" style="display: none;" id="mainHeader">
+        <div class="header-content">
+            <div class="logo">🏥 Aditi</div>
+            <div class="user-info">
+                <div class="user-details">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <span class="role-badge" id="userRole">...</span>
+                </div>
+                <button id="logout" class="logout-btn">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container" id="dashboardContent" style="display: none;">
+        <!-- Role-specific welcome message -->
+        <div class="role-welcome" id="roleWelcome">
+            <h3 id="welcomeTitle">Welcome!</h3>
+            <p id="welcomeMessage">Loading your personalized dashboard...</p>
+        </div>
+
+        <h2 class="dashboard-title">Welcome to <span class="brand-highlight">Drx.MediMate</span></h2>
+        <p class="subtitle" id="dashboardSubtitle">Your intelligent pharmaceutical assistant</p>
+        
+        <!-- Navigation to Role-Specific Dashboard -->
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <a href="#" class="dashboard-nav-btn" id="roleDashboardBtn">
+                Go to My Dashboard
+            </a>
+        </div>
+
+        <!-- Quick Actions (Role-specific) -->
+        <div class="quick-actions" id="quickActions">
+            <h3>Quick Actions</h3>
+            <div class="action-buttons" id="actionButtons">
+                <!-- Dynamic buttons based on role -->
+            </div>
+        </div>
+
+        <!-- Feature Cards -->
+        <nav class="sidebar">
     <h1>Drx.MediMate</h1>
     <a href="/drug-info-page" class="nav-link"><i class="fas fa-pills"></i> Drug Info</a>
     <a href="/symptom-checker-page" class="nav-link"><i class="fas fa-stethoscope"></i> Symptom Checker</a>
@@ -314,36 +787,461 @@
       </div>
     </div>
   </main>
-  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+    </div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDa6_47neFJAH-I4i-ZCU0elY4cRmpyotg",
-      authDomain: "aditi-pharmaceutical-assistant.firebaseapp.com",
-      projectId: "aditi-pharmaceutical-assistant",
-      storageBucket: "aditi-pharmaceutical-assistant.appspot.com",
-      messagingSenderId: "241653252150",
-      appId: "1:241653252150:web:ce83fa898dc2f77a669897",
-      measurementId: "G-HMJ6SD9Q9H"
-    };
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged, 
+            signOut 
+        } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+        import {
+            getFirestore,
+            doc,
+            getDoc,
+            setDoc
+        } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
+        const firebaseConfig = {
+            apiKey: "AIzaSyDa6_47neFJAH-I4i-ZCU0elY4cRmpyotg",
+            authDomain: "aditi-pharmaceutical-assistant.firebaseapp.com",
+            projectId: "aditi-pharmaceutical-assistant",
+            storageBucket: "aditi-pharmaceutical-assistant.appspot.com",
+            messagingSenderId: "241653252150",
+            appId: "1:241653252150:web:ce83fa898dc2f77a669897",
+            measurementId: "G-HMJ6SD9Q9H"
+        };
 
-    onAuthStateChanged(auth, (user) => {
-      if (!user) window.location.href = "/";
-    });
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const db = getFirestore();
 
-    document.getElementById("logout").addEventListener("click", () => {
-      signOut(auth).then(() => {
-        localStorage.removeItem("loggedInUserId");
-        window.location.href = "/";
-      });
-    });
-  </script>
+        // Role-based dashboard routes
+        const ROLE_DASHBOARDS = {
+            pharmacist: 'pharmacist-dashboard.html',
+            doctor: 'doctor-dashboard.html',
+            student: 'student-dashboard.html',
+            patient: 'patient-dashboard.html'
+        };
+
+        // Role-based features configuration
+        const ROLE_FEATURES = {
+            pharmacist: {
+                welcome: {
+                    title: "Welcome, Pharmacist!",
+                    message: "Manage your pharmacy operations with AI-powered tools"
+                },
+                subtitle: "Professional pharmacy management tools",
+                quickActions: [
+                    { text: "View Inventory", href: "inventory-management" },
+                    { text: "Process Prescriptions", href: "prescription-processing" },
+                    { text: "Generate Reports", href: "reports" }
+                ],
+                features: [
+                    {
+                        href: "drug-info-page",
+                        icon: "💊",
+                        iconClass: "drug-icon",
+                        title: "Drug Information",
+                        description: "Look up clinical drug info powered by Gemini AI.",
+                        allowed: true
+                    },
+                    {
+                        href: "inventory-management",
+                        icon: "📦",
+                        iconClass: "inventory-icon",
+                        title: "Inventory Management",
+                        description: "Track stock levels, expiry dates, and manage suppliers.",
+                        allowed: true
+                    },
+                    {
+                        href: "prescription-processing",
+                        icon: "📋",
+                        iconClass: "prescription-icon",
+                        title: "Prescription Processing",
+                        description: "Verify and process patient prescriptions efficiently.",
+                        allowed: true
+                    },
+                    {
+                        href: "upload-image-page",
+                        icon: "📷",
+                        iconClass: "camera-icon",
+                        title: "Medicine Image",
+                        description: "Upload a medicine photo to get full details.",
+                        allowed: true
+                    }
+                ]
+            },
+            doctor: {
+                welcome: {
+                    title: "Welcome, Doctor!",
+                    message: "Enhance your practice with intelligent diagnostic tools"
+                },
+                subtitle: "Advanced clinical decision support",
+                quickActions: [
+                    { text: "Patient Records", href: "patient-records" },
+                    { text: "Write Prescription", href: "prescribe" },
+                    { text: "Drug Interactions", href: "drug-interactions" }
+                ],
+                features: [
+                    {
+                        href: "drug-info-page",
+                        icon: "💊",
+                        iconClass: "drug-icon",
+                        title: "Drug Information",
+                        description: "Look up clinical drug info powered by Gemini AI.",
+                        allowed: true
+                    },
+                    {
+                        href: "symptom-checker-page",
+                        icon: "🩺",
+                        iconClass: "symptom-icon",
+                        title: "Symptom Checker",
+                        description: "AI-powered symptom analysis and differential diagnosis.",
+                        allowed: true
+                    },
+                    {
+                        href: "consultation-tools",
+                        icon: "👨‍⚕️",
+                        iconClass: "consultation-icon",
+                        title: "Consultation Tools",
+                        description: "Digital tools to enhance patient consultations.",
+                        allowed: true
+                    },
+                    {
+                        href: "upload-image-page",
+                        icon: "📷",
+                        iconClass: "camera-icon",
+                        title: "Medicine Image",
+                        description: "Upload a medicine photo to get full details.",
+                        allowed: true
+                    }
+                ]
+            },
+            student: {
+                welcome: {
+                    title: "Welcome, Student!",
+                    message: "Learn and explore pharmaceutical knowledge"
+                },
+                subtitle: "Educational resources and learning tools",
+                quickActions: [
+                    { text: "Study Materials", href: "study-materials" },
+                    { text: "Practice Tests", href: "practice-tests" },
+                    { text: "Drug Flashcards", href: "flashcards" }
+                ],
+                features: [
+                    {
+                        href: "drug-info-page",
+                        icon: "💊",
+                        iconClass: "drug-icon",
+                        title: "Drug Information",
+                        description: "Learn about medications with detailed explanations.",
+                        allowed: true
+                    },
+                    {
+                        href: "educational-resources",
+                        icon: "📚",
+                        iconClass: "education-icon",
+                        title: "Educational Resources",
+                        description: "Access curated learning materials and references.",
+                        allowed: true
+                    },
+                    {
+                        href: "symptom-checker-page",
+                        icon: "🩺",
+                        iconClass: "symptom-icon",
+                        title: "Symptom Checker",
+                        description: "Learn symptom-drug relationships (educational only).",
+                        allowed: true
+                    },
+                    {
+                        href: "#",
+                        icon: "📋",
+                        iconClass: "prescription-icon",
+                        title: "Prescription Writing",
+                        description: "Advanced feature - Available after graduation.",
+                        allowed: false
+                    }
+                ]
+            },
+            patient: {
+                welcome: {
+                    title: "Welcome, Patient!",
+                    message: "Manage your health and medications safely"
+                },
+                subtitle: "Personal health management tools",
+                quickActions: [
+                    { text: "My Medications", href: "my-medications" },
+                    { text: "Health Records", href: "health-records" },
+                    { text: "Find Pharmacy", href: "pharmacy-locator" }
+                ],
+                features: [
+                    {
+                        href: "symptom-checker-page",
+                        icon: "🩺",
+                        iconClass: "symptom-icon",
+                        title: "Symptom Checker",
+                        description: "Get suggestions for safe OTC medications.",
+                        allowed: true
+                    },
+                    {
+                        href: "medication-tracker",
+                        icon: "⏰",
+                        iconClass: "drug-icon",
+                        title: "Medication Tracker",
+                        description: "Track your medications and set reminders.",
+                        allowed: true
+                    },
+                    {
+                        href: "upload-image-page",
+                        icon: "📷",
+                        iconClass: "camera-icon",
+                        title: "Medicine Image",
+                        description: "Identify your medications by photo.",
+                        allowed: true
+                    },
+                    {
+                        href: "#",
+                        icon: "💊",
+                        iconClass: "drug-icon",
+                        title: "Clinical Drug Info",
+                        description: "Professional feature - Consult your doctor.",
+                        allowed: false
+                    }
+                ]
+            }
+        };
+
+        // Show role selection modal for Google users without role
+        function showRoleSelectionModal(user) {
+            return new Promise((resolve) => {
+                const modal = document.createElement('div');
+                modal.className = 'role-modal-overlay';
+                modal.innerHTML = `
+                    <div class="role-modal">
+                        <h3>Complete Your Profile</h3>
+                        <p>Please select your role to personalize your experience:</p>
+                        <div class="cards-grid">
+                            <div class="feature-card" data-role="pharmacist">
+                                <div class="card-icon drug-icon">💊</div>
+                                <h5 class="card-title">Pharmacist</h5>
+                                <p class="card-description">Manage prescriptions and inventory</p>
+                            </div>
+                            <div class="feature-card" data-role="doctor">
+                                <div class="card-icon symptom-icon">🩺</div>
+                                <h5 class="card-title">Doctor</h5>
+                                <p class="card-description">Prescribe medications and patient care</p>
+                            </div>
+                            <div class="feature-card" data-role="student">
+                                <div class="card-icon education-icon">📚</div>
+                                <h5 class="card-title">Student</h5>
+                                <p class="card-description">Learn and access educational resources</p>
+                            </div>
+                            <div class="feature-card" data-role="patient">
+                                <div class="card-icon camera-icon">👤</div>
+                                <h5 class="card-title">Patient</h5>
+                                <p class="card-description">Track medications and health records</p>
+                            </div>
+                        </div>
+                        <button class="role-confirm-btn" disabled>Continue</button>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                let selectedRole = null;
+                const confirmBtn = modal.querySelector('.role-confirm-btn');
+                
+                // Handle role selection
+                modal.querySelectorAll('.feature-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        modal.querySelectorAll('.feature-card').forEach(c => c.classList.remove('selected'));
+                        card.classList.add('selected');
+                        selectedRole = card.dataset.role;
+                        confirmBtn.disabled = false;
+                    });
+                });
+                
+                // Handle confirmation
+                confirmBtn.addEventListener('click', async () => {
+                    if (selectedRole) {
+                        try {
+                            const nameParts = user.displayName ? user.displayName.split(' ') : ["", ""];
+                            
+                            const userData = {
+                                email: user.email,
+                                firstName: nameParts[0] || "User",
+                                lastName: nameParts.slice(1).join(' ') || "",
+                                role: selectedRole,
+                                createdAt: new Date().toISOString(),
+                                emailVerified: true
+                            };
+                            
+                            await setDoc(doc(db, "users", user.uid), userData);
+                            document.body.removeChild(modal);
+                            resolve(userData);
+                        } catch (error) {
+                            console.error("Error saving user role:", error);
+                            alert("Error saving your role. Please try again.");
+                        }
+                    }
+                });
+            });
+        }
+
+        function populateDashboard(userData) {
+            const role = userData.role;
+            const config = ROLE_FEATURES[role];
+            
+            if (!config) {
+                console.error('Unknown role:', role);
+                userData.role = 'patient';
+                populateDashboard(userData);
+                return;
+            }
+
+            // Update user info
+            document.getElementById('userName').textContent = `${userData.firstName} ${userData.lastName}`;
+            const roleElement = document.getElementById('userRole');
+            roleElement.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+            roleElement.className = `role-badge role-${role}`;
+
+            // Update welcome message
+            document.getElementById('welcomeTitle').textContent = config.welcome.title;
+            document.getElementById('welcomeMessage').textContent = config.welcome.message;
+            document.getElementById('dashboardSubtitle').textContent = config.subtitle;
+
+            // Set up role dashboard navigation
+            const roleDashboardBtn = document.getElementById('roleDashboardBtn');
+            const dashboardRoute = ROLE_DASHBOARDS[role];
+            if (dashboardRoute) {
+                roleDashboardBtn.href = dashboardRoute;
+                roleDashboardBtn.textContent = `Go to ${role.charAt(0).toUpperCase() + role.slice(1)} Dashboard`;
+            }
+
+            // Populate quick actions
+            const actionButtons = document.getElementById('actionButtons');
+            actionButtons.innerHTML = config.quickActions.map(action => 
+                `<a href="${action.href}" class="action-btn">${action.text}</a>`
+            ).join('');
+
+            // Populate feature cards
+            const featureCards = document.getElementById('featureCards');
+            featureCards.innerHTML = config.features.map(feature => `
+                <a href="${feature.href}" class="feature-card ${!feature.allowed ? 'disabled' : ''}">
+                    <div class="access-badge ${feature.allowed ? 'access-allowed' : 'access-restricted'}">
+                        ${feature.allowed ? 'Available' : 'Restricted'}
+                    </div>
+                    <div class="card-icon ${feature.iconClass}">${feature.icon}</div>
+                    <h5 class="card-title">${feature.title}</h5>
+                    <p class="card-description">${feature.description}</p>
+                </a>
+            `).join('');
+
+            // Show the dashboard
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('mainHeader').style.display = 'block';
+            document.getElementById('dashboardContent').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('dashboardContent').classList.add('show');
+            }, 100);
+        }
+
+        async function verifyUserAndLoadDashboard(user) {
+            try {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                let userData;
+                
+                if (!userDoc.exists()) {
+                    userData = await showRoleSelectionModal(user);
+                } else {
+                    userData = userDoc.data();
+                    
+                    if (!userData.role) {
+                        userData = await showRoleSelectionModal(user);
+                    }
+                }
+                
+                // Store user data for other scripts
+                localStorage.setItem('loggedInUserId', user.uid);
+                localStorage.setItem('userRole', userData.role);
+                localStorage.setItem('userData', JSON.stringify(userData));
+                
+                populateDashboard(userData);
+                
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                setTimeout(() => {
+                    window.location.href = "sisu.html";
+                }, 3000);
+            }
+        }
+
+        // Authentication state observer
+        onAuthStateChanged(auth, (user) => {
+            if (user && user.emailVerified) {
+                verifyUserAndLoadDashboard(user);
+            } else if (user && !user.emailVerified) {
+                document.getElementById('loadingState').innerHTML = `
+                    <div class="spinner"></div>
+                    <p>Please verify your email before continuing...</p>
+                    <button onclick="window.location.href='sisu.html'" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer;">Back to Login</button>
+                `;
+            } else {
+                window.location.href = "sisu.html";
+            }
+        });
+
+        // Logout functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutBtn = document.getElementById('logout');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async () => {
+                    try {
+                        await signOut(auth);
+                        localStorage.clear();
+                        window.location.href = "sisu.html";
+                    } catch (error) {
+                        console.error("Logout error:", error);
+                    }
+                });
+            }
+        });
+
+        // Handle role-specific navigation
+        document.addEventListener('click', function(e) {
+            const featureCard = e.target.closest('.feature-card');
+            if (featureCard && featureCard.classList.contains('disabled')) {
+                e.preventDefault();
+                alert('This feature is not available for your role. Please contact support if you need access.');
+            }
+        });
+
+        // Export utilities for compatibility
+        window.DashboardAuth = {
+            getCurrentUser: () => auth.currentUser,
+            getUserData: () => JSON.parse(localStorage.getItem('userData') || '{}'),
+            getUserRole: () => localStorage.getItem('userRole'),
+            hasPermission: (permission) => {
+                const role = localStorage.getItem('userRole');
+                const permissions = {
+                    pharmacist: ['inventory', 'prescriptions', 'reports', 'patients'],
+                    doctor: ['prescriptions', 'patients', 'reports', 'consultations'],
+                    student: ['learning', 'resources', 'progress', 'assignments'],
+                    patient: ['profile', 'medications', 'history', 'appointments']
+                };
+                return permissions[role]?.includes(permission) || false;
+            }
+        };
+
+        // Security: Clear sensitive data on page unload
+        window.addEventListener('beforeunload', () => {
+            if (window.userData) {
+                window.userData = null;
+            }
+        });
+    </script>
   <script>
     const cardsData = [
       {
