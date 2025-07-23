@@ -215,6 +215,7 @@ def index_redirect():
 
 @app.route('/patient-dashboard', methods=['GET', 'POST'])
 def patient_dashboard_reminders():
+    print("🧪 patient-dashboard route hit")
     if request.method == 'POST':
         email = request.form['email']
         med_name = request.form['med_name']
@@ -349,5 +350,4 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 if __name__ == '__main__':
-    logging.info("Starting Flask server...")
-    app.run(debug=os.getenv("FLASK_DEBUG", "false").lower() == "true")
+    app.run(debug=True)
