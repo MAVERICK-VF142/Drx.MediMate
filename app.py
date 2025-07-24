@@ -124,19 +124,6 @@ def get_drug_information(drug_name):
     text = response.text.strip() if response and hasattr(response, 'text') else "❌ No response from AI."
     return format_markdown_response(text)
 
-    logging.info(f"Prompt to Gemini: {prompt}")
-    try:
-        response = gemini_generate_with_retry(prompt)
-        logging.info("Received response from Gemini AI.")
-        if response and hasattr(response, 'text'):
-            return response.text.strip()
-        else:
-            logging.warning("No text in AI response.")
-            return "❌ No response from AI."
-    except Exception as e:
-        logging.error(f"Exception in get_drug_information: {str(e)}")
-        return f"❌ Error: {str(e)}"
-
 
 def get_symptom_recommendation(symptoms):
     prompt = (
@@ -157,18 +144,6 @@ def get_symptom_recommendation(symptoms):
     text = response.text.strip() if response and hasattr(response, 'text') else "❌ No response from AI."
     return format_markdown_response(text)
 
-    logging.info(f"Prompt to Gemini for symptom check: {prompt}")
-    try:
-        response = gemini_generate_with_retry(prompt)
-        logging.info("Received response from Gemini for symptoms.")
-        if response and hasattr(response, 'text'):
-            return response.text.strip()
-        else:
-            logging.warning("❌ No text in AI response for symptoms.")
-            return "❌ No response from AI."
-    except Exception as e:
-        logging.error(f"❌ Exception in get_symptom_recommendation: {str(e)}")
-        return f"❌ Error: {str(e)}"
 
 
 def analyze_image_with_gemini(image_data):
@@ -202,16 +177,6 @@ def analyze_image_with_gemini(image_data):
         text = response.text.strip() if response and hasattr(response, 'text') else "❌ Analysis failed or empty response from AI."
         return format_markdown_response(text)
 
-        logging.info("Sending prompt and image to Gemini AI.")
-        # gemini_generate_with_retry() supports both string and list prompts
-        response = gemini_generate_with_retry([prompt, image])
-        text = response.text.strip() if response and hasattr(response, 'text') else None
-        if not text:
-            logging.warning("❌ Analysis failed or empty AI response.")
-            return "❌ Analysis failed or empty response from AI."
-        
-        logging.info("AI analysis complete.")
-        return text
 
 
     except Exception as e:
