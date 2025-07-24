@@ -18,14 +18,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Form switching functions
     function showForm(targetForm) {
         [signInForm, signUpForm, recoverForm].forEach(form => {
-            form.style.display = 'none';
-            form.classList.remove('active');
+            if (form) {
+                form.style.display = 'none';
+                form.classList.remove('active');
+            }
         });
         
-        targetForm.style.display = 'block';
-        setTimeout(() => {
-            targetForm.classList.add('active');
-        }, 10);
+        if (targetForm) {
+            targetForm.style.display = 'block';
+            setTimeout(() => {
+                targetForm.classList.add('active');
+            }, 10);
+        }
         
         // Clear any existing messages
         document.querySelectorAll('.alert-message').forEach(msg => {
@@ -69,8 +73,10 @@ document.addEventListener('DOMContentLoaded', function() {
             passwordInput.setAttribute('type', type);
             
             const icon = togglePassword.querySelector('i');
-            icon.classList.toggle('fa-eye');
-            icon.classList.toggle('fa-eye-slash');
+            if (icon) {
+                icon.classList.toggle('fa-eye');
+                icon.classList.toggle('fa-eye-slash');
+            }
         });
     }
     
@@ -80,8 +86,10 @@ document.addEventListener('DOMContentLoaded', function() {
             signUpPasswordInput.setAttribute('type', type);
             
             const icon = toggleSignUpPassword.querySelector('i');
-            icon.classList.toggle('fa-eye');
-            icon.classList.toggle('fa-eye-slash');
+            if (icon) {
+                icon.classList.toggle('fa-eye');
+                icon.classList.toggle('fa-eye-slash');
+            }
         });
     }
     
@@ -100,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (index < strength.score) {
                     bar.style.backgroundColor = getStrengthColor(strength.score);
                 } else {
-                    bar.style.backgroundColor = 'var(--gray-200)';
+                    bar.style.backgroundColor = 'var(--gray-200, #e5e7eb)';
                 }
             });
             
@@ -152,7 +160,9 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.role-card').forEach(card => {
                 card.classList.remove('selected');
             });
-            this.nextElementSibling.classList.add('selected');
+            if (this.nextElementSibling) {
+                this.nextElementSibling.classList.add('selected');
+            }
         });
     });
     
@@ -171,11 +181,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function getStrengthColor(score) {
         switch (score) {
-            case 1: return 'var(--error-500)';
-            case 2: return 'var(--warning-500)';
-            case 3: return 'var(--warning-500)';
-            case 4: return 'var(--success-500)';
-            default: return 'var(--gray-200)';
+            case 1: return '#ef4444';
+            case 2: return '#f59e0b';
+            case 3: return '#f59e0b';
+            case 4: return '#10b981';
+            default: return '#e5e7eb';
         }
     }
     
@@ -196,10 +206,10 @@ document.addEventListener('DOMContentLoaded', function() {
         return re.test(email);
     }
     
-    function validateForm(formType) {
+    window.validateForm = function(formType) {
         if (formType === 'signIn') {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const email = document.getElementById('email')?.value;
+            const password = document.getElementById('password')?.value;
             
             if (!email || !password) {
                 showMessage('Please fill in all fields.', 'signInMessage', 'warning');
@@ -213,12 +223,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (formType === 'signUp') {
-            const email = document.getElementById('rEmail').value;
-            const password = document.getElementById('rPassword').value;
-            const firstName = document.getElementById('fName').value;
-            const lastName = document.getElementById('lName').value;
+            const email = document.getElementById('rEmail')?.value;
+            const password = document.getElementById('rPassword')?.value;
+            const firstName = document.getElementById('fName')?.value;
+            const lastName = document.getElementById('lName')?.value;
             const selectedRole = document.querySelector('input[name="userRole"]:checked');
-            const agreeTerms = document.getElementById('agreeTerms').checked;
+            const agreeTerms = document.getElementById('agreeTerms')?.checked;
             
             if (!email || !password || !firstName || !lastName) {
                 showMessage('Please fill in all required fields.', 'signUpMessage', 'warning');
@@ -260,11 +270,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         return true;
-    }
+    };
     
     // Enhanced message function
     window.showMessage = function(message, divId, type = 'error') {
         const messageDiv = document.getElementById(divId);
+        if (!messageDiv) return;
+        
         messageDiv.className = `alert-message ${type}`;
         messageDiv.innerHTML = `
             <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'exclamation-circle'}"></i>
@@ -309,38 +321,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Keyboard navigation enhancement
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            const activeForm = document.querySelector('.form-container.active');
-            if (activeForm) {
-                const submitButton = activeForm.querySelector('button[type="submit"], button[id^="submit"]');
-                if (submitButton && !submitButton.disabled) {
-                    submitButton.click();
-                }
-            }
-        }
-        
-        // Tab navigation for role selection
-        if (e.key === 'Tab') {
-            const focusedElement = document.activeElement;
-            if (focusedElement && focusedElement.classList.contains('role-card')) {
-                e.preventDefault();
-                const roleCards = Array.from(document.querySelectorAll('.role-card'));
-                const currentIndex = roleCards.indexOf(focusedElement);
-                const nextIndex = e.shiftKey ? 
-                    (currentIndex - 1 + roleCards.length) % roleCards.length :
-                    (currentIndex + 1) % roleCards.length;
-                roleCards[nextIndex].focus();
-            }
-        }
-    });
-    
     // Initialize role features
     initializeRoleFeatures();
     
     // Initialize with sign-in form
-    showForm(signInForm);
+    if (signInForm) {
+        showForm(signInForm);
+    }
 });
 
 // Role-based utility functions

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aditi - Pharmaceutical Assistant</title>
+    <title>Aditi Pharmaceutical - Dashboard</title>
     <style>
         * {
             margin: 0;
@@ -456,7 +456,7 @@
     <!-- Header -->
     <div class="header" style="display: none;" id="mainHeader">
         <div class="header-content">
-            <div class="logo">🏥 Aditi</div>
+            <div class="logo">🏥 Aditi Pharmaceutical</div>
             <div class="user-info">
                 <div class="user-details">
                     <span class="user-name" id="userName">Loading...</span>
@@ -475,7 +475,7 @@
             <p id="welcomeMessage">Loading your personalized dashboard...</p>
         </div>
 
-        <h2 class="dashboard-title">Welcome to <span class="brand-highlight">Drx.MediMate</span></h2>
+        <h2 class="dashboard-title">Welcome to <span class="brand-highlight">Aditi Pharmaceutical</span></h2>
         <p class="subtitle" id="dashboardSubtitle">Your intelligent pharmaceutical assistant</p>
         
         <!-- Navigation to Role-Specific Dashboard -->
@@ -527,12 +527,12 @@
         const auth = getAuth();
         const db = getFirestore();
 
-        // Role-based dashboard routes
+        // Role-based dashboard routes - Updated to use Flask routes
         const ROLE_DASHBOARDS = {
-            pharmacist: 'pharmacist-dashboard.html',
-            doctor: 'doctor-dashboard.html',
-            student: 'student-dashboard.html',
-            patient: 'patient-dashboard.html'
+            pharmacist: '/pharmacist-dashboard.html',
+            doctor: '/doctor-dashboard.html',
+            student: '/student-dashboard.html',
+            patient: '/patient-dashboard.html'
         };
 
         // Role-based features configuration
@@ -544,13 +544,13 @@
                 },
                 subtitle: "Professional pharmacy management tools",
                 quickActions: [
-                    { text: "View Inventory", href: "inventory-management" },
-                    { text: "Process Prescriptions", href: "prescription-processing" },
-                    { text: "Generate Reports", href: "reports" }
+                    { text: "View Inventory", href: "/inventory-management" },
+                    { text: "Process Prescriptions", href: "/prescription-processing" },
+                    { text: "Generate Reports", href: "#reports" }
                 ],
                 features: [
                     {
-                        href: "drug-info-page",
+                        href: "/drug-info-page",
                         icon: "💊",
                         iconClass: "drug-icon",
                         title: "Drug Information",
@@ -558,7 +558,7 @@
                         allowed: true
                     },
                     {
-                        href: "inventory-management",
+                        href: "/inventory-management",
                         icon: "📦",
                         iconClass: "inventory-icon",
                         title: "Inventory Management",
@@ -566,7 +566,7 @@
                         allowed: true
                     },
                     {
-                        href: "prescription-processing",
+                        href: "/prescription-processing",
                         icon: "📋",
                         iconClass: "prescription-icon",
                         title: "Prescription Processing",
@@ -574,7 +574,7 @@
                         allowed: true
                     },
                     {
-                        href: "upload-image-page",
+                        href: "/upload-image-page",
                         icon: "📷",
                         iconClass: "camera-icon",
                         title: "Medicine Image",
@@ -590,13 +590,13 @@
                 },
                 subtitle: "Advanced clinical decision support",
                 quickActions: [
-                    { text: "Patient Records", href: "patient-records" },
-                    { text: "Write Prescription", href: "prescribe" },
-                    { text: "Drug Interactions", href: "drug-interactions" }
+                    { text: "Patient Records", href: "/patient-records" },
+                    { text: "Write Prescription", href: "#prescribe" },
+                    { text: "Drug Interactions", href: "#drug-interactions" }
                 ],
                 features: [
                     {
-                        href: "drug-info-page",
+                        href: "/drug-info-page",
                         icon: "💊",
                         iconClass: "drug-icon",
                         title: "Drug Information",
@@ -604,7 +604,7 @@
                         allowed: true
                     },
                     {
-                        href: "symptom-checker-page",
+                        href: "/symptom-checker-page",
                         icon: "🩺",
                         iconClass: "symptom-icon",
                         title: "Symptom Checker",
@@ -612,7 +612,7 @@
                         allowed: true
                     },
                     {
-                        href: "consultation-tools",
+                        href: "#consultation-tools",
                         icon: "👨‍⚕️",
                         iconClass: "consultation-icon",
                         title: "Consultation Tools",
@@ -620,7 +620,7 @@
                         allowed: true
                     },
                     {
-                        href: "upload-image-page",
+                        href: "/upload-image-page",
                         icon: "📷",
                         iconClass: "camera-icon",
                         title: "Medicine Image",
@@ -636,13 +636,13 @@
                 },
                 subtitle: "Educational resources and learning tools",
                 quickActions: [
-                    { text: "Study Materials", href: "study-materials" },
-                    { text: "Practice Tests", href: "practice-tests" },
-                    { text: "Drug Flashcards", href: "flashcards" }
+                    { text: "Study Materials", href: "/educational-resources" },
+                    { text: "Practice Tests", href: "#practice-tests" },
+                    { text: "Drug Flashcards", href: "#flashcards" }
                 ],
                 features: [
                     {
-                        href: "drug-info-page",
+                        href: "/drug-info-page",
                         icon: "💊",
                         iconClass: "drug-icon",
                         title: "Drug Information",
@@ -650,7 +650,7 @@
                         allowed: true
                     },
                     {
-                        href: "educational-resources",
+                        href: "/educational-resources",
                         icon: "📚",
                         iconClass: "education-icon",
                         title: "Educational Resources",
@@ -658,7 +658,7 @@
                         allowed: true
                     },
                     {
-                        href: "symptom-checker-page",
+                        href: "/symptom-checker-page",
                         icon: "🩺",
                         iconClass: "symptom-icon",
                         title: "Symptom Checker",
@@ -682,13 +682,13 @@
                 },
                 subtitle: "Personal health management tools",
                 quickActions: [
-                    { text: "My Medications", href: "my-medications" },
-                    { text: "Health Records", href: "health-records" },
-                    { text: "Find Pharmacy", href: "pharmacy-locator" }
+                    { text: "My Medications", href: "/medication-tracker" },
+                    { text: "Health Records", href: "#health-records" },
+                    { text: "Find Pharmacy", href: "#pharmacy-locator" }
                 ],
                 features: [
                     {
-                        href: "symptom-checker-page",
+                        href: "/symptom-checker-page",
                         icon: "🩺",
                         iconClass: "symptom-icon",
                         title: "Symptom Checker",
@@ -696,7 +696,7 @@
                         allowed: true
                     },
                     {
-                        href: "medication-tracker",
+                        href: "/medication-tracker",
                         icon: "⏰",
                         iconClass: "drug-icon",
                         title: "Medication Tracker",
@@ -704,7 +704,7 @@
                         allowed: true
                     },
                     {
-                        href: "upload-image-page",
+                        href: "/upload-image-page",
                         icon: "📷",
                         iconClass: "camera-icon",
                         title: "Medicine Image",
@@ -883,7 +883,7 @@
             } catch (error) {
                 console.error('Error loading user data:', error);
                 setTimeout(() => {
-                    window.location.href = "sisu.html";
+                    window.location.href = "/sisu.html";
                 }, 3000);
             }
         }
@@ -896,10 +896,10 @@
                 document.getElementById('loadingState').innerHTML = `
                     <div class="spinner"></div>
                     <p>Please verify your email before continuing...</p>
-                    <button onclick="window.location.href='sisu.html'" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer;">Back to Login</button>
+                    <button onclick="window.location.href='/sisu.html'" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer;">Back to Login</button>
                 `;
             } else {
-                window.location.href = "sisu.html";
+                window.location.href = "/sisu.html";
             }
         });
 
@@ -911,7 +911,7 @@
                     try {
                         await signOut(auth);
                         localStorage.clear();
-                        window.location.href = "sisu.html";
+                        window.location.href = "/sisu.html";
                     } catch (error) {
                         console.error("Logout error:", error);
                     }
