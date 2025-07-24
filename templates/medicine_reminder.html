@@ -1,0 +1,35 @@
+<!-- templates/medicine_reminder.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Medicine Reminder</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <h1>🩺 Set Medicine Reminder</h1>
+  <form action="/submit-reminder" method="POST">
+    <label>Patient Name:</label><br />
+    <input type="text" name="patient_name" required><br /><br />
+
+    <label>Medicine Name:</label><br />
+    <input type="text" name="medicine_name" required><br /><br />
+
+    <label>Dosage:</label><br />
+    <input type="text" name="dosage" required><br /><br />
+
+    <label>Frequency (e.g., every 8 hours):</label><br />
+    <input type="text" name="frequency" required><br /><br />
+
+    <label>Start Date:</label><br />
+    <input type="date" name="start_date" required><br /><br />
+
+    <label>End Date:</label><br />
+    <input type="date" name="end_date" required><br /><br />
+
+    <button type="submit">💾 Save Reminder</button>
+  </form>
+  <br />
+  <a href="/reminder-list">📋 View Reminders</a>
+</body>
+</html>
