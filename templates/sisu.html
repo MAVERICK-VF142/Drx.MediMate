@@ -27,8 +27,7 @@
             <div class="brand-content">
                 <div class="logo-section">
                     <div class="logo">
-                        <i class="fas fa-pills"></i>
-                        <span>Aditi Pharmaceutical</span>
+                        <span>🌿Aditi Pharmaceutical</span>
                     </div>
                     <div class="tagline">
                         <h1>Revolutionizing Healthcare Management</h1>
@@ -77,6 +76,7 @@
             <!-- Sign In Form -->
             <div class="form-container active" id="signIn">
                 <div class="form-header">
+                    <h1>🌿</h1>
                     <h2>Welcome back</h2>
                     <p class="form-subtitle">Sign in to your account to continue</p>
                 </div>
@@ -141,7 +141,7 @@
                     <p class="form-subtitle">Join thousands of healthcare professionals</p>
                 </div>
 
-                <div id="signUpMessage" class="alert-message" style="display:none;"></div>
+                <div id="signUpMessage" class="alert-message" style="display:block;"></div>
 
                 <form class="auth-form" id="signUpForm">
                     <div class="form-row">
@@ -171,6 +171,20 @@
                                 autocomplete="email">
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label for="role" class="form-label">Register your role as:</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user-tag input-icon"></i>
+                            <select id="role" name="role" class="form-input" required>
+                                <option value="" disabled selected>Select your role</option>
+                                <option value="student">Student</option>
+                                <option value="doctor">Doctor</option>
+                                <option value="pharmacist">Pharmacist</option>
+                            </select>
+                        </div>
+                    </div>
+
 
                     <div class="form-group">
                         <label for="rPassword" class="form-label">Password</label>
@@ -281,218 +295,153 @@
             <p class="loading-text">Please wait...</p>
         </div>
     </div>
-
-    <script src="../static/js/auth.js"></script>
-    <script type="module" src="../static/js/firebaseauth.js"></script>
-
-    <script type="module">
-        // Your existing Firebase code with enhancements
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-        import {
-            getAuth,
-            onAuthStateChanged,
-            createUserWithEmailAndPassword,
-            signInWithEmailAndPassword,
-            sendEmailVerification,
-            sendPasswordResetEmail,
-            GoogleAuthProvider,
-            signInWithPopup
-        } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-        import {
-            getFirestore,
-            setDoc,
-            doc
-        } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDa6_47neFJAH-I4i-ZCU0elY4cRmpyotg",
-            authDomain: "aditi-pharmaceutical-assistant.firebaseapp.com",
-            projectId: "aditi-pharmaceutical-assistant",
-            storageBucket: "aditi-pharmaceutical-assistant.appspot.com",
-            messagingSenderId: "241653252150",
-            appId: "1:241653252150:web:ce83fa898dc2f77a669897",
-            measurementId: "G-HMJ6SD9Q9H"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth();
-        const db = getFirestore();
-        const provider = new GoogleAuthProvider();
-
-        // Enhanced message function
-        function showMessage(message, divId, type = 'error') {
-            const messageDiv = document.getElementById(divId);
-            messageDiv.className = `alert-message ${type}`;
-            messageDiv.innerHTML = `
-                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'exclamation-circle'}"></i>
-                <span>${message}</span>
-            `;
-            messageDiv.style.display = "block";
-
-            setTimeout(() => {
-                messageDiv.style.opacity = 0;
-                setTimeout(() => {
-                    messageDiv.style.display = "none";
-                    messageDiv.style.opacity = 1;
-                }, 300);
-            }, 5000);
-        }
-
-        // Loading functions
-        function showLoading() {
-            document.getElementById('loadingOverlay').style.display = 'flex';
-        }
-
-        function hideLoading() {
-            document.getElementById('loadingOverlay').style.display = 'none';
-        }
-
-        onAuthStateChanged(auth, (user) => {
-            if (user && user.emailVerified) {
-                window.location.href = "index.html";
-            }
-        });
-
-        // Sign Up
-        document.getElementById('submitSignUp').addEventListener('click', (event) => {
-            event.preventDefault();
-            const email = document.getElementById('rEmail').value;
-            const password = document.getElementById('rPassword').value;
-            const firstName = document.getElementById('fName').value;
-            const lastName = document.getElementById('lName').value;
-            const agreeTerms = document.getElementById('agreeTerms').checked;
-
-            if (!agreeTerms) {
-                showMessage('Please agree to the Terms of Service and Privacy Policy.', 'signUpMessage', 'warning');
-                return;
-            }
-
-            showLoading();
-
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    sendEmailVerification(user)
-                        .then(() => {
-                            const userData = { email, firstName, lastName };
-                            setDoc(doc(db, "users", user.uid), userData)
-                                .then(() => {
-                                    hideLoading();
-                                    showMessage('Account created successfully! Please check your email for verification.', 'signUpMessage', 'success');
-                                })
-                                .catch((error) => {
-                                    hideLoading();
-                                    console.error("Firestore error:", error);
-                                    showMessage('Account created but profile save failed. Please try again.', 'signUpMessage', 'warning');
-                                });
-                        })
-                        .catch((error) => {
-                            hideLoading();
-                            console.error("Verification error:", error);
-                            showMessage('Account created but verification email failed. Please try again.', 'signUpMessage', 'warning');
-                        });
-                })
-                .catch((error) => {
-                    hideLoading();
-                    const errorCode = error.code;
-                    if (errorCode === 'auth/email-already-in-use') {
-                        showMessage('Email Address Already Exists!', 'signUpMessage');
-                    } else if (errorCode === 'auth/weak-password') {
-                        showMessage('Password is too weak. Please choose a stronger password.', 'signUpMessage');
-                    } else {
-                        showMessage('Unable to create user', 'signUpMessage');
-                    }
-                });
-        });
-
-        // Sign In
-        document.getElementById('submitSignIn').addEventListener('click', (event) => {
-            event.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            showLoading();
-
-            signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    if (user.emailVerified) {
-                        showMessage('Login successful!', 'signInMessage', 'success');
-                        localStorage.setItem('loggedInUserId', user.uid);
-                        setTimeout(() => {
-                            window.location.href = "index.html";
-                        }, 1000);
-                    } else {
-                        hideLoading();
-                        showMessage('Please verify your email before logging in.', 'signInMessage', 'warning');
-                        auth.signOut();
-                    }
-                })
-                .catch((error) => {
-                    hideLoading();
-                    const errorCode = error.code;
-                    if (errorCode === 'auth/wrong-password' || errorCode === 'auth/invalid-credential') {
-                        showMessage('Incorrect email or password', 'signInMessage');
-                    } else if (errorCode === 'auth/user-not-found') {
-                        showMessage('Account does not exist', 'signInMessage');
-                    } else {
-                        showMessage('Error logging in', 'signInMessage');
-                    }
-                });
-        });
-
-        // Recover Password
-        document.getElementById('submitRecover').addEventListener('click', (event) => {
-            event.preventDefault();
-            const recoverEmail = document.getElementById('recoverEmail').value;
-
-            showLoading();
-
-            sendPasswordResetEmail(auth, recoverEmail)
-                .then(() => {
-                    hideLoading();
-                    showMessage('Recovery email sent. Check your inbox.', 'recoverMessage', 'success');
-                })
-                .catch(error => {
-                    hideLoading();
-                    showMessage(error.message, 'recoverMessage');
-                });
-        });
-
-        // Google Sign In
-        document.getElementById('googleSignIn').addEventListener('click', (event) => {
-            event.preventDefault();
-            showLoading();
-
-            signInWithPopup(auth, provider)
-                .then((result) => {
-                    const user = result.user;
-                    const nameParts = user.displayName ? user.displayName.split(' ') : ["", ""];
-
-                    const userRef = doc(db, "users", user.uid);
-                    setDoc(userRef, {
-                        email: user.email,
-                        firstName: nameParts[0],
-                        lastName: nameParts[1]
-                    }, { merge: true });
-
-                    localStorage.setItem('loggedInUserId', user.uid);
-                    setTimeout(() => {
-                        window.location.href = "index.html";
-                    }, 1000);
-                })
-                .catch((error) => {
-                    hideLoading();
-                    console.error("Google Sign-In Error:", error);
-                    showMessage("Google sign-in failed. Try again.", 'signInMessage');
-                });
-        });
-
-        // Google Sign Up (same as sign in)
-        document.getElementById('googleSignUp').addEventListener('click', (event) => {
-            document.getElementById('googleSignIn').click();
-        });
-    </script>
 </body>
+
+<script src="../static/js/sisu.js" defer></script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+  import {
+    getAuth,
+    onAuthStateChanged,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    sendEmailVerification,
+    GoogleAuthProvider,
+    signInWithPopup
+  } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+  import {
+    getFirestore,
+    setDoc,
+    doc,
+    getDoc
+  } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const firebaseConfig = {
+      apiKey: "AIzaSyBqFUcrGkFUBpMWUlhyn8-qXE_LQU9qVt8",
+      authDomain: "fir-b132d.firebaseapp.com",
+      projectId: "fir-b132d",
+      storageBucket: "fir-b132d.firebasestorage.app",
+      messagingSenderId: "1018273141961",
+      appId: "1:1018273141961:web:4ab4871e97a0e77bc5a918",
+      measurementId: "G-99HFK6SCGQ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const db = getFirestore();
+
+    const signUpForm = document.getElementById('signUpForm');
+    const signInForm = document.getElementById('signInForm');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+
+    function showMessage(msg, id, type = 'error') {
+      const el = document.getElementById(id);
+      el.className = `alert-message ${type}`;
+      el.textContent = msg;
+      el.style.display = 'block';
+      setTimeout(() => el.style.display = 'none', 5000);
+    }
+
+    function showLoading() {
+      loadingOverlay.style.display = 'flex';
+    }
+
+    function hideLoading() {
+      loadingOverlay.style.display = 'none';
+    }
+
+    function redirectUserByRole(role) {
+      setTimeout(() => {
+        if (role === 'doctor') window.location.href = '/doctor-dashboard';
+        else if (role === 'pharmacist') window.location.href = '/pharmacist-dashboard';
+        else if (role === 'student') window.location.href = '/student-dashboard';
+        else window.location.href = '/';
+      }, 500);
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const docSnap = await getDoc(doc(db, "users", user.uid));
+        if (docSnap.exists()) {
+          redirectUserByRole(docSnap.data().role);
+        }
+      }
+    });
+
+    signUpForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('rEmail').value;
+      const password = document.getElementById('rPassword').value;
+      const role = document.getElementById('role').value;
+      const firstName = document.getElementById('fName').value;
+      const lastName = document.getElementById('lName').value;
+
+      showLoading();
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        await setDoc(doc(db, "users", cred.user.uid), {
+          email, role, firstName, lastName, createdAt: new Date().toISOString()
+        });
+        await sendEmailVerification(cred.user);
+        showMessage("Account created. Redirecting...", 'signUpMessage', 'success');
+        redirectUserByRole(role);
+      } catch (err) {
+        showMessage("Signup error: " + err.message, 'signUpMessage', 'error');
+      } finally {
+        hideLoading();
+      }
+    });
+
+    signInForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      showLoading();
+      try {
+        const cred = await signInWithEmailAndPassword(auth, email, password);
+        const docSnap = await getDoc(doc(db, "users", cred.user.uid));
+        if (docSnap.exists()) {
+          showMessage("Login successful", 'signInMessage', 'success');
+          redirectUserByRole(docSnap.data().role);
+        } else {
+          showMessage("No user profile found", 'signInMessage');
+        }
+      } catch (err) {
+        showMessage("Login failed: " + err.message, 'signInMessage');
+      } finally {
+        hideLoading();
+      }
+    });
+    const googleSignInBtn = document.getElementById('googleSignIn');
+    const provider = new GoogleAuthProvider();
+
+    googleSignInBtn.addEventListener('click', async () => {
+    try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (!userDoc.exists()) {
+        await setDoc(doc(db, "users", user.uid), {
+            email: user.email,
+            role: "student",
+            firstName: user.displayName?.split(" ")[0] || "",
+            lastName: user.displayName?.split(" ")[1] || "",
+            createdAt: new Date().toISOString()
+        });
+        }
+
+        const data = (await getDoc(doc(db, "users", user.uid))).data();
+        redirectUserByRole(data.role);
+    } catch (err) {
+        showMessage("Google Sign-in failed: " + err.message, 'signInMessage', 'error');
+    }
+    });
+
+  });
+</script>
 
 </html>

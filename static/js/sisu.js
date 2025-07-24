@@ -1,20 +1,34 @@
-        // Switch between forms
-        document.getElementById('signUpButton').addEventListener('click', () => {
-            document.getElementById('signIn').style.display = 'none';
-            document.getElementById('signup').style.display = 'block';
-        });
+window.addEventListener('DOMContentLoaded', () => {
+  const signInSection = document.getElementById('signIn');
+  const signUpSection = document.getElementById('signup');
+  const recoverSection = document.getElementById('recoverPassword');
 
-        document.getElementById('signInButton').addEventListener('click', () => {
-            document.getElementById('signup').style.display = 'none';
-            document.getElementById('signIn').style.display = 'block';
-        });
+  // Prevent link-based default behavior
+  document.getElementById('signUpButton')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    signInSection.style.display = 'none';
+    signUpSection.style.display = 'block';
+    recoverSection.style.display = 'none';
+  });
 
-        document.getElementById('recoverPasswordLink').addEventListener('click', () => {
-            document.getElementById('signIn').style.display = 'none';
-            document.getElementById('recoverPassword').style.display = 'block';
-        });
+  document.getElementById('signInButton')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    signUpSection.style.display = 'none';
+    signInSection.style.display = 'block';
+    recoverSection.style.display = 'none';
+  });
 
-        document.getElementById('backToSignIn').addEventListener('click', () => {
-            document.getElementById('recoverPassword').style.display = 'none';
-            document.getElementById('signIn').style.display = 'block';
-        });
+  document.getElementById('recoverPasswordLink')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    signInSection.style.display = 'none';
+    signUpSection.style.display = 'none';
+    recoverSection.style.display = 'block';
+  });
+
+  document.getElementById('backToSignIn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    recoverSection.style.display = 'none';
+    signInSection.style.display = 'block';
+    signUpSection.style.display = 'none';
+  });
+});

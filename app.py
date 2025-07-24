@@ -1,7 +1,7 @@
 import os
 import json
 import base64
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, make_response
 from flask_cors import CORS
 from PIL import Image
 from io import BytesIO
@@ -10,16 +10,24 @@ import markdown
 import logging
 import time
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeout
+import pytesseract
+import re
+import uuid
+import pdfkit
+from dotenv import load_dotenv
+load_dotenv()
 
 # ---------------------------
 # Configuration & Setup
 # ---------------------------
 
 # Load Gemini API key from environment variable
-api_key = os.getenv("GEMINI_KEY")
+api_key = os.getenv("GEMINI_API_KEY")
 if not api_key:
-    raise EnvironmentError("❌ GEMINI_KEY environment variable not set.")
+    raise ValueError("GEMINI_API_KEY is missing")
+
 genai.configure(api_key=api_key)
+
 
 # Load Gemini model
 model = genai.GenerativeModel("gemini-2.5-flash")
@@ -71,6 +79,7 @@ def gemini_generate_with_retry(prompt, max_retries=3, delay=2, timeout=10):
 
     logging.critical("❌ All Gemini API retry attempts failed.")
     return None
+
 
 # ---------------------------
 # Utility
@@ -209,6 +218,91 @@ def analyze_image_with_gemini(image_data):
         logging.error(f"❌ Error during image analysis: {str(e)}")
         return f"❌ Error during image analysis: {str(e)}"
 
+def extract_prescription_with_gemini(image_data):
+    try:
+        if not image_data.startswith("data:image/"):
+            logging.warning("❌ Invalid image format received.")
+            return {"error": "Invalid image format uploaded."}
+
+        logging.info("Processing prescription image...")
+        image_base64 = image_data.split(',')[1]
+        image_bytes = base64.b64decode(image_base64)
+        image = Image.open(BytesIO(image_bytes))
+
+        prompt = (
+            "You're analyzing a medical prescription image. "
+            "Extract the following in **structured JSON** format:\n\n"
+            "```json\n"
+            "{\n"
+            "  \"medicines\": [\n"
+            "    {\n"
+            "      \"name\": \"\",\n"
+            "      \"dose\": \"\",\n"
+            "      \"frequency\": \"\",\n"
+            "      \"duration\": \"\"\n"
+            "    }\n"
+            "  ]\n"
+            "}\n"
+            "```\n\n"
+            "If fields are missing or illegible, leave them blank. Focus only on medicines prescribed. "
+            "Ignore doctor's name or patient details unless relevant."
+        )
+
+        response = model.generate_content([prompt, image])
+        text = response.text.strip()
+
+        # Try extracting the JSON block from the markdown output
+        json_match = re.search(r"```json\n(.*?)\n```", text, re.DOTALL)
+        if json_match:
+            extracted_json = json.loads(json_match.group(1))
+            return extracted_json
+        else:
+            return {"error": "Failed to parse structured data from Gemini's response.", "raw_response": text}
+
+    except Exception as e:
+        logging.error(f"Gemini prescription analysis failed: {e}")
+        return {"error": "Something went wrong during image analysis."}
+
+
+def suggest_substitutes_with_gemini(image_data):
+    try:
+        if not image_data.startswith("data:image/"):
+            logging.warning("❌ Invalid image format.")
+            return {"error": "Invalid image format uploaded."}
+
+        image_base64 = image_data.split(',')[1]
+        image_bytes = base64.b64decode(image_base64)
+        image = Image.open(BytesIO(image_bytes))
+
+        prompt = (
+            "You're analyzing a medicine package image to suggest brand substitutes.\n\n"
+            "First, extract the **brand name** and identify the **active ingredient(s)**.\n"
+            "Then, suggest 3–5 **other brands** (available in India or globally) with the same composition.\n\n"
+            "Return the output in structured JSON like this:\n"
+            "```json\n"
+            "{\n"
+            "  \"original_brand\": \"\",\n"
+            "  \"active_ingredient\": \"\",\n"
+            "  \"substitutes\": [\"\", \"\", \"\"]\n"
+            "}\n"
+            "```\n\n"
+            "If the image is blurry or medicine cannot be identified, return:\n"
+            "`{\"error\": \"Unable to identify medicine.\"}`"
+        )
+
+        response = model.generate_content([prompt, image])
+        text = response.text.strip()
+
+        json_match = re.search(r"\{[\s\S]+\}", text)
+        if json_match:
+            return json.loads(json_match.group())
+        else:
+            return {"error": "Could not parse Gemini response.", "raw_response": text}
+    except Exception as e:
+        logging.error(f"Gemini substitution suggestion failed: {e}")
+        return {"error": "Substitution analysis failed."}
+
+
 # ---------------------------
 # Routes (Pages)
 # ---------------------------
@@ -217,9 +311,17 @@ def analyze_image_with_gemini(image_data):
 def sisu():
     return render_template('sisu.html')
 
-@app.route('/index.html')
-def index():
-    return render_template('index.html')
+@app.route('/doctor-dashboard')
+def doctor():
+    return render_template('doctor.html')
+
+@app.route('/student-dashboard')
+def student():
+    return render_template('student.html')
+
+@app.route('/pharmacist-dashboard')
+def pharmacist():
+    return render_template('pharmacist.html')
 
 @app.route('/drug-info-page')
 def drug_info_page():
@@ -232,6 +334,29 @@ def symptom_checker_page():
 @app.route('/upload-image-page')
 def upload_image_page():
     return render_template('upload_image.html')
+
+@app.route('/upload_prescription', methods=['GET'])
+def show_upload_prescription_page():
+    return render_template('upload_prescription.html')
+
+@app.route('/upload_prescription', methods=['POST'])
+def upload_prescription():
+    file = request.files.get('file')
+    if not file:
+        return render_template('upload_prescription.html', error="No file uploaded")
+
+    # Read image content into memory
+    image_bytes = file.read()
+    image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+    image_data_url = f"data:image/jpeg;base64,{image_base64}"
+
+    try:
+        result = extract_prescription_with_gemini(image_data_url)
+    except Exception as e:
+        print(e)
+        return render_template('upload_prescription.html', error=e)
+
+    return render_template('upload_prescription.html', result=result, image_data=image_data_url)
 
 # ---------------------------
 # API Endpoints (AJAX/JS)
@@ -291,14 +416,145 @@ def my_account():
         "notifications": True
     })
 
+@app.route('/suggest_substitute', methods=['GET'])
+def show_suggest_substitute():
+    return render_template('suggest_substitute.html')
+
+@app.route('/suggest_substitute', methods=['POST'])
+def suggest_substitute():
+    file = request.files.get('file')
+    if not file:
+        return render_template('suggest_substitute.html', error="No file uploaded")
+
+    try:
+        # Read the uploaded image into memory
+        image_bytes = file.read()
+        image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+        image_data_url = f"data:image/jpeg;base64,{image_base64}"
+
+        # Pass base64 image to Gemini
+        result = suggest_substitutes_with_gemini(image_data_url)
+
+        return render_template("suggest_substitute.html", result=result, image_data=image_data_url)
+
+    except Exception as e:
+        return render_template("suggest_substitute.html", error="Error during analysis")
+    
+
+@app.route('/clinical_support', methods=['GET', 'POST'])
+def clinical_support():
+    if request.method == 'POST':
+        symptoms = request.form.get('symptoms')
+        if not symptoms:
+            return render_template('clinical_support.html', error="Please enter symptoms.")
+        
+        try:
+            diagnosis = get_possible_diagnosis_with_gemini(symptoms)
+            return render_template('clinical_support.html', symptoms=symptoms, diagnosis=diagnosis)
+        except Exception as e:
+            return render_template('clinical_support.html', error="Error in diagnosis generation.")
+    
+    return render_template('clinical_support.html')
+
+
+def get_possible_diagnosis_with_gemini(symptoms_text):
+    prompt = f"""A patient presents with the following symptoms: {symptoms_text}.
+    Based on standard clinical knowledge, suggest possible diagnoses."""
+    return call_gemini(prompt)
+
+
+# Smart Prescription Generator
+@app.route('/smart_prescription', methods=['GET', 'POST'])
+def smart_prescription():
+    if request.method == 'POST':
+        symptoms = request.form.get('symptoms')
+        if not symptoms:
+            return render_template('smart_prescription.html', error="Please enter symptoms.")
+        
+        try:
+            prescription_html = get_prescription_from_symptoms(symptoms)
+            return render_template('smart_prescription.html', symptoms=symptoms, prescription_html=prescription_html)
+        except Exception as e:
+            print(e)
+            return render_template('smart_prescription.html', error="Error in prescription generation.")
+    
+    return render_template('smart_prescription.html')
+
+
+@app.route('/download_prescription', methods=['POST'])
+def download_prescription():
+    prescription_html = request.form.get('prescription_html')
+    if not prescription_html:
+        return "No content to download.", 400
+
+    pdf = pdfkit.from_string(prescription_html, False)
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'attachment; filename=prescription.pdf'
+    return response
+
+
+def get_prescription_from_symptoms(symptoms_text):
+    prompt = f"""A patient reports the following symptoms: {symptoms_text}.
+    Suggest a smart prescription including:
+    - Drug Name
+    - Dosage (in mg or ml)
+    - Frequency (e.g., twice a day)
+    - Duration (in days)
+    
+    Respond in pure HTML table format without explanation or extra text."""
+    return call_gemini(prompt)
+
+
+def call_gemini(prompt):
+
+    response = model.generate_content(prompt)
+
+    # Extract generated HTML (Gemini should return a table directly)
+    if response and response.text:
+        return response.text
+    else:
+        return "<p>Unable to generate prescription. Please try again.</p>"
+
+
+@app.route('/get-health-tips')
+def health_tips_page():
+    return render_template("health_tips.html")
+
+@app.route('/pharma-quiz')
+def pharma_quiz_page():
+    return render_template("pharma_quiz.html")
+
+@app.route('/drug-news')
+def drug_news_page():
+    return render_template("drug_news.html")
+
+@app.route('/get-health-tips', methods=['POST'])
+def get_health_tips():
+    data = request.json
+    input_text = data.get("symptoms", "")
+    prompt = f"Give 4 concise daily health tips based on a person's current health feeling: {input_text}"
+    response = model.generate_content(prompt)
+    return jsonify({"tips": response.text.strip()})
+
+@app.route('/pharma-quiz', methods=['POST'])
+def get_pharma_quiz():
+    topic = request.json.get("topic", "")
+    prompt = f"Explain the topic '{topic}' briefly (3-4 lines) and create a 10-mark multiple choice quiz with answers."
+    response = model.generate_content(prompt)
+    return jsonify({"quiz": response.text.strip()})
+
+@app.route('/drug-news', methods=['GET'])
+def get_drug_news():
+    prompt = "Give a card-style list of the 3 latest news items related to pharmaceuticals: include title + 1-line summary."
+    response = model.generate_content(prompt)
+    return jsonify({"news": response.text.strip()})
+
 # ---------------------------
 # Run app
 # ---------------------------
 
 if __name__ == '__main__':
-    # Use FLASK_DEBUG=true in your environment to enable debug mode
-
-    app.run(debug=os.getenv("FLASK_DEBUG", "false").lower() == "true")
 
     logging.info("Starting Flask server...")
     app.run(debug=os.getenv("FLASK_DEBUG", "false").lower() == "true")
