@@ -28,11 +28,14 @@ if not api_key:
     raise EnvironmentError("❌ GEMINI_KEY environment variable not set.")
 genai.configure(api_key=api_key)
 
+
 # Load Gemini model
 model = genai.GenerativeModel("gemini-2.5-flash")
 
 # Initialize Flask app
 app = Flask(__name__)
+
+app.secret_key = "AIzaSyAwb9K8E9I15FNpQOJZeox48J3qjTeIr6Y" 
 CORS(app)  # Enable Cross-Origin Resource Sharing
 
 logging.basicConfig(
