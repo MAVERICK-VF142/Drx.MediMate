@@ -1,0 +1,40 @@
+<!-- templates/reminder_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Reminders List</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <h1>📋 All Medicine Reminders</h1>
+  {% if reminders %}
+    <table border="1" cellpadding="10">
+      <tr>
+        <th>Patient</th>
+        <th>Medicine</th>
+        <th>Dosage</th>
+        <th>Frequency</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Created</th>
+      </tr>
+      {% for r in reminders %}
+        <tr>
+          <td>{{ r.patient_name }}</td>
+          <td>{{ r.medicine_name }}</td>
+          <td>{{ r.dosage }}</td>
+          <td>{{ r.frequency }}</td>
+          <td>{{ r.start_date }}</td>
+          <td>{{ r.end_date }}</td>
+          <td>{{ r.created_at.strftime('%Y-%m-%d') }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>No reminders found.</p>
+  {% endif %}
+  <br />
+  <a href="/medicine-reminder">➕ Add New Reminder</a>
+</body>
+</html>
