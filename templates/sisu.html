@@ -227,6 +227,18 @@
                                         </div>
                                     </label>
                                 </div>
+                                <div class="role-option" data-role="admin">
+                                    <input type="radio" id="roleAdmin" name="userRole" value="admin" required>
+                                    <label for="roleAdmin" class="role-card">
+                                        <div class="role-icon">
+                                            <i class="fas fa-user-shield"></i>
+                                        </div>
+                                        <div class="role-info">
+                                            <h4>Admin</h4>
+                                            <p>Manage system and users</p>
+                                        </div>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -460,7 +472,8 @@
                 pharmacist: 'pharmacist-dashboard.html',
                 doctor: 'doctor-dashboard.html',
                 student: 'student-dashboard.html',
-                patient: 'patient-dashboard.html'
+                patient: 'patient-dashboard.html',
+                admin: 'admin-dashboard.html'
             };
             
             const route = roleRoutes[userRole] || 'index.html';
@@ -563,6 +576,9 @@
                     const phoneNumber = document.getElementById('phoneNumber').value;
                     if (dateOfBirth) roleData.dateOfBirth = dateOfBirth;
                     if (phoneNumber) roleData.phoneNumber = phoneNumber;
+                    break;
+                case 'admin':
+                    // No additional fields for admin
                     break;
             }
 

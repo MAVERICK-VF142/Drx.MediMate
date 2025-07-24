@@ -144,3 +144,17 @@ A big thank you to all contributors!
 
 <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="900">
 
+## Admin Panel
+
+The admin panel is accessible via /admin-dashboard.html for users with 'admin' role. Features include:
+
+- Managing user accounts: View, edit, delete user profiles.
+- Managing records, appointments, prescriptions.
+- System notifications and analytics.
+
+### Usage
+Sign up with admin role or edit a user to admin in Firestore.
+
+### Testing
+Run `python test.py` for unit tests.
+

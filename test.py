@@ -1,13 +1,19 @@
-import google.generativeai as genai
+import unittest
+from app import app
 
-# Configure API key for Gemini
-genai.configure(api_key="AIzaSyDGc-")
-model = genai.GenerativeModel("gemini-1.5-flash-8b")
+class FlaskTestCase(unittest.TestCase):
+    def setUp(self):
+        self.app = app.test_client()
+        self.app.testing = True
 
-def cyber_attack_response(query):
-    prompt = f"You are a cybersecurity expert. Explain about {query}. If it's an ongoing attack, suggest real-time mitigation steps."
-    response = model.generate_content(prompt)
-    return response.text if response else "I couldn't process your request."
+    def test_home(self):
+        response = self.app.get('/')
+        self.assertEqual(response.status_code, 200)
 
-query = "What is a sql injection"
-print(cyber_attack_response(query))
+    def test_admin_dashboard(self):
+        response = self.app.get('/admin-dashboard.html')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Admin Dashboard', response.data)
+
+if __name__ == '__main__':
+    unittest.main()

@@ -236,6 +236,10 @@ def student_dashboard():
 def patient_dashboard():
     return render_template('patient-dashboard.html')
 
+@app.route('/admin-dashboard.html')
+def admin_dashboard():
+    return render_template('admin-dashboard.html')
+
 
 # ---------------------------
 # Feature Page Routes

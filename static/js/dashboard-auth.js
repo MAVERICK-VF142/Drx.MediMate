@@ -30,7 +30,8 @@ const ROLE_ROUTES = {
     pharmacist: 'pharmacist-dashboard.html',
     doctor: 'doctor-dashboard.html',
     student: 'student-dashboard.html',
-    patient: 'patient-dashboard.html'
+    patient: 'patient-dashboard.html',
+    admin: 'admin-dashboard.html'
 };
 
 // Get current page role requirement
@@ -142,7 +143,8 @@ window.DashboardAuth = {
             pharmacist: ['inventory', 'prescriptions', 'reports', 'patients'],
             doctor: ['prescriptions', 'patients', 'reports', 'consultations'],
             student: ['learning', 'resources', 'progress', 'assignments'],
-            patient: ['profile', 'medications', 'history', 'appointments']
+            patient: ['profile', 'medications', 'history', 'appointments'],
+            admin: ['users', 'analytics', 'notifications', 'security', 'records', 'appointments', 'prescriptions']
         };
         return permissions[role]?.includes(permission) || false;
     }
