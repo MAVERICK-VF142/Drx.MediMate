@@ -1,10 +1,59 @@
-<!-- templates/student-dashboard.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Student Dashboard</title>
+    <meta charset="UTF-8">
+    <title>Student Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-  <h1>Welcome to Student Dashboard</h1>
+<body class="bg-light">
+    <div class="container py-5">
+        <h1 class="mb-4">Welcome to Student Dashboard</h1>
+
+        <!-- ✅ Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <!-- 🩺 Medicine Reminders -->
+        <div class="card mb-4">
+            <div class="card-header">⏰ Medicine Reminders</div>
+            <ul class="list-group list-group-flush">
+                {% if medicines %}
+                    {% for med in medicines %}
+                        <li class="list-group-item">💊 {{ med.name }} at {{ med.time }}</li>
+                    {% endfor %}
+                {% else %}
+                    <li class="list-group-item text-muted">No upcoming medicines.</li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- 📝 Add Medicine Form -->
+        <div class="card">
+            <div class="card-header">➕ Add New Medicine Reminder</div>
+            <div class="card-body">
+                <form method="POST" action="/add_medicine">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Medicine Name</label>
+                        <input type="text" name="name" id="name" class="form-control" placeholder="e.g., Paracetamol" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="time" class="form-label">Reminder Time</label>
+                        <input type="time" name="time" id="time" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Add Reminder</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

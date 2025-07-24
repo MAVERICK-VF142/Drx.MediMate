@@ -28,6 +28,7 @@ genai.configure(api_key=api_key)
 model = genai.GenerativeModel("gemini-2.5-flash")
 
 app = Flask(__name__)
+app.secret_key = 'super-secret-123'  # 🔐 Replace with a strong, random key in production
 CORS(app)  # Enable Cross-Origin Resource Sharing
 
 logging.basicConfig(
@@ -208,7 +209,7 @@ def index():
 
 # Alternative route for index
 @app.route('/dashboard')
-def index(): return render_template("index.html")
+def dashboard(): return render_template("index.html")
 
 @app.route('/doctor-dashboard.html')
 def doctor_dashboard(): return render_template("doctor-dashboard.html")
