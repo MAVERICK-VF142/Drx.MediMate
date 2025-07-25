@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Medical Symptom Analysis - Aditi Healthcare</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -40,9 +42,9 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: radial-gradient(ellipse at top, #1e40af0a 0%, transparent 50%), 
-                        radial-gradient(ellipse at bottom, #0ea5e90a 0%, transparent 50%),
-                        linear-gradient(135deg, var(--background-cream) 0%, var(--background-light) 50%, #F1F5F9 100%);
+            background: radial-gradient(ellipse at top, #1e40af0a 0%, transparent 50%),
+                radial-gradient(ellipse at bottom, #0ea5e90a 0%, transparent 50%),
+                linear-gradient(135deg, var(--background-cream) 0%, var(--background-light) 50%, #F1F5F9 100%);
             color: var(--text-dark);
             line-height: 1.6;
             min-height: 100vh;
@@ -76,12 +78,15 @@
                 transform: translateY(100vh) rotate(0deg);
                 opacity: 0;
             }
+
             10% {
                 opacity: 0.3;
             }
+
             90% {
                 opacity: 0.3;
             }
+
             100% {
                 transform: translateY(-10vh) rotate(360deg);
                 opacity: 0;
@@ -117,14 +122,34 @@
         }
 
         @keyframes neuronPulse {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.5); }
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
         }
 
         @keyframes synapseFlow {
-            0% { opacity: 0; transform: scaleX(0); }
-            50% { opacity: 1; transform: scaleX(1); }
-            100% { opacity: 0; transform: scaleX(0); }
+            0% {
+                opacity: 0;
+                transform: scaleX(0);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scaleX(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scaleX(0);
+            }
         }
 
         /* Premium glassmorphism header */
@@ -146,20 +171,26 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, 
-                var(--primary-medium), 
-                var(--accent-blue), 
-                var(--accent-purple),
-                var(--accent-emerald),
-                var(--primary-medium)
-            );
+            background: linear-gradient(90deg,
+                    var(--primary-medium),
+                    var(--accent-blue),
+                    var(--accent-purple),
+                    var(--accent-emerald),
+                    var(--primary-medium));
             background-size: 300% 100%;
             animation: headerFlow 8s ease-in-out infinite;
         }
 
         @keyframes headerFlow {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
         }
 
         .header-content {
@@ -209,13 +240,25 @@
         }
 
         @keyframes logoHover {
-            0%, 100% { transform: translateY(0) rotateY(0deg); }
-            50% { transform: translateY(-3px) rotateY(10deg); }
+
+            0%,
+            100% {
+                transform: translateY(0) rotateY(0deg);
+            }
+
+            50% {
+                transform: translateY(-3px) rotateY(10deg);
+            }
         }
 
         @keyframes logoSpin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* Smart breadcrumb with activity indicator */
@@ -242,9 +285,17 @@
         }
 
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
         }
 
         /* Advanced profile system */
@@ -310,6 +361,7 @@
                 opacity: 0;
                 transform: translateY(-16px) scale(0.9);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
@@ -343,12 +395,27 @@
             animation: typingBounce 1.4s infinite ease-in-out;
         }
 
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        .typing-dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
 
         @keyframes typingBounce {
-            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-            40% { transform: scale(1.2); opacity: 1; }
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+
+            40% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
         }
 
         .container {
@@ -395,6 +462,7 @@
                 transform: translateY(-30px) scale(0.9);
                 filter: blur(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
@@ -403,8 +471,13 @@
         }
 
         @keyframes underlineExpand {
-            from { width: 0; }
-            to { width: 120px; }
+            from {
+                width: 0;
+            }
+
+            to {
+                width: 120px;
+            }
         }
 
         .page-subtitle {
@@ -423,6 +496,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -443,6 +517,7 @@
                 opacity: 0;
                 transform: translateY(40px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -499,13 +574,28 @@
             animation: iconFloat 4s ease-in-out infinite;
         }
 
-        .dashboard-icon:nth-child(1) { animation-delay: 0s; }
-        .dashboard-icon:nth-child(2) { animation-delay: 0.5s; }
-        .dashboard-icon:nth-child(3) { animation-delay: 1s; }
+        .dashboard-icon:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .dashboard-icon:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .dashboard-icon:nth-child(3) {
+            animation-delay: 1s;
+        }
 
         @keyframes iconFloat {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-6px) rotate(5deg); }
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-6px) rotate(5deg);
+            }
         }
 
         .dashboard-title {
@@ -548,8 +638,15 @@
         }
 
         @keyframes cardTopFlow {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
         }
 
         @keyframes cardReveal {
@@ -557,6 +654,7 @@
                 opacity: 0;
                 transform: translateY(50px) scale(0.95);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
@@ -677,18 +775,48 @@
             animation: voiceWave 1.2s ease-in-out infinite;
         }
 
-        .voice-bar:nth-child(1) { animation-delay: 0s; }
-        .voice-bar:nth-child(2) { animation-delay: 0.1s; }
-        .voice-bar:nth-child(3) { animation-delay: 0.2s; }
-        .voice-bar:nth-child(4) { animation-delay: 0.3s; }
-        .voice-bar:nth-child(5) { animation-delay: 0.4s; }
+        .voice-bar:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .voice-bar:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .voice-bar:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .voice-bar:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        .voice-bar:nth-child(5) {
+            animation-delay: 0.4s;
+        }
 
         @keyframes voiceWave {
-            0%, 100% { height: 20px; opacity: 0.6; }
-            50% { height: 40px; opacity: 1; }
+
+            0%,
+            100% {
+                height: 20px;
+                opacity: 0.6;
+            }
+
+            50% {
+                height: 40px;
+                opacity: 1;
+            }
         }
 
         /* Premium analyze button */
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
         .btn-checker {
             background: linear-gradient(135deg, var(--primary-medium) 0%, var(--primary-dark) 100%);
             color: white;
@@ -747,13 +875,31 @@
             animation: loadingWave 1.4s ease-in-out infinite;
         }
 
-        .loading-dot:nth-child(1) { animation-delay: 0s; }
-        .loading-dot:nth-child(2) { animation-delay: 0.2s; }
-        .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+        .loading-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .loading-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
 
         @keyframes loadingWave {
-            0%, 60%, 100% { transform: scale(0.8); opacity: 0.6; }
-            30% { transform: scale(1.2); opacity: 1; }
+
+            0%,
+            60%,
+            100% {
+                transform: scale(0.8);
+                opacity: 0.6;
+            }
+
+            30% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
         }
 
         /* Premium results section */
@@ -782,8 +928,15 @@
         }
 
         @keyframes resultProgress {
-            from { transform: scaleX(0); transform-origin: left; }
-            to { transform: scaleX(1); transform-origin: left; }
+            from {
+                transform: scaleX(0);
+                transform-origin: left;
+            }
+
+            to {
+                transform: scaleX(1);
+                transform-origin: left;
+            }
         }
 
         @keyframes resultReveal {
@@ -792,6 +945,7 @@
                 transform: translateY(30px) scale(0.95);
                 filter: blur(5px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
@@ -824,8 +978,15 @@
         }
 
         @keyframes resultIconSpin {
-            0%, 100% { transform: scale(1) rotate(0deg); }
-            50% { transform: scale(1.1) rotate(180deg); }
+
+            0%,
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+
+            50% {
+                transform: scale(1.1) rotate(180deg);
+            }
         }
 
         .result-box {
@@ -928,6 +1089,7 @@
                 transform: translateX(100%);
                 opacity: 0;
             }
+
             to {
                 transform: translateX(0);
                 opacity: 1;
@@ -964,8 +1126,13 @@
         }
 
         @keyframes progressShimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
         }
 
         /* Smart suggestions */
@@ -1014,8 +1181,15 @@
         }
 
         @keyframes statusFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-4px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-4px);
+            }
         }
 
         .status-dot {
@@ -1027,9 +1201,17 @@
         }
 
         @keyframes statusPulse {
-            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
         }
 
         /* Hidden utility */
@@ -1044,20 +1226,21 @@
                 flex-direction: column;
                 gap: 1rem;
             }
-            
+
             .container {
                 padding: 2rem 1.5rem;
             }
-            
+
             .page-title {
                 font-size: 2.5rem;
             }
-            
+
             .page-subtitle {
                 font-size: 1.1rem;
             }
-            
-            .card, .result-section {
+
+            .card,
+            .result-section {
                 padding: 2rem 1.5rem;
             }
 
@@ -1089,9 +1272,12 @@
 
         /* Advanced animations */
         @keyframes morphBackground {
-            0%, 100% {
+
+            0%,
+            100% {
                 background-position: 0% 50%;
             }
+
             50% {
                 background-position: 100% 50%;
             }
@@ -1129,16 +1315,17 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Particle system -->
     <div class="particles" id="particles"></div>
-    
+
     <!-- Neural network background -->
     <div class="neural-bg" id="neuralBg"></div>
-    
+
     <!-- Notification container -->
     <div class="notification-container" id="notificationContainer"></div>
-    
+
     <!-- Status widget -->
     <div class="status-widget">
         <div class="status-dot"></div>
@@ -1182,7 +1369,8 @@
     <div class="container">
         <div class="hero-section">
             <h1 class="page-title">Medical Symptom Analysis</h1>
-            <p class="page-subtitle">Advanced AI-powered diagnostic assistance leveraging machine learning for precise medical insights</p>
+            <p class="page-subtitle">Advanced AI-powered diagnostic assistance leveraging machine learning for precise
+                medical insights</p>
         </div>
 
         <!-- Interactive medical dashboard -->
@@ -1220,16 +1408,13 @@
                     Patient Symptom Description
                 </label>
                 <div class="textarea-container">
-                    <textarea 
-                        id="symptoms" 
+                    <textarea id="symptoms"
                         placeholder="Describe symptoms in detail including onset, duration, severity, and associated factors. Example: 'Patient presents with acute onset chest pain, radiating to left arm, accompanied by shortness of breath and diaphoresis, started 2 hours ago...'"
                         oninput="updateCharCounter(this); showSuggestions(this.value)"
-                        onfocus="showTypingIndicator(true)"
-                        onblur="showTypingIndicator(false)"
-                    ></textarea>
+                        onfocus="showTypingIndicator(true)" onblur="showTypingIndicator(false)"></textarea>
                     <div class="char-counter" id="charCounter">0 characters</div>
                 </div>
-                
+
                 <div class="typing-indicator" id="typingIndicator">
                     <i class="fas fa-keyboard"></i>
                     <span>Analyzing input</span>
@@ -1241,9 +1426,12 @@
                 </div>
 
                 <div class="suggestions-container" id="suggestionsContainer">
-                    <div class="suggestion-chip" onclick="addSuggestion('fever, headache, fatigue')">Common symptoms</div>
-                    <div class="suggestion-chip" onclick="addSuggestion('chest pain, shortness of breath')">Cardiac symptoms</div>
-                    <div class="suggestion-chip" onclick="addSuggestion('nausea, vomiting, abdominal pain')">GI symptoms</div>
+                    <div class="suggestion-chip" onclick="addSuggestion('fever, headache, fatigue')">Common symptoms
+                    </div>
+                    <div class="suggestion-chip" onclick="addSuggestion('chest pain, shortness of breath')">Cardiac
+                        symptoms</div>
+                    <div class="suggestion-chip" onclick="addSuggestion('nausea, vomiting, abdominal pain')">GI symptoms
+                    </div>
                 </div>
 
                 <div class="mic-container">
@@ -1260,15 +1448,23 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="progress-container hidden" id="progressContainer">
                 <div class="progress-bar" id="progressBar" style="width: 0%"></div>
             </div>
-            
-            <button id="analyzeBtn" class="btn-checker" onclick="checkSymptoms()">
-                <i class="fas fa-search"></i>
-                Analyze Symptoms
-            </button>
+
+            <div class="btn-group">
+                <button id="analyzeBtn" class="btn-checker" onclick="checkSymptoms()">
+                    <i class="fas fa-search"></i>
+                    Analyze Symptoms
+                </button>
+
+                <button id="predictBtn" class="btn-checker" onclick="predictDisease()">
+                    <i class="fas fa-stethoscope"></i>
+                    Predict Disease
+                </button>
+            </div>
+
         </div>
 
         <!-- Premium results section -->
@@ -1288,7 +1484,7 @@
         function initParticles() {
             const particlesContainer = document.getElementById('particles');
             const particleCount = 20;
-            
+
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
@@ -1304,7 +1500,7 @@
             const neuralBg = document.getElementById('neuralBg');
             const neuronCount = 15;
             const neurons = [];
-            
+
             // Create neurons
             for (let i = 0; i < neuronCount; i++) {
                 const neuron = document.createElement('div');
@@ -1319,15 +1515,15 @@
                     y: parseFloat(neuron.style.top)
                 });
             }
-            
+
             // Create synapses between nearby neurons
             for (let i = 0; i < neurons.length; i++) {
                 for (let j = i + 1; j < neurons.length; j++) {
                     const distance = Math.sqrt(
-                        Math.pow(neurons[i].x - neurons[j].x, 2) + 
+                        Math.pow(neurons[i].x - neurons[j].x, 2) +
                         Math.pow(neurons[i].y - neurons[j].y, 2)
                     );
-                    
+
                     if (distance < 30) {
                         const synapse = document.createElement('div');
                         synapse.className = 'synapse';
@@ -1348,14 +1544,14 @@
             const container = document.getElementById('notificationContainer');
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
-            
+
             const icons = {
                 success: 'fas fa-check-circle',
                 error: 'fas fa-exclamation-circle',
                 warning: 'fas fa-exclamation-triangle',
                 info: 'fas fa-info-circle'
             };
-            
+
             notification.innerHTML = `
                 <div class="notification-icon">
                     <i class="${icons[type] || icons.info}"></i>
@@ -1365,9 +1561,9 @@
                     <div style="font-size: 0.9rem; opacity: 0.9;">${message}</div>
                 </div>
             `;
-            
+
             container.appendChild(notification);
-            
+
             // Auto remove
             setTimeout(() => {
                 notification.style.animation = 'notificationSlide 0.3s reverse';
@@ -1380,7 +1576,7 @@
             const counter = document.getElementById('charCounter');
             const count = textarea.value.length;
             counter.textContent = `${count} characters`;
-            
+
             if (count > 500) {
                 counter.style.color = 'var(--warning-orange)';
             } else if (count > 1000) {
@@ -1433,7 +1629,7 @@
                 voice: 'Natural language processing captures medical terminology',
                 insights: 'Comprehensive risk assessment with treatment recommendations'
             };
-            
+
             showNotification(features[feature], 'info', 3000);
         }
 
@@ -1459,12 +1655,12 @@
             const aiResponse = document.getElementById("aiResponse");
             const progressContainer = document.getElementById("progressContainer");
             const progressBar = document.getElementById("progressBar");
-    
+
             if (!symptoms.trim()) {
                 showNotification("Please enter symptom details to proceed with analysis.", "warning");
                 return;
             }
-    
+
             // Enhanced loading state with progress
             button.disabled = true;
             button.innerHTML = `
@@ -1475,11 +1671,11 @@
                 </div>
                 <span>Analyzing patient data...</span>
             `;
-            
+
             resultDiv.classList.add('hidden');
             aiResponse.innerHTML = "";
             progressContainer.classList.remove('hidden');
-            
+
             // Simulate progress
             let progress = 0;
             const progressInterval = setInterval(() => {
@@ -1487,45 +1683,45 @@
                 if (progress > 90) progress = 90;
                 progressBar.style.width = progress + '%';
             }, 200);
-    
+
             fetch("/symptom_checker", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ symptoms })
             })
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
-                }
-                return res.json();
-            })
-            .then(data => {
-                clearInterval(progressInterval);
-                progressBar.style.width = '100%';
-                
-                setTimeout(() => {
-                    const formatted = data.response.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-                    aiResponse.innerHTML = formatted;
-                    resultDiv.classList.remove('hidden');
-                    progressContainer.classList.add('hidden');
-                    
-                    // Smooth scroll to results
-                    setTimeout(() => {
-                        resultDiv.scrollIntoView({ 
-                            behavior: 'smooth', 
-                            block: 'start' 
-                        });
-                    }, 300);
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(`HTTP error! status: ${res.status}`);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    clearInterval(progressInterval);
+                    progressBar.style.width = '100%';
 
-                    showNotification("Analysis completed successfully", "success");
-                }, 500);
-            })
-            .catch(err => {
-                clearInterval(progressInterval);
-                progressContainer.classList.add('hidden');
-                console.error('Error:', err);
-                
-                aiResponse.innerHTML = `
+                    setTimeout(() => {
+                        const formatted = data.response.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+                        aiResponse.innerHTML = formatted;
+                        resultDiv.classList.remove('hidden');
+                        progressContainer.classList.add('hidden');
+
+                        // Smooth scroll to results
+                        setTimeout(() => {
+                            resultDiv.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }, 300);
+
+                        showNotification("Analysis completed successfully", "success");
+                    }, 500);
+                })
+                .catch(err => {
+                    clearInterval(progressInterval);
+                    progressContainer.classList.add('hidden');
+                    console.error('Error:', err);
+
+                    aiResponse.innerHTML = `
                     <div style="text-align: center; padding: 3rem; color: var(--error-red);">
                         <div style="font-size: 3rem; margin-bottom: 1.5rem;">
                             <i class="fas fa-exclamation-triangle"></i>
@@ -1538,17 +1734,114 @@
                         </div>
                     </div>
                 `;
-                resultDiv.classList.remove('hidden');
-                showNotification("Analysis failed. Please try again.", "error");
-            })
-            .finally(() => {
-                button.disabled = false;
-                button.innerHTML = `
+                    resultDiv.classList.remove('hidden');
+                    showNotification("Analysis failed. Please try again.", "error");
+                })
+                .finally(() => {
+                    button.disabled = false;
+                    button.innerHTML = `
                     <i class="fas fa-search"></i>
                     Analyze Symptoms
                 `;
-            });
+                });
         }
+
+        // Disease prediction with progress tracking
+        function predictDisease() {
+            const symptoms = document.getElementById("symptoms").value;
+            const button = document.getElementById("predictBtn");
+            const resultDiv = document.getElementById("result");
+            const aiResponse = document.getElementById("aiResponse");
+            const progressContainer = document.getElementById("progressContainer");
+            const progressBar = document.getElementById("progressBar");
+
+            if (!symptoms.trim()) {
+                showNotification("Please enter symptom details to proceed with prediction.", "warning");
+                return;
+            }
+
+            // Show progress bar and disable button
+            button.disabled = true;
+            button.innerHTML = `
+                <div class="loading-wave">
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+                </div>
+                <span>Predicting disease...</span>
+                `;
+
+            resultDiv.classList.add('hidden');
+            aiResponse.innerHTML = "";
+            progressContainer.classList.remove('hidden');
+
+            // Simulate progress
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 90) progress = 90;
+                progressBar.style.width = progress + '%';
+            }, 200);
+
+            fetch("/symptom_checker", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ symptoms, action: "predict" }) // add custom flag
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                    return res.json();
+                })
+                .then(data => {
+                    clearInterval(progressInterval);
+                    progressBar.style.width = '100%';
+
+                    setTimeout(() => {
+                        const formatted = data.response.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+                        aiResponse.innerHTML = formatted;
+                        resultDiv.classList.remove('hidden');
+                        progressContainer.classList.add('hidden');
+
+                        setTimeout(() => {
+                            resultDiv.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }, 300);
+
+                        showNotification("Disease prediction completed", "success");
+                    }, 500);
+                })
+                .catch(err => {
+                    clearInterval(progressInterval);
+                    progressContainer.classList.add('hidden');
+                    console.error('Error:', err);
+
+                    aiResponse.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: var(--error-red);">
+                    <div style="font-size: 3rem; margin-bottom: 1.5rem;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <strong style="font-size: 1.3rem; color: var(--text-dark); display: block; margin-bottom: 1rem;">Prediction Error</strong>
+                    <div style="color: var(--text-medium); font-size: 1rem; line-height: 1.6;">
+                    Could not predict disease based on entered symptoms. Please try again.
+                    <br><br>
+                    <small style="color: var(--text-light);">If this keeps happening, contact technical support.</small>
+                    </div>
+                </div>
+                `;
+                    resultDiv.classList.remove('hidden');
+                    showNotification("Prediction failed. Please try again.", "error");
+                })
+                .finally(() => {
+                    button.disabled = false;
+                    button.innerHTML = `
+                        <i class="fas fa-stethoscope"></i>
+                        Predict Disease
+                        `;
+                });
+        }
+
 
         // Enhanced voice input with visualization
         const micButton = document.getElementById("mic-button");
@@ -1590,7 +1883,7 @@
                         finalTranscript += event.results[i][0].transcript;
                     }
                 }
-                
+
                 if (finalTranscript) {
                     if (textarea.value.trim()) {
                         textarea.value += " " + finalTranscript;
@@ -1641,18 +1934,18 @@
         }
 
         // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             // Ctrl/Cmd + Enter to analyze
             if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
                 e.preventDefault();
                 checkSymptoms();
             }
-            
+
             // Escape to close profile menu
             if (e.key === 'Escape') {
                 document.getElementById('profileMenu').classList.remove('show');
             }
-            
+
             // Ctrl/Cmd + M for voice input
             if ((e.ctrlKey || e.metaKey) && e.key === 'm') {
                 e.preventDefault();
@@ -1663,16 +1956,16 @@
         });
 
         // Initialize everything when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             initParticles();
             initNeuralNetwork();
             initScrollReveal();
-            
+
             // Focus on textarea
             setTimeout(() => {
                 document.getElementById('symptoms').focus();
             }, 1000);
-            
+
             // Show welcome notification
             setTimeout(() => {
                 showNotification("Advanced AI medical analysis system initialized", "info", 3000);
@@ -1681,17 +1974,18 @@
 
         // Performance monitoring
         if ('performance' in window) {
-            window.addEventListener('load', function() {
+            window.addEventListener('load', function () {
                 const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
                 console.log(`Enhanced medical app loaded in ${loadTime}ms`);
             });
         }
 
         // Error handling
-        window.addEventListener('error', function(e) {
+        window.addEventListener('error', function (e) {
             console.error('Application error:', e.error);
             showNotification('An unexpected error occurred. System remains operational.', 'error');
         });
     </script>
 </body>
+
 </html>
