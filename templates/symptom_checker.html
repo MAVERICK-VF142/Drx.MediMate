@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Symptom Checker - Aditi</title>
@@ -220,7 +221,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .result-section {
@@ -257,21 +260,22 @@
             .header-content {
                 padding: 0 1rem;
             }
-            
+
             .container {
                 padding: 1rem;
             }
-            
+
             .page-title {
                 font-size: 2rem;
             }
-            
+
             .card {
                 padding: 1.5rem;
             }
         }
     </style>
 </head>
+
 <body>
     <!-- Header - EXACT SAME AS DRUG_INFO -->
     <div class="header">
@@ -302,157 +306,226 @@
         <div class="card">
             <div class="form-group">
                 <label for="symptoms"><strong>Describe the symptoms:</strong></label>
-                <textarea 
-                    id="symptoms" 
-                    placeholder="e.g. sore throat, mild fever, headache..."
-                ></textarea>
+                <textarea id="symptoms" placeholder="e.g. sore throat, mild fever, headache..."></textarea>
             </div>
             <button id="analyzeBtn" class="btn-checker" onclick="checkSymptoms()">
                 🔍 Analyze Symptoms
             </button>
         </div>
-
         <div id="result" class="result-section hidden">
             <div class="result-header">🧠 AI Recommendation:</div>
             <div class="result-box" id="aiResponse"></div>
+            <!-- Translate Section -->
+            <div style="margin-top: 1rem; text-align: center;">
+                <label for="translate-language">Translate to:</label>
+                <select id="translate-language">
+                    {% for lang in INDIAN_LANGUAGES %}
+                    <option value="{{ lang }}">{{ lang }}</option>
+                    {% endfor %}
+                </select>
+                <button id="translateBtn">Translate</button>
+                <div id="translated-result-container" style="display:none; margin-top: 1rem; text-align: center;">
+                    <h4>Translated:</h4>
+                    <p id="translated-text" style="font-style: italic; color: #4b5563;"></p>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <!-- Firebase Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"></script>
-    <script src="../static/js/auth.js"></script>
-    <script src="../static/js/main.js"></script>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-        import { getFirestore, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
-      
-        const firebaseConfig = {
-          apiKey: "AIzaSyDa6_47neFJAH-I4i-ZCU0elY4cRmpyotg",
-          authDomain: "aditi-pharmaceutical-assistant.firebaseapp.com",
-          projectId: "aditi-pharmaceutical-assistant",
-          storageBucket: "aditi-pharmaceutical-assistant.firebasestorage.app",
-          messagingSenderId: "241653252150",
-          appId: "1:241653252150:web:ce83fa898dc2f77a669897",
-          measurementId: "G-HMJ6SD9Q9H"
-        };
-      
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth();
-        const db = getFirestore();
-      
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            const uid = user.uid;
-            try {
-              const docRef = doc(db, "users", uid);
-              const docSnap = await getDoc(docRef);
-      
-              if (docSnap.exists()) {
-                const userData = docSnap.data();
-                document.getElementById('loggedUserFName').innerText = userData.firstName || '';
-                document.getElementById('loggedUserLName').innerText = userData.lastName || '';
-                document.getElementById('loggedUserEmail').innerText = userData.email || '';
-              }
-            } catch (error) {
-              console.error("Error fetching user document:", error);
-            }
-          } else {
-            window.location.href = "/";
-          }
-        });
-      
-        document.getElementById('logout').addEventListener('click', () => {
-          signOut(auth)
-            .then(() => {
-              window.location.href = "/";
-            })
-            .catch((error) => {
-              console.error("Error signing out:", error);
-            });
-        });
-    </script>
+        <!-- Firebase Scripts -->
+        <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"></script>
+        <script src="../static/js/auth.js"></script>
+        <script src="../static/js/main.js"></script>
 
-    <script>
-        // Profile menu toggle - EXACT SAME AS DRUG_INFO
-        function toggleProfileMenu() {
-            const profileMenu = document.getElementById('profileMenu');
-            profileMenu.classList.toggle('show');
-        }
+        <script type="module">
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+            import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+            import { getFirestore, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
-        // Close profile menu when clicking outside
-        document.addEventListener('click', (e) => {
-            const profileContainer = document.querySelector('.profile-container');
-            if (!profileContainer.contains(e.target)) {
-                document.getElementById('profileMenu').classList.remove('show');
-            }
-        });
+            const firebaseConfig = {
+                apiKey: "AIzaSyDa6_47neFJAH-I4i-ZCU0elY4cRmpyotg",
+                authDomain: "aditi-pharmaceutical-assistant.firebaseapp.com",
+                projectId: "aditi-pharmaceutical-assistant",
+                storageBucket: "aditi-pharmaceutical-assistant.firebasestorage.app",
+                messagingSenderId: "241653252150",
+                appId: "1:241653252150:web:ce83fa898dc2f77a669897",
+                measurementId: "G-HMJ6SD9Q9H"
+            };
 
-        function checkSymptoms() {
-            const symptoms = document.getElementById("symptoms").value;
-            const button = document.getElementById("analyzeBtn");
-            const resultDiv = document.getElementById("result");
-            const aiResponse = document.getElementById("aiResponse");
-    
-            if (!symptoms.trim()) {
-                alert("Please enter some symptoms.");
-                return;
-            }
-    
-            // Show loading state
-            button.disabled = true;
-            button.innerHTML = `Analyzing... <span class="spinner-border"></span>`;
-            resultDiv.classList.add('hidden');
-            aiResponse.innerHTML = "";
-    
-            fetch("/symptom_checker", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ symptoms })
-            })
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth();
+            const db = getFirestore();
+
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    const uid = user.uid;
+                    try {
+                        const docRef = doc(db, "users", uid);
+                        const docSnap = await getDoc(docRef);
+
+                        if (docSnap.exists()) {
+                            const userData = docSnap.data();
+                            document.getElementById('loggedUserFName').innerText = userData.firstName || '';
+                            document.getElementById('loggedUserLName').innerText = userData.lastName || '';
+                            document.getElementById('loggedUserEmail').innerText = userData.email || '';
+                        }
+                    } catch (error) {
+                        console.error("Error fetching user document:", error);
+                    }
+                } else {
+                    window.location.href = "/";
                 }
-                return res.json();
-            })
-            .then(data => {
-                const formatted = data.response.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-                aiResponse.innerHTML = formatted;
-                resultDiv.classList.remove('hidden');
-                
-                // Scroll to results
-                resultDiv.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'start' 
-                });
-            })
-            .catch(err => {
-                console.error('Error:', err);
-                aiResponse.innerHTML = `
+            });
+
+            document.getElementById('logout').addEventListener('click', () => {
+                signOut(auth)
+                    .then(() => {
+                        window.location.href = "/";
+                    })
+                    .catch((error) => {
+                        console.error("Error signing out:", error);
+                    });
+            });
+        </script>
+
+        <script>
+            // Profile menu toggle - EXACT SAME AS DRUG_INFO
+            function toggleProfileMenu() {
+                const profileMenu = document.getElementById('profileMenu');
+                profileMenu.classList.toggle('show');
+            }
+
+            // Close profile menu when clicking outside
+            document.addEventListener('click', (e) => {
+                const profileContainer = document.querySelector('.profile-container');
+                if (!profileContainer.contains(e.target)) {
+                    document.getElementById('profileMenu').classList.remove('show');
+                }
+            });
+
+            function checkSymptoms() {
+                const symptoms = document.getElementById("symptoms").value;
+                const button = document.getElementById("analyzeBtn");
+                const resultDiv = document.getElementById("result");
+                const aiResponse = document.getElementById("aiResponse");
+                const translatedResultDiv = document.getElementById("translated-result-container"); // Corrected ID
+                const translatedTextP = document.getElementById("translated-text");
+
+                if (!symptoms.trim()) {
+                    alert("Please enter some symptoms.");
+                    return;
+                }
+
+                // Show loading state
+                button.disabled = true;
+                button.innerHTML = `Analyzing... <span class="spinner-border"></span>`;
+                resultDiv.classList.add('hidden');
+                aiResponse.innerHTML = "";
+                translatedResultDiv.style.display = "none"; // Hide previous translation
+                translatedTextP.innerText = ""; // Clear previous translation
+
+                fetch("/symptom_checker", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ symptoms })
+                })
+                    .then(res => {
+                        if (!res.ok) {
+                            throw new Error(`HTTP error! status: ${res.status}`);
+                        }
+                        return res.json();
+                    })
+                    .then(data => {
+                        const formatted = data.response.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+                        aiResponse.innerHTML = formatted;
+                        resultDiv.classList.remove('hidden');
+
+                        // Scroll to results
+                        resultDiv.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    })
+                    .catch(err => {
+                        console.error('Error:', err);
+                        aiResponse.innerHTML = `
                     <div style="text-align: center; color: #dc2626;">
                         <strong>❌ Analysis Failed</strong><br>
                         An error occurred while analyzing symptoms. Please try again.
                     </div>
                 `;
-                resultDiv.classList.remove('hidden');
-            })
-            .finally(() => {
-                button.disabled = false;
-                button.innerHTML = "🔍 Analyze Symptoms";
-            });
-        }
-
-        // Enter key support
-        document.getElementById('symptoms').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && e.ctrlKey) {
-                checkSymptoms();
+                        resultDiv.classList.remove('hidden');
+                    })
+                    .finally(() => {
+                        button.disabled = false;
+                        button.innerHTML = "🔍 Analyze Symptoms";
+                    });
             }
-        });
-    </script>
-</body>
-</html>
 
+            // Enter key support
+            document.getElementById('symptoms').addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' && e.ctrlKey) {
+                    checkSymptoms();
+                }
+            });
+
+            function translateOutput() {
+                const language = document.getElementById("translate-language").value;
+                const aiResponseElement = document.getElementById("aiResponse"); // Get the AI response element
+                const translatedResultDiv = document.getElementById("translated-result-container"); // Get the container for translated text
+                const translatedTextP = document.getElementById("translated-text"); // Get the paragraph for translated text
+
+                if (!aiResponseElement || aiResponseElement.innerText.trim() === "") {
+                    // Changed alert message to be more specific
+                    alert("No AI recommendation found to translate. Please analyze symptoms first.");
+                    return;
+                }
+
+                const textToTranslate = aiResponseElement.innerText; // Get text from aiResponse
+
+                // Show a loading indicator for translation
+                translatedTextP.innerText = "Translating...";
+                translatedResultDiv.style.display = "block"; // Show the translation section
+
+                fetch("/translate", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        text: textToTranslate,
+                        language: language // This sends the full language name (e.g., "Hindi")
+                    })
+                })
+                    .then(res => {
+                        if (!res.ok) {
+                            // Log the status and response text for better debugging
+                            return res.text().then(text => { throw new Error(`HTTP error! status: ${res.status}, response: ${text}`); });
+                        }
+                        return res.json();
+                    })
+                    .then(data => {
+                        if (data.response) {
+                            translatedTextP.innerText = data.response;
+                            translatedResultDiv.style.display = "block";
+                        } else if (data.error) {
+                            translatedTextP.innerText = `Translation Error: ${data.error}`;
+                            translatedResultDiv.style.display = "block";
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Translation error:", err);
+                        translatedTextP.innerText = "❌ Failed to translate. Please try again.";
+                        translatedResultDiv.style.display = "block";
+                    });
+            }
+
+            // Add event listener to the translate button to trigger translation
+            document.getElementById('translateBtn').addEventListener('click', translateOutput);
+
+        </script>
+</body>
+
+</html>

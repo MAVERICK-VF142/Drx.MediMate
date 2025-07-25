@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -138,9 +139,17 @@
             display: block;
         }
 
-        .drug-icon { color: #8b5cf6; }
-        .symptom-icon { color: #10b981; }
-        .camera-icon { color: #3b82f6; }
+        .drug-icon {
+            color: #8b5cf6;
+        }
+
+        .symptom-icon {
+            color: #10b981;
+        }
+
+        .camera-icon {
+            color: #3b82f6;
+        }
 
         .card-title {
             font-size: 1.4rem;
@@ -170,15 +179,15 @@
             .header-content {
                 padding: 0 1rem;
             }
-            
+
             .container {
                 padding: 1rem;
             }
-            
+
             .dashboard-title {
                 font-size: 2rem;
             }
-            
+
             .cards-grid {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
@@ -186,6 +195,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Account Link - from main branch -->
     <a href="/my-account" class="account-link">My Account</a>
@@ -202,7 +212,7 @@
     <div class="container" id="dashboardContent">
         <h2 class="dashboard-title">Welcome to <span class="brand-highlight">Drx.MediMate</span> Dashboard</h2>
         <p class="subtitle">Your intelligent pharmaceutical assistant</p>
-        
+
         <div class="cards-grid">
             <a href="drug-info-page" class="feature-card">
                 <div class="card-icon drug-icon">💊</div>
@@ -266,4 +276,5 @@
         });
     </script>
 </body>
+
 </html>

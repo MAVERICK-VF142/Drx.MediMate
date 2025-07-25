@@ -10,12 +10,37 @@ import logging
 import time
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeout
 from flask import session
+from deep_translator import GoogleTranslator # Keep this import
 
-INDIAN_LANGUAGES = [
-    "English", "Assamese", "Bengali", "Bodo", "Dogri", "Gujarati", "Hindi", "Kannada",
-    "Kashmiri", "Konkani", "Maithili", "Malayalam", "Manipuri", "Marathi", "Nepali", 
-    "Odia", "Punjabi", "Sanskrit", "Santali", "Sindhi", "Tamil", "Telugu", "Urdu"
-]
+# --- NEW: Language Mapping Dictionary ---
+LANGUAGE_CODES = {
+    "English": "en",
+    "Assamese": "as",
+    "Bengali": "bn",
+    "Bodo": "brx", # Note: Bodo might not have a direct ISO 639-1, check deep_translator docs for best fit or use 'auto'
+    "Dogri": "doi", # Similar note for Dogri
+    "Gujarati": "gu",
+    "Hindi": "hi",
+    "Kannada": "kn",
+    "Kashmiri": "ks",
+    "Konkani": "kok", # Similar note for Konkani
+    "Maithili": "mai", # Similar note for Maithili
+    "Malayalam": "ml",
+    "Manipuri": "mni", # Similar note for Manipuri
+    "Marathi": "mr",
+    "Nepali": "ne",
+    "Odia": "or",
+    "Punjabi": "pa",
+    "Sanskrit": "sa",
+    "Santali": "sat", # Similar note for Santali
+    "Sindhi": "sd",
+    "Tamil": "ta",
+    "Telugu": "te",
+    "Urdu": "ur"
+}
+
+# Use the keys from the mapping for your dropdown
+INDIAN_LANGUAGES = list(LANGUAGE_CODES.keys())
 
 
 # ---------------------------
@@ -35,7 +60,7 @@ model = genai.GenerativeModel("gemini-2.5-flash")
 # Initialize Flask app
 app = Flask(__name__)
 
-app.secret_key = "AIzaSyAwb9K8E9I15FNpQOJZeox48J3qjTeIr6Y" 
+app.secret_key = "AIzaSyAwb9K8E9I15FNpQOJZeox48J3qjTeIr6Y"
 CORS(app)  # Enable Cross-Origin Resource Sharing
 
 logging.basicConfig(
@@ -55,7 +80,7 @@ def gemini_generate_with_retry(prompt, max_retries=3, delay=2, timeout=10):
     while attempt < max_retries:
         try:
             logging.info(f"🌐 Gemini API Call Attempt {attempt + 1}")
-            
+
             # Set up timeout using ThreadPoolExecutor
             with ThreadPoolExecutor(max_workers=1) as executor:
                 future = executor.submit(model.generate_content, prompt)
@@ -136,19 +161,20 @@ def get_symptom_recommendation(symptoms):
     except Exception as e:
         logging.error(f"❌ Exception in get_symptom_recommendation: {str(e)}")
         return f"❌ Error: {str(e)}"
-        
-def translate_output(text, target_language):
-    if target_language not in INDIAN_LANGUAGES:
-        logging.warning(f"❌ Invalid target language: {target_language}")
-        return "❌ Invalid target language specified."
-    
-    from html import escape
-    sanitized_text = escape(text)
-    prompt = f"Translate the following into {target_language}:\n\n{sanitized_text}"
-    response = gemini_generate_with_retry(prompt)
-    if response and hasattr(response, 'text'):
-        return response.text.strip()
-    return "❌ Translation failed or no response."
+
+# This function is not used by the /translate endpoint, but it's good to fix it if it were.
+# def translate_output(text, target_language):
+#     if target_language not in INDIAN_LANGUAGES:
+#         logging.warning(f"❌ Invalid target language: {target_language}")
+#         return "❌ Invalid target language specified."
+
+#     from html import escape
+#     sanitized_text = escape(text)
+#     prompt = f"Translate the following into {target_language}:\n\n{sanitized_text}"
+#     response = gemini_generate_with_retry(prompt)
+#     if response and hasattr(response, 'text'):
+#         return response.text.strip()
+#     return "❌ Translation failed or no response."
 
 def analyze_image_with_gemini(image_data):
     try:
@@ -174,7 +200,7 @@ def analyze_image_with_gemini(image_data):
         if not text:
             logging.warning("❌ Analysis failed or empty AI response.")
             return "❌ Analysis failed or empty response from AI."
-        
+
         logging.info("AI analysis complete.")
         return text
 
@@ -196,22 +222,17 @@ def index():
 
 @app.route('/drug-info-page')
 def drug_info_page():
-    return render_template('drug_info.html')
+    # Pass the updated INDIAN_LANGUAGES list
+    return render_template('drug_info.html',INDIAN_LANGUAGES=INDIAN_LANGUAGES)
 
 @app.route('/symptom-checker-page')
 def symptom_checker_page():
-    return render_template('symptom_checker.html')
+    # Pass the updated INDIAN_LANGUAGES list
+    return render_template('symptom_checker.html',INDIAN_LANGUAGES=INDIAN_LANGUAGES)
 
 @app.route('/upload-image-page')
 def upload_image_page():
     return render_template('upload_image.html')
-
-@app.route('/show-translate')
-def show_translate():
-    if 'last_output' not in session:
-        session['last_output'] = ''  # Initialize with a default value if not set
-    result = session.get('last_output', '')  
-    return render_template("translate.html", indian_languages=INDIAN_LANGUAGES, result=result)
 
 
 # ---------------------------
@@ -254,20 +275,28 @@ def symptom_check():
 
 @app.route('/translate', methods=['POST'])
 def translate_text():
-    logging.info("API /translate called")
+    data = request.get_json()
+    text = data.get('text', '')
+    lang_name = data.get('language', '') # Get the full language name
+
+    if not text or not lang_name:
+        return jsonify({'response': 'Invalid input'}), 400
+
+    # --- NEW: Get the ISO code from the mapping ---
+    target_lang_code = LANGUAGE_CODES.get(lang_name)
+
+    if not target_lang_code:
+        logging.warning(f"❌ Invalid or unsupported target language name: {lang_name}")
+        return jsonify({'response': 'Unsupported language for translation'}), 400
+
     try:
-        data = request.get_json()
-        logging.info(f"Request JSON: {data}")
-        text = data.get('text')
-        language = data.get('language')
-        if not text or not language:
-            return api_response('❌ Text and language are required.', 400)
-        
-        translated = translate_output(text, language)
-        return api_response(translated)
+        # Use the ISO code for translation
+        translated = GoogleTranslator(target=target_lang_code).translate(text)
+        return jsonify({'response': translated})
     except Exception as e:
-        logging.error(f"❌ Error in /translate: {str(e)}")
-        return api_response(f"❌ Translation failed: {str(e)}", 500)
+        logging.error(f"Translation error: {e}") # Log the actual error
+        return jsonify({'response': 'Translation failed'}), 500
+
 
 
 @app.route('/process-upload', methods=['POST'])

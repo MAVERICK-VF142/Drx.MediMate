@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -331,7 +332,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* Responsive */
@@ -339,29 +342,30 @@
             .header-content {
                 padding: 0 1rem;
             }
-            
+
             .container {
                 padding: 1rem;
             }
-            
+
             .page-title {
                 font-size: 2rem;
             }
-            
+
             .search-form {
                 flex-direction: column;
             }
-            
+
             .chat-section {
                 padding: 1.5rem;
             }
-            
+
             .message-container {
                 height: 250px;
             }
         }
     </style>
 </head>
+
 <body>
     <!-- Header -->
     <div class="header">
@@ -393,7 +397,8 @@
         <!-- Search Section -->
         <div class="search-section">
             <div class="search-form">
-                <input type="text" class="search-input" id="drugSearch" placeholder="Enter drug name (e.g., Paracetamol, Ibuprofen, Amoxicillin...)">
+                <input type="text" class="search-input" id="drugSearch"
+                    placeholder="Enter drug name (e.g., Paracetamol, Ibuprofen, Amoxicillin...)">
                 <button class="search-btn" id="searchBtn" onclick="searchDrug()">
                     🔍 Search
                 </button>
@@ -416,153 +421,219 @@
             <div id="chatbox" class="message-container">
                 <div class="welcome-message">
                     <strong>Welcome to Drug Information Center!</strong><br>
-                    Search for any drug above or ask me about medications, dosages, interactions, side effects, and more.
+                    Search for any drug above or ask me about medications, dosages, interactions, side effects, and
+                    more.
                 </div>
             </div>
+            <!-- Translate Section -->
+            <div style="margin-top: 1rem; text-align: center;">
+                <label for="translate-language">Translate to:</label>
+                <select id="translate-language">
+                    {% for lang in INDIAN_LANGUAGES %}
+                    <option value="{{ lang }}">{{ lang }}</option>
+                    {% endfor %}
+                </select>
+                <button id="translateBtn">Translate</button>
+                <div id="translated-result" style="display:none; margin-top: 1rem; text-align: center;">
+                    <h4>Translated:</h4>
+                    <p id="translated-text" style="font-style: italic; color: #4b5563;"></p>
+                </div>
+
+            </div>
+
 
             <div class="input-container">
-                <input type="text" id="userInput" placeholder="Ask about drug interactions, dosages, side effects..." autofocus>
+                <input type="text" id="userInput" placeholder="Ask about drug interactions, dosages, side effects..."
+                    autofocus>
                 <button class="send-button" onclick="sendMessage()">Send</button>
             </div>
-        </div>
-    </div>
 
-    <!-- Firebase Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"></script>
-    <script src="../static/js/auth.js"></script>
-    <script src="../static/js/main.js"></script>
+            <!-- Firebase Scripts -->
+            <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
+            <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
+            <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"></script>
+            <script src="../static/js/auth.js"></script>
+            <script src="../static/js/main.js"></script>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-        import { getFirestore, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
-      
-        const firebaseConfig = {
-          apiKey: "AIzaSyDa6_47neFJAH-I4i-ZCU0elY4cRmpyotg",
-          authDomain: "aditi-pharmaceutical-assistant.firebaseapp.com",
-          projectId: "aditi-pharmaceutical-assistant",
-          storageBucket: "aditi-pharmaceutical-assistant.firebasestorage.app",
-          messagingSenderId: "241653252150",
-          appId: "1:241653252150:web:ce83fa898dc2f77a669897",
-          measurementId: "G-HMJ6SD9Q9H"
-        };
-      
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth();
-        const db = getFirestore();
-      
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            const uid = user.uid;
-            try {
-              const docRef = doc(db, "users", uid);
-              const docSnap = await getDoc(docRef);
-      
-              if (docSnap.exists()) {
-                const userData = docSnap.data();
-                document.getElementById('loggedUserFName').innerText = userData.firstName || '';
-                document.getElementById('loggedUserLName').innerText = userData.lastName || '';
-                document.getElementById('loggedUserEmail').innerText = userData.email || '';
-              }
-            } catch (error) {
-              console.error("Error fetching user document:", error);
-            }
-          } else {
-            window.location.href = "/";
-          }
-        });
-      
-        document.getElementById('logout').addEventListener('click', () => {
-          signOut(auth)
-            .then(() => {
-              window.location.href = "/";
-            })
-            .catch((error) => {
-              console.error("Error signing out:", error);
-            });
-        });
-    </script>
+            <script type="module">
+                import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+                import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+                import { getFirestore, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
-    <script>
-        // Profile menu toggle
-        function toggleProfileMenu() {
-            const profileMenu = document.getElementById('profileMenu');
-            profileMenu.classList.toggle('show');
-        }
+                const firebaseConfig = {
+                    apiKey: "AIzaSyDa6_47neFJAH-I4i-ZCU0elY4cRmpyotg",
+                    authDomain: "aditi-pharmaceutical-assistant.firebaseapp.com",
+                    projectId: "aditi-pharmaceutical-assistant",
+                    storageBucket: "aditi-pharmaceutical-assistant.firebasestorage.app",
+                    messagingSenderId: "241653252150",
+                    appId: "1:241653252150:web:ce83fa898dc2f77a669897",
+                    measurementId: "G-HMJ6SD9Q9H"
+                };
 
-        // Close profile menu when clicking outside
-        document.addEventListener('click', (e) => {
-            const profileContainer = document.querySelector('.profile-container');
-            if (!profileContainer.contains(e.target)) {
-                document.getElementById('profileMenu').classList.remove('show');
-            }
-        });
+                const app = initializeApp(firebaseConfig);
+                const auth = getAuth();
+                const db = getFirestore();
 
-        // Drug search functionality
-        function searchDrug() {
-            const drugName = document.getElementById('drugSearch').value.trim();
-            const searchBtn = document.getElementById('searchBtn');
-            
-            if (!drugName) {
-                alert('Please enter a drug name');
-                return;
-            }
+                // Firebase auth state change
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        const uid = user.uid;
+                        try {
+                            const docRef = doc(db, "users", uid);
+                            const docSnap = await getDoc(docRef);
 
-            // Add search result as message
-            addMessageToChat('user', `Search for: ${drugName}`);
-            
-            // Show loading
-            searchBtn.disabled = true;
-            searchBtn.innerHTML = `Searching... <span class="loading"></span>`;
-            
-            // Simulate API call - replace with your actual backend
-            setTimeout(() => {
-                addMessageToChat('assistant', `Here's information about ${drugName}: This is a simulated response. In your implementation, this would contain detailed drug information from your backend.`);
-                searchBtn.disabled = false;
-                searchBtn.innerHTML = '🔍 Search';
-                document.getElementById('drugSearch').value = '';
-            }, 2000);
-        }
+                            if (docSnap.exists()) {
+                                const userData = docSnap.data();
+                                document.getElementById('loggedUserFName').innerText = userData.firstName || '';
+                                document.getElementById('loggedUserLName').innerText = userData.lastName || '';
+                                document.getElementById('loggedUserEmail').innerText = userData.email || '';
+                            }
+                        } catch (error) {
+                            console.error("Error fetching user document:", error);
+                        }
+                    } else {
+                        window.location.href = "/";
+                    }
+                });
 
-        // Chat functionality
-        function sendMessage() {
-            const userInput = document.getElementById('userInput');
-            const message = userInput.value.trim();
-            
-            if (message) {
-                addMessageToChat('user', message);
-                userInput.value = '';
-                
-                // Simulate response - replace with actual API call
-                setTimeout(() => {
-                    addMessageToChat('assistant', `I understand you're asking about: "${message}". Let me provide you with relevant drug information.`);
-                }, 1000);
-            }
-        }
+                // Logout event
+                document.getElementById('logout').addEventListener('click', () => {
+                    signOut(auth)
+                        .then(() => {
+                            window.location.href = "/";
+                        })
+                        .catch((error) => {
+                            console.error("Error signing out:", error);
+                        });
+                });
+            </script>
 
-        function addMessageToChat(sender, message) {
-            const chatbox = document.getElementById('chatbox');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}`;
-            messageDiv.textContent = message;
-            chatbox.appendChild(messageDiv);
-            chatbox.scrollTop = chatbox.scrollHeight;
-        }
+            <script>
+                // Profile menu toggle
+                function toggleProfileMenu() {
+                    const profileMenu = document.getElementById('profileMenu');
+                    profileMenu.classList.toggle('show');
+                }
 
-        // Enter key functionality
-        document.getElementById('drugSearch').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                searchDrug();
-            }
-        });
+                // Close profile menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    const profileContainer = document.querySelector('.profile-container');
+                    if (!profileContainer.contains(e.target)) {
+                        document.getElementById('profileMenu').classList.remove('show');
+                    }
+                });
 
-        document.getElementById('userInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
-    </script>
+                // Drug search functionality
+                function searchDrug() {
+                    const drugName = document.getElementById('drugSearch').value.trim();
+                    const searchBtn = document.getElementById('searchBtn');
+
+                    if (!drugName) {
+                        alert('Please enter a drug name');
+                        return;
+                    }
+
+                    // Add search message
+                    addMessageToChat('user', `Search for: ${drugName}`);
+
+                    // Show loading
+                    searchBtn.disabled = true;
+                    searchBtn.innerHTML = `Searching... <span class="loading"></span>`;
+
+                    // Simulate API call
+                    setTimeout(() => {
+                        addMessageToChat('assistant', `Here's information about ${drugName}: This is a simulated response. In your implementation, this would contain detailed drug information from your backend.`);
+                        searchBtn.disabled = false;
+                        searchBtn.innerHTML = '🔍 Search';
+                        document.getElementById('drugSearch').value = '';
+                    }, 2000);
+                }
+
+                // Chat message sending
+                function sendMessage() {
+                    const userInput = document.getElementById('userInput');
+                    const message = userInput.value.trim();
+
+                    if (message) {
+                        addMessageToChat('user', message);
+                        userInput.value = '';
+
+                        // Simulate assistant response
+                        setTimeout(() => {
+                            addMessageToChat('assistant', `I understand you're asking about: "${message}". Let me provide you with relevant drug information.`);
+                        }, 1000);
+                    }
+                }
+
+                // Add message to chat window
+                function addMessageToChat(sender, message) {
+                    const chatbox = document.getElementById('chatbox');
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `message ${sender}`;
+                    messageDiv.innerText = message;
+                    chatbox.appendChild(messageDiv);
+                    chatbox.scrollTop = chatbox.scrollHeight;
+                }
+
+                // Event listeners for Enter key
+                document.getElementById('drugSearch').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        searchDrug();
+                    }
+                });
+
+                document.getElementById('userInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        sendMessage();
+                    }
+                });
+
+                // Translation output
+                function translateOutput() {
+                    const language = document.getElementById("translate-language").value;
+                    const lastAssistantMessage = [...document.querySelectorAll(".message.assistant")].pop();
+
+                    if (!lastAssistantMessage) {
+                        alert("No assistant message found to translate.");
+                        return;
+                    }
+
+                    const textToTranslate = lastAssistantMessage.innerText;
+
+                    fetch("/translate", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            text: textToTranslate,
+                            language: language
+                        })
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            document.getElementById("translated-text").innerText = data.response;
+                            document.getElementById("translated-result").style.display = "block";
+                        })
+                        .catch(err => {
+                            console.error("Translation error:", err);
+                            alert("❌ Failed to translate.");
+                        });
+                }
+
+                // Add event listener to the translate button to trigger translation
+                document.getElementById('translateBtn').addEventListener('click', translateOutput);
+
+                // Toggle dropdown menu for translation options
+                function toggleTranslateDropdown() {
+                    const dropdown = document.getElementById('translateDropdown');
+                    dropdown.classList.toggle('show');
+                }
+
+                // Attach toggle function to the dropdown toggle button
+                document.getElementById('translateDropdownBtn').addEventListener('click', toggleTranslateDropdown);
+            </script>
+
 </body>
+
 </html>
