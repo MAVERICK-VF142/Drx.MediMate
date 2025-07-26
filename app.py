@@ -1,27 +1,41 @@
-import os
-from dotenv import load_dotenv
-load_dotenv()  
-import json
+# Standard library imports
 import base64
-import uuid
-import secrets
 import datetime
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session
-from flask_cors import CORS
-from PIL import Image
-from io import BytesIO
-import google.generativeai as genai
-from utils.cache import get_cached_drug, set_cached_drug
-from dotenv import load_dotenv
-load_dotenv()
-import markdown
-import logging
-import time
 import functools
-
+import json
+import logging
+import os
+import re
+import secrets
+import time
+import uuid
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeout
+from io import BytesIO
+
+# Third-party imports
 import firebase_admin
+import google.generativeai as genai
+import markdown
+from dotenv import load_dotenv
 from firebase_admin import credentials, firestore, auth
+from flask import (Flask, jsonify, redirect, render_template, request, session,
+                   url_for)
+from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from PIL import Image
+
+# Local application imports
+from utils.cache import get_cached_drug, set_cached_drug
+
+# Load environment variables once, right after imports
+load_dotenv()
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s"
+)
 
 # ---------------------------
 # Configuration & Setup
@@ -38,13 +52,34 @@ model = genai.GenerativeModel("gemini-2.5-flash")
 
 # Initialize Flask app
 app = Flask(__name__)
+
+# Initialize rate limiter
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://",
+)
 # Configure Flask secret key
 secret_key = os.getenv("SECRET_KEY")
 if not secret_key:
     logging.warning("SECRET_KEY environment variable not set. Generating a temporary random key. This should ONLY be used for local development.")
     secret_key = secrets.token_urlsafe(32)
 app.secret_key = secret_key
-CORS(app)  # Enable Cross-Origin Resource Sharing
+# Configure CORS with restricted origins for production
+allowed_origins = os.getenv("ALLOWED_ORIGINS")
+if allowed_origins:
+    origins = allowed_origins.split(",")
+else:
+    # Default to localhost for development
+    origins = [
+        "http://localhost:5000", 
+        "http://127.0.0.1:5000",
+        "http://localhost:8000", # Common alternative dev port
+        "http://127.0.0.1:8000"
+    ]
+logging.info(f"CORS enabled for origins: {origins}")
+CORS(app, origins=origins, supports_credentials=True)
 
 # ---------------------------
 # Firebase Admin SDK Setup
@@ -156,6 +191,41 @@ def gemini_generate_with_retry(prompt, max_retries=3, delay=2, timeout=20):
 # ---------------------------
 # Utility Functions
 # ---------------------------
+
+def parse_firestore_timestamp(timestamp):
+    """
+    Safely parses a Firestore timestamp which can be a datetime object,
+    a Firestore Timestamp, or an ISO string.
+    """
+    if isinstance(timestamp, datetime.datetime):
+        return timestamp
+    if hasattr(timestamp, 'to_datetime'):
+        try:
+            return timestamp.to_datetime()
+        except Exception as e:
+            logging.error(f"Failed to convert Firestore Timestamp to datetime: {e}")
+            return None
+    if isinstance(timestamp, str):
+        try:
+            return datetime.datetime.fromisoformat(timestamp)
+        except (ValueError, TypeError):
+            logging.error(f"Could not parse timestamp string: {timestamp}")
+            return None
+    logging.warning(f"Unhandled timestamp type: {type(timestamp)}")
+    return None
+
+def validate_drug_name(drug_name):
+    """
+    Validates the drug name to ensure it meets security and format requirements.
+    - Allows alphanumeric characters, spaces, hyphens, parentheses, and periods.
+    - Limits the length to a reasonable size to prevent overly long inputs.
+    """
+    if not drug_name or len(drug_name) > 100:
+        return False
+    # Regex to allow alphanumeric, spaces, hyphens, parentheses, and periods
+    if not re.match(r"^[a-zA-Z0-9\s\-\(\).]+$", drug_name):
+        return False
+    return True
 
 def api_response(message, status=200):
     """Standard JSON response helper"""
@@ -513,15 +583,16 @@ def check_auth():
 # ---------------------------
 
 @app.route('/get_drug_info', methods=['POST'])
+@limiter.limit("10 per minute")
 def get_drug_info():
     logging.info("API /get_drug_info called")
     try:
         data = request.get_json()
         logging.info(f"Request JSON: {data}")
         drug_name = data.get('drug_name')
-        if not drug_name:
-            logging.warning("No drug name provided in request")
-            return api_response('❌ No drug name provided.', 400)
+        if not validate_drug_name(drug_name):
+            logging.warning(f"Invalid drug name received: {drug_name}")
+            return api_response('❌ Invalid or missing drug name.', 400)
         logging.info(f"Calling get_drug_information with drug_name: {drug_name}")
         response = get_drug_information(drug_name)
         return api_response(response)
@@ -530,6 +601,7 @@ def get_drug_info():
         return api_response(f"❌ Error: {str(e)}", 500)
 
 @app.route('/symptom_checker', methods=['POST'])
+@limiter.limit("10 per minute")
 def symptom_check():
     logging.info("API /symptom_checker called")
     try:
@@ -553,13 +625,14 @@ def symptom_check():
         return api_response(f'❌ Error during analysis: {str(e)}', 500)
 
 @app.route('/process-upload', methods=['POST'])
+@limiter.limit("10 per minute")
 def process_upload():
     logging.info("API /process-upload called")
     image_data = request.form.get("image_data")
     if image_data:
         logging.info("Image data received for analysis")
         result = analyze_image_with_gemini(image_data)
-        print(result)
+        logging.info(f"Image analysis result: {result}")
         return jsonify({'result': result})
     else:
         logging.warning("❌ No image data received in request")
@@ -612,20 +685,10 @@ def verify_admin_invitation(code):
         return False, "Invitation code has already been used"
     
     # Check if expired
-    expires_at = invitation.get('expires_at')
-
-    # Ensure expires_at is a datetime object
-    if not isinstance(expires_at, datetime.datetime):
-        # Firestore Timestamp objects have a to_datetime() helper
-        if hasattr(expires_at, 'to_datetime'):
-            expires_at = expires_at.to_datetime()
-        else:
-            # Fallback: attempt ISO parsing
-            try:
-                expires_at = datetime.datetime.fromisoformat(str(expires_at))
-            except Exception as parse_err:
-                logging.error(f"Unable to parse expires_at field: {parse_err}")
-                return False, "Invalid expiry date format"
+    expires_at_raw = invitation.get('expires_at')
+    expires_at = parse_firestore_timestamp(expires_at_raw)
+    if not expires_at:
+        return False, "Invalid expiry date format"
 
     if datetime.datetime.now() > expires_at:
         return False, "Invitation code has expired"
@@ -688,16 +751,11 @@ def verify_invitation():
             if invitation.get('used'):
                 return False, "Invitation code has already been used"
 
-            # Expiration check (reuse helper)
-            expires_at = invitation.get('expires_at')
-            if not isinstance(expires_at, datetime.datetime):
-                if hasattr(expires_at, 'to_datetime'):
-                    expires_at = expires_at.to_datetime()
-                else:
-                    try:
-                        expires_at = datetime.datetime.fromisoformat(str(expires_at))
-                    except Exception:
-                        return False, "Invalid expiry date format"
+            # Expiration check
+            expires_at_raw = invitation.get('expires_at')
+            expires_at = parse_firestore_timestamp(expires_at_raw)
+            if not expires_at:
+                return False, "Invalid expiry date format"
             if datetime.datetime.now() > expires_at:
                 return False, "Invitation code has expired"
 
