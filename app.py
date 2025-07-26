@@ -53,12 +53,24 @@ model = genai.GenerativeModel("gemini-2.5-flash")
 # Initialize Flask app
 app = Flask(__name__)
 
-# Initialize rate limiter
+def get_limiter_key():
+    """
+    Custom key function for rate limiting that uses:
+    - Authenticated user's ID if available
+    - Falls back to IP address for anonymous users
+    """
+    if 'user' in session:
+        return f"user:{session['user']['id']}"
+    return get_remote_address()
+
+# Initialize rate limiter with Redis in production, memory otherwise
+storage_uri = os.environ.get('REDIS_URL', 'memory://')
 limiter = Limiter(
-    get_remote_address,
+    key_func=get_limiter_key,
     app=app,
     default_limits=["200 per day", "50 per hour"],
-    storage_uri="memory://",
+    storage_uri=storage_uri,
+    strategy="fixed-window"  # More consistent rate limiting
 )
 # Configure Flask secret key
 secret_key = os.getenv("SECRET_KEY")
@@ -217,14 +229,29 @@ def parse_firestore_timestamp(timestamp):
 def validate_drug_name(drug_name):
     """
     Validates the drug name to ensure it meets security and format requirements.
-    - Allows alphanumeric characters, spaces, hyphens, parentheses, and periods.
-    - Limits the length to a reasonable size to prevent overly long inputs.
+    - Allows alphanumeric characters, spaces, hyphens, and parentheses.
+    - Requires a minimum of 2 non-whitespace characters.
+    - Limits the length to 100 characters.
+    
+    Args:
+        drug_name (str): The drug name to validate
+        
+    Returns:
+        bool: True if valid, False otherwise
     """
-    if not drug_name or len(drug_name) > 100:
+    # Check for empty or whitespace-only input
+    if not drug_name or not drug_name.strip():
         return False
-    # Regex to allow alphanumeric, spaces, hyphens, parentheses, and periods
-    if not re.match(r"^[a-zA-Z0-9\s\-\(\).]+$", drug_name):
+        
+    # Strip whitespace and check length constraints
+    stripped = drug_name.strip()
+    if len(stripped) < 2 or len(drug_name) > 100:
         return False
+        
+    # Regex to allow alphanumeric, spaces, hyphens, and parentheses only
+    if not re.match(r'^[a-zA-Z0-9\s\-\(\)]+$', stripped):
+        return False
+        
     return True
 
 def api_response(message, status=200):
