@@ -1,210 +1,280 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PharmaPro Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aditi - Pharmaceutical Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <style>
-    body {
-      background: linear-gradient(135deg, #e3f2fd, #ffffff);
-      font-family: 'Poppins', sans-serif;
-      overflow-x: hidden;
-    }
-  
-    .dashboard-title {
-      font-weight: 700;
-      font-size: 2.3rem;
-      color: #34495e;
-      margin-bottom: 2rem;
-      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.05);
-    }
-  
-    .card {
-      border: none;
-      border-radius: 20px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      background: #fff;
-    }
-  
-    .card:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 14px 22px rgba(0, 0, 0, 0.12);
-    }
-  
-    .card-body {
-      padding: 1.6rem;
-      text-align: center;
-    }
-  
-    .card-title {
-      font-size: 1.4rem;
-      font-weight: 600;
-    }
-  
-    .card-text {
-      font-size: 0.95rem;
-      color: #6c757d;
-    }
-  
-    .card-icon {
-      font-size: 2.4rem;
-      margin-bottom: 12px;
-      animation: pulse 2s infinite;
-    }
-  
-    .bg-primary-gradient {
-      background: linear-gradient(135deg, #4e54c8, #8f94fb);
-      color: #fff;
-    }
-  
-    .bg-success-gradient {
-      background: linear-gradient(135deg, #43cea2, #185a9d);
-      color: #fff;
-    }
-  
-    .bg-info-gradient {
-      background: linear-gradient(135deg, #56ccf2, #2f80ed);
-      color: #fff;
-    }
-  
-    .logout-btn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 999;
-      background: rgba(255, 0, 0, 0.9);
-      color: white;
-      border: none;
-      border-radius: 30px;
-      padding: 10px 20px;
-      font-weight: 600;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-      transition: background 0.3s ease;
-    }
-  
-    .logout-btn:hover {
-      background: #c0392b;
-    }
-  
-    #dashboardContent {
-      animation: fadeIn 1s ease forwards;
-    }
-  
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.08); opacity: 0.9; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-  
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  
-    @media (max-width: 576px) {
-      .card-body {
-        padding: 1.2rem;
-      }
-  
-      .card-title {
-        font-size: 1.2rem;
-      }
-  
-      .card-icon {
-        font-size: 2rem;
-      }
-  
-      .dashboard-title {
-        font-size: 1.8rem;
-      }
-    }
-  </style>
-  
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        /* Account Link - from main branch */
+        .account-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 999;
+            background: #3498db;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s ease;
+        }
+
+        .account-link:hover {
+            background: #2c80b4;
+            color: white;
+        }
+
+        .logout-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .logout-btn:hover {
+            background: #b91c1c;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-title {
+            font-size: 2.5rem;
+            color: #1f2937;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .brand-highlight {
+            color: #2563eb;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #2563eb;
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .drug-icon {
+            color: #8b5cf6;
+        }
+
+        .symptom-icon {
+            color: #10b981;
+        }
+
+        .camera-icon {
+            color: #3b82f6;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
+            color: #6b7280;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Hidden content shown after auth */
+        #dashboardContent {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #dashboardContent.show {
+            opacity: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .dashboard-title {
+                font-size: 2rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+    </style>
 </head>
+
 <body>
+    <!-- Account Link - from main branch -->
+    <a href="/my-account" class="account-link">My Account</a>
 
-  <button id="logout" class="logout-btn">Logout</button>
-
-  <div class="container py-5" id="dashboardContent" style="display: none;">
-    <h2 class="text-center dashboard-title">Welcome to <span style="color:#007bff;">Drx.MediMate</span> Dashboard</h2>
-    
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-      <div class="col">
-        <div class="card bg-primary-gradient h-100" onclick="location.href='/drug-info-page'">
-          <div class="card-body">
-            <div class="card-icon">💊</div>
-            <h5 class="card-title">Drug Information</h5>
-            <p class="card-text">Look up clinical drug info powered by Gemini AI.</p>
-          </div>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">🏥 Aditi</div>
+            <button id="logout" class="logout-btn">Logout</button>
         </div>
-      </div>
-
-      <div class="col">
-        <div class="card bg-success-gradient h-100" onclick="location.href='/symptom-checker-page'">
-          <div class="card-body">
-            <div class="card-icon">🩺</div>
-            <h5 class="card-title">Symptom Checker</h5>
-            <p class="card-text">Suggest safe OTC drugs based on symptoms.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="card bg-info-gradient h-100" onclick="location.href='/upload-image-page'">
-          <div class="card-body">
-            <div class="card-icon">📷</div>
-            <h5 class="card-title">Medicine Image</h5>
-            <p class="card-text">Upload a medicine photo to get full details.</p>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
+    <!-- Main Container -->
+    <div class="container" id="dashboardContent">
+        <h2 class="dashboard-title">Welcome to <span class="brand-highlight">Drx.MediMate</span> Dashboard</h2>
+        <p class="subtitle">Your intelligent pharmaceutical assistant</p>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+        <div class="cards-grid">
+            <a href="drug-info-page" class="feature-card">
+                <div class="card-icon drug-icon">💊</div>
+                <h5 class="card-title">Drug Information</h5>
+                <p class="card-description">Look up clinical drug info powered by Gemini AI.</p>
+            </a>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDa6_47neFJAH-I4i-ZCU0elY4cRmpyotg",
-      authDomain: "aditi-pharmaceutical-assistant.firebaseapp.com",
-      projectId: "aditi-pharmaceutical-assistant",
-      storageBucket: "aditi-pharmaceutical-assistant.appspot.com",
-      messagingSenderId: "241653252150",
-      appId: "1:241653252150:web:ce83fa898dc2f77a669897",
-      measurementId: "G-HMJ6SD9Q9H"
-    };
+            <a href="symptom-checker-page" class="feature-card">
+                <div class="card-icon symptom-icon">🩺</div>
+                <h5 class="card-title">Symptom Checker</h5>
+                <p class="card-description">Suggest safe OTC drugs based on symptoms.</p>
+            </a>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
+            <a href="upload-image-page" class="feature-card">
+                <div class="card-icon camera-icon">📷</div>
+                <h5 class="card-title">Medicine Image</h5>
+                <p class="card-description">Upload a medicine photo to get full details.</p>
+            </a>
+        </div>
+    </div>
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById('dashboardContent').style.display = 'block';
-      } else {
-        window.location.href = "/";
-      }
-    });
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
 
-    const logoutBtn = document.getElementById('logout');
-    logoutBtn.addEventListener('click', () => {
-      signOut(auth)
-        .then(() => {
-          localStorage.removeItem('loggedInUserId');
-          window.location.href = "/";
-        })
-        .catch((error) => {
-          console.error("Logout error:", error);
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDa6_47neFJAH-I4i-ZCU0elY4cRmpyotg",
+            authDomain: "aditi-pharmaceutical-assistant.firebaseapp.com",
+            projectId: "aditi-pharmaceutical-assistant",
+            storageBucket: "aditi-pharmaceutical-assistant.appspot.com",
+            messagingSenderId: "241653252150",
+            appId: "1:241653252150:web:ce83fa898dc2f77a669897",
+            measurementId: "G-HMJ6SD9Q9H"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('dashboardContent').classList.add('show');
+            } else {
+                window.location.href = "/";
+            }
         });
-    });
-  </script>
+
+        const logoutBtn = document.getElementById('logout');
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth)
+                .then(() => {
+                    localStorage.removeItem('loggedInUserId');
+                    window.location.href = "/";
+                })
+                .catch((error) => {
+                    console.error("Logout error:", error);
+                });
+        });
+    </script>
 </body>
+
 </html>

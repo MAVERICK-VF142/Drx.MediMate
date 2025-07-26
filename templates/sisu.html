@@ -1,114 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register, Login & Recover Password</title>
+    <title>Aditi Pharmaceutical - Authentication</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="../static/css/sisu.css">
-    <script type="module" src="../static/js/firebaseauth.js"></script>
-    <style>
-        .google-login button {
-            background-color: #4285F4;
-            color: white;
-            border: none;
-            padding: 10px;
-            font-size: 1em;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .google-login button i {
-            margin-right: 8px;
-        }
-    </style>
 </head>
+
 <body>
-    <!-- Registration Form -->
-    <div class="container" id="signup" style="display:none;">
-        <h1 class="form-title">Register</h1>
-        <form method="post" action="">
-            <div id="signUpMessage" class="messageDiv" style="display:none;"></div>
-            <div class="input-group">
-                <i class="fas fa-user"></i>
-                <input type="text" id="fName" placeholder="" required>
-                <label for="fName">First Name</label>
+    <div class="auth-wrapper">
+        <!-- Background Elements -->
+        <div class="bg-decoration">
+            <div class="bg-circle circle-1"></div>
+            <div class="bg-circle circle-2"></div>
+            <div class="bg-circle circle-3"></div>
+        </div>
+
+        <!-- Left Panel - Branding -->
+        <div class="left-panel">
+            <div class="brand-content">
+                <div class="logo-section">
+                    <div class="logo">
+                        <i class="fas fa-pills"></i>
+                        <span>Aditi Pharmaceutical</span>
+                    </div>
+                    <div class="tagline">
+                        <h1>Revolutionizing Healthcare Management</h1>
+                        <p>Join thousands of healthcare professionals who trust our AI-powered pharmaceutical assistant
+                            to streamline their operations and enhance patient care.</p>
+                    </div>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h3>Smart Analytics</h3>
+                            <p>Real-time insights and comprehensive reporting</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h3>Enterprise Security</h3>
+                            <p>Bank-level encryption and compliance standards</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h3>AI Assistant</h3>
+                            <p>Intelligent automation and decision support</p>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-            <div class="input-group">
-                <i class="fas fa-user"></i>
-                <input type="text" id="lName" placeholder="" required>
-                <label for="lName">Last Name</label>
+        </div>
+
+        <!-- Right Panel - Forms -->
+        <div class="right-panel">
+            <!-- Sign In Form -->
+            <div class="form-container active" id="signIn">
+                <div class="form-header">
+                    <h2>Welcome back</h2>
+                    <p class="form-subtitle">Sign in to your account to continue</p>
+                </div>
+
+                <div id="signInMessage" class="alert-message" style="display:none;"></div>
+
+                <form class="auth-form" id="signInForm">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope input-icon"></i>
+                            <input type="email" id="email" class="form-input" placeholder="Enter your email" required
+                                autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" id="password" class="form-input" placeholder="Enter your password"
+                                required autocomplete="current-password">
+                            <button type="button" class="password-toggle" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="checkmark"></span>
+                            <span class="checkbox-label">Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-link" id="recoverPasswordLink">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="submitSignIn">
+                        <span>Sign In</span>
+                        <i class="fas fa-arrow-right btn-icon"></i>
+                    </button>
+                </form>
+
+                <div class="divider">
+                    <span>or continue with</span>
+                </div>
+
+                <button class="btn-google" id="googleSignIn">
+                    <i class="fab fa-google google-icon"></i>
+                    <span>Continue with Google</span>
+                </button>
+
+                <div class="form-footer">
+                    <p>Don't have an account? <a href="#" class="link-primary" id="signUpButton">Create account</a></p>
+                </div>
             </div>
-            <div class="input-group">
-                <i class="fas fa-envelope"></i>
-                <input type="email" id="rEmail" placeholder="" required>
-                <label for="rEmail">Email</label>
+
+            <!-- Sign Up Form -->
+            <div class="form-container" id="signup" style="display:none;">
+                <div class="form-header">
+                    <h2>Create your account</h2>
+                    <p class="form-subtitle">Join thousands of healthcare professionals</p>
+                </div>
+
+                <div id="signUpMessage" class="alert-message" style="display:none;"></div>
+
+                <form class="auth-form" id="signUpForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fName" class="form-label">First Name</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user input-icon"></i>
+                                <input type="text" id="fName" class="form-input" placeholder="First name" required
+                                    autocomplete="given-name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lName" class="form-label">Last Name</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user input-icon"></i>
+                                <input type="text" id="lName" class="form-input" placeholder="Last name" required
+                                    autocomplete="family-name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rEmail" class="form-label">Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope input-icon"></i>
+                            <input type="email" id="rEmail" class="form-input" placeholder="Enter your email" required
+                                autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rPassword" class="form-label">Password</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" id="rPassword" class="form-input"
+                                placeholder="Create a strong password" required autocomplete="new-password">
+                            <button type="button" class="password-toggle" id="toggleSignUpPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength" id="passwordStrength">
+                            <div class="strength-bars">
+                                <div class="strength-bar"></div>
+                                <div class="strength-bar"></div>
+                                <div class="strength-bar"></div>
+                                <div class="strength-bar"></div>
+                            </div>
+                            <span class="strength-text">Password strength</span>
+                        </div>
+                        <div class="password-requirements">
+                            <div class="requirement" data-requirement="length">
+                                <i class="fas fa-check"></i>
+                                <span>At least 8 characters</span>
+                            </div>
+                            <div class="requirement" data-requirement="uppercase">
+                                <i class="fas fa-check"></i>
+                                <span>One uppercase letter</span>
+                            </div>
+                            <div class="requirement" data-requirement="lowercase">
+                                <i class="fas fa-check"></i>
+                                <span>One lowercase letter</span>
+                            </div>
+                            <div class="requirement" data-requirement="number">
+                                <i class="fas fa-check"></i>
+                                <span>One number</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" id="agreeTerms" required>
+                            <span class="checkmark"></span>
+                            <span class="checkbox-label">
+                                I agree to the <a href="#" class="link-primary">Terms of Service</a>
+                                and <a href="#" class="link-primary">Privacy Policy</a>
+                            </span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="submitSignUp">
+                        <span>Create Account</span>
+                        <i class="fas fa-arrow-right btn-icon"></i>
+                    </button>
+                </form>
+
+                <div class="divider">
+                    <span>or continue with</span>
+                </div>
+
+                <button class="btn-google" id="googleSignUp">
+                    <i class="fab fa-google google-icon"></i>
+                    <span>Continue with Google</span>
+                </button>
+
+                <div class="form-footer">
+                    <p>Already have an account? <a href="#" class="link-primary" id="signInButton">Sign in</a></p>
+                </div>
             </div>
-            <div class="input-group">
-                <i class="fas fa-lock"></i>
-                <input type="password" id="rPassword" placeholder="" required>
-                <label for="rPassword">Password</label>
+
+            <!-- Password Recovery Form -->
+            <div class="form-container" id="recoverPassword" style="display:none;">
+                <div class="form-header">
+                    <h2>Reset your password</h2>
+                    <p class="form-subtitle">Enter your email to receive a password reset link</p>
+                </div>
+
+                <div id="recoverMessage" class="alert-message" style="display:none;"></div>
+
+                <form class="auth-form" id="recoverForm">
+                    <div class="form-group">
+                        <label for="recoverEmail" class="form-label">Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope input-icon"></i>
+                            <input type="email" id="recoverEmail" class="form-input" placeholder="Enter your email"
+                                required autocomplete="email">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="submitRecover">
+                        <span>Send Reset Link</span>
+                        <i class="fas fa-paper-plane btn-icon"></i>
+                    </button>
+                </form>
+
+                <div class="form-footer">
+                    <p><a href="#" class="link-primary" id="backToSignIn">← Back to sign in</a></p>
+                </div>
             </div>
-            <button id="submitSignUp">Sign Up</button>
-        </form>
-        <p class="or">---------- or --------</p>
-        <div class="links">
-            <p>Already Have Account?</p>
-            <button class="btn" id="signInButton">Sign In</button>
         </div>
     </div>
 
-    <!-- Login Form -->
-    <div class="container" id="signIn">
-        <h1 class="form-title">Sign In</h1>
-        <form method="post" action="">
-            <div id="signInMessage" class="messageDiv" style="display:none;"></div>
-            <div class="input-group">
-                <i class="fas fa-envelope"></i>
-                <input type="email" id="email" placeholder="" required>
-                <label for="email">Email</label>
-            </div>
-            <div class="input-group">
-                <i class="fas fa-lock"></i>
-                <input type="password" id="password" placeholder="" required>
-                <label for="password">Password</label>
-            </div>
-            <p class="recover">
-                <a href="#" id="recoverPasswordLink">Recover Password</a>
-            </p>
-            <button id="submitSignIn">Sign In</button>
-        </form>
-        <div class="google-login">
-            <button id="googleSignIn"><i class="fab fa-google"></i> Sign in with Google</button>
-        </div>
-        <p class="or">---------- or --------</p>
-        <div class="links">
-            <p>Don't have an account yet?</p>
-            <button id="signUpButton">Sign Up</button>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display:none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Please wait...</p>
         </div>
     </div>
 
-    <!-- Password Recovery Form -->
-    <div class="container" id="recoverPassword" style="display:none;">
-        <h1 class="form-title">Recover Password</h1>
-        <form method="post" action="">
-            <div id="recoverMessage" class="messageDiv" style="display:none;"></div>
-            <div class="input-group">
-                <i class="fas fa-envelope"></i>
-                <input type="email" id="recoverEmail" placeholder="" required>
-                <label for="recoverEmail">Email</label>
-            </div>
-            <button class="btn" id="submitRecover">Send Recovery Email</button>
-        </form>
-        <p class="links">
-            <button id="backToSignIn">Back to Sign In</button>
-        </p>
-    </div>
-
-    <script src="../static/js/sisu.js"></script>
+    <script src="../static/js/auth.js"></script>
+    <script type="module" src="../static/js/firebaseauth.js"></script>
 
     <script type="module">
+        // Your existing Firebase code with enhancements
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
         import {
             getAuth,
@@ -141,21 +319,39 @@
         const db = getFirestore();
         const provider = new GoogleAuthProvider();
 
+        // Enhanced message function
+        function showMessage(message, divId, type = 'error') {
+            const messageDiv = document.getElementById(divId);
+            messageDiv.className = `alert-message ${type}`;
+            messageDiv.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'exclamation-circle'}"></i>
+                <span>${message}</span>
+            `;
+            messageDiv.style.display = "block";
+
+            setTimeout(() => {
+                messageDiv.style.opacity = 0;
+                setTimeout(() => {
+                    messageDiv.style.display = "none";
+                    messageDiv.style.opacity = 1;
+                }, 300);
+            }, 5000);
+        }
+
+        // Loading functions
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
         onAuthStateChanged(auth, (user) => {
             if (user && user.emailVerified) {
                 window.location.href = "index.html";
             }
         });
-
-        function showMessage(message, divId) {
-            const messageDiv = document.getElementById(divId);
-            messageDiv.style.display = "block";
-            messageDiv.innerHTML = message;
-            messageDiv.style.opacity = 1;
-            setTimeout(() => {
-                messageDiv.style.opacity = 0;
-            }, 5000);
-        }
 
         // Sign Up
         document.getElementById('submitSignUp').addEventListener('click', (event) => {
@@ -164,23 +360,45 @@
             const password = document.getElementById('rPassword').value;
             const firstName = document.getElementById('fName').value;
             const lastName = document.getElementById('lName').value;
+            const agreeTerms = document.getElementById('agreeTerms').checked;
+
+            if (!agreeTerms) {
+                showMessage('Please agree to the Terms of Service and Privacy Policy.', 'signUpMessage', 'warning');
+                return;
+            }
+
+            showLoading();
 
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
                     sendEmailVerification(user)
-                        .then(() => showMessage('Verification email sent. Please check your inbox.', 'signUpMessage'))
-                        .catch((error) => console.error("Verification error:", error));
-
-                    const userData = { email, firstName, lastName };
-                    setDoc(doc(db, "users", user.uid), userData)
-                        .then(() => showMessage('Account created successfully. Please verify your email.', 'signUpMessage'))
-                        .catch((error) => console.error("Firestore error:", error));
+                        .then(() => {
+                            const userData = { email, firstName, lastName };
+                            setDoc(doc(db, "users", user.uid), userData)
+                                .then(() => {
+                                    hideLoading();
+                                    showMessage('Account created successfully! Please check your email for verification.', 'signUpMessage', 'success');
+                                })
+                                .catch((error) => {
+                                    hideLoading();
+                                    console.error("Firestore error:", error);
+                                    showMessage('Account created but profile save failed. Please try again.', 'signUpMessage', 'warning');
+                                });
+                        })
+                        .catch((error) => {
+                            hideLoading();
+                            console.error("Verification error:", error);
+                            showMessage('Account created but verification email failed. Please try again.', 'signUpMessage', 'warning');
+                        });
                 })
                 .catch((error) => {
+                    hideLoading();
                     const errorCode = error.code;
                     if (errorCode === 'auth/email-already-in-use') {
                         showMessage('Email Address Already Exists!', 'signUpMessage');
+                    } else if (errorCode === 'auth/weak-password') {
+                        showMessage('Password is too weak. Please choose a stronger password.', 'signUpMessage');
                     } else {
                         showMessage('Unable to create user', 'signUpMessage');
                     }
@@ -193,21 +411,27 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
+            showLoading();
+
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
                     if (user.emailVerified) {
-                        showMessage('Login successful!', 'signInMessage');
+                        showMessage('Login successful!', 'signInMessage', 'success');
                         localStorage.setItem('loggedInUserId', user.uid);
-                        window.location.href = "index.html";
+                        setTimeout(() => {
+                            window.location.href = "index.html";
+                        }, 1000);
                     } else {
-                        showMessage('Please verify your email before logging in.', 'signInMessage');
+                        hideLoading();
+                        showMessage('Please verify your email before logging in.', 'signInMessage', 'warning');
                         auth.signOut();
                     }
                 })
                 .catch((error) => {
+                    hideLoading();
                     const errorCode = error.code;
-                    if (errorCode === 'auth/wrong-password') {
+                    if (errorCode === 'auth/wrong-password' || errorCode === 'auth/invalid-credential') {
                         showMessage('Incorrect email or password', 'signInMessage');
                     } else if (errorCode === 'auth/user-not-found') {
                         showMessage('Account does not exist', 'signInMessage');
@@ -222,14 +446,23 @@
             event.preventDefault();
             const recoverEmail = document.getElementById('recoverEmail').value;
 
+            showLoading();
+
             sendPasswordResetEmail(auth, recoverEmail)
-                .then(() => showMessage('Recovery email sent. Check your inbox.', 'recoverMessage'))
-                .catch(error => showMessage(error.message, 'recoverMessage'));
+                .then(() => {
+                    hideLoading();
+                    showMessage('Recovery email sent. Check your inbox.', 'recoverMessage', 'success');
+                })
+                .catch(error => {
+                    hideLoading();
+                    showMessage(error.message, 'recoverMessage');
+                });
         });
 
         // Google Sign In
         document.getElementById('googleSignIn').addEventListener('click', (event) => {
             event.preventDefault();
+            showLoading();
 
             signInWithPopup(auth, provider)
                 .then((result) => {
@@ -244,13 +477,22 @@
                     }, { merge: true });
 
                     localStorage.setItem('loggedInUserId', user.uid);
-                    window.location.href = "index.html";
+                    setTimeout(() => {
+                        window.location.href = "index.html";
+                    }, 1000);
                 })
                 .catch((error) => {
+                    hideLoading();
                     console.error("Google Sign-In Error:", error);
                     showMessage("Google sign-in failed. Try again.", 'signInMessage');
                 });
         });
+
+        // Google Sign Up (same as sign in)
+        document.getElementById('googleSignUp').addEventListener('click', (event) => {
+            document.getElementById('googleSignIn').click();
+        });
     </script>
 </body>
+
 </html>

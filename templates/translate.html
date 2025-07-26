@@ -1,0 +1,33 @@
+<form id="translate-form">
+  <label for="language">Translate to:</label>
+  <select id="language" name="language">
+    {% for lang in indian_languages %}
+    <option value="{{ lang }}">{{ lang }}</option>
+    {% endfor %}
+  </select>
+  <input type="hidden" id="text" name="text" value="{{ result }}">
+  <button type="submit">Translate</button>
+</form>
+
+<div id="translated-output"></div>
+
+<script>
+document.getElementById('translate-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const text = document.getElementById('text').value;
+    const language = document.getElementById('language').value;
+
+    const response = await fetch('/translate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ text, language })
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        document.getElementById('translated-output').innerText = data.response;
+    } else {
+        document.getElementById('translated-output').innerText = 'Error: Unable to translate. Please try again.';
+    }
+});
+</script>
