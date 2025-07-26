@@ -617,9 +617,12 @@ def get_drug_info():
         data = request.get_json()
         logging.info(f"Request JSON: {data}")
         drug_name = data.get('drug_name')
+        if drug_name is None:
+            logging.warning("❌ Missing drug name in request.")
+            return api_response('❌ Missing drug name.', 400)
         if not validate_drug_name(drug_name):
-            logging.warning(f"Invalid drug name received: {drug_name}")
-            return api_response('❌ Invalid or missing drug name.', 400)
+            logging.warning(f"❌ Invalid drug name received: {drug_name}")
+            return api_response('❌ Invalid drug name.', 400)
         logging.info(f"Calling get_drug_information with drug_name: {drug_name}")
         response = get_drug_information(drug_name)
         return api_response(response)
