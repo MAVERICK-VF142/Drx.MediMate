@@ -32,11 +32,6 @@ from utils.cache import get_cached_drug, set_cached_drug
 load_dotenv()
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s"
-)
-
 # ---------------------------
 # Configuration & Setup
 # ---------------------------
@@ -78,12 +73,14 @@ if not secret_key:
     logging.warning("SECRET_KEY environment variable not set. Generating a temporary random key. This should ONLY be used for local development.")
     secret_key = secrets.token_urlsafe(32)
 app.secret_key = secret_key
-# Configure CORS with restricted origins for production
-allowed_origins = os.getenv("ALLOWED_ORIGINS")
-if allowed_origins:
-    origins = allowed_origins.split(",")
-else:
-    # Default to localhost for development
+secret_key = os.getenv("SECRET_KEY")
+if not secret_key:
+    if os.getenv("FLASK_ENV") == "development":
+        logging.warning("SECRET_KEY not set. Generating temporary key for development.")
+        secret_key = secrets.token_urlsafe(32)
+    else:
+        raise EnvironmentError("SECRET_KEY must be set in production")
+app.secret_key = secret_key    # Default to localhost for development
     origins = [
         "http://localhost:5000", 
         "http://127.0.0.1:5000",

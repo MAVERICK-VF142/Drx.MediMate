@@ -17,8 +17,9 @@ async function getUserNameById(uid) {
         console.error(`Error fetching user ${uid}:`, err);
     }
     return uid; // fallback
-}document.addEventListener('DOMContentLoaded', function() {
-    loadDashboardData();
+}
+ 
+document.addEventListener('DOMContentLoaded', function() {    loadDashboardData();
     fetchUsers();
     fetchAppointments();
     setupInvitationControls();

@@ -152,29 +152,35 @@ onAuthStateChanged(auth, async (user) => {
         await verifyAccess(user);
     } else {
         // Not authenticated or email not verified
-        
-        // First check if we have a server session that might be active
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5-second timeout
+// First check if we have a server session that might be active
+const controller = new AbortController();
+const timeoutId = setTimeout(() => controller.abort(), 5000); // 5-second timeout
 
-        try {
-            const response = await fetch('/api/auth/check', { signal: controller.signal });
-            clearTimeout(timeoutId);
-            const data = await response.json();
-            
-            if (!data.authenticated) {
-                if (!window.location.pathname.endsWith('sisu.html')) {
-                    window.location.href = 'sisu.html';
-                }
-            }
-        } catch (error) {
-            clearTimeout(timeoutId);
-            console.error('Error checking server authentication:', error);
-            if (!window.location.pathname.endsWith('sisu.html')) {
-                window.location.href = 'sisu.html';
-            }
+try {
+    const response = await fetch('/api/auth/check', { signal: controller.signal });
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+        throw new Error(`Server check failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (!data || typeof data.authenticated !== 'boolean') {
+        throw new Error('Invalid server response format');
+    }
+
+    if (!data.authenticated) {
+        if (!window.location.pathname.endsWith('sisu.html')) {
+            window.location.href = 'sisu.html';
         }
     }
+} catch (error) {
+    clearTimeout(timeoutId);
+    console.error('Error checking server authentication:', error);
+    if (!window.location.pathname.endsWith('sisu.html')) {
+        window.location.href = 'sisu.html';
+    }
+}    }
 });
 
 // Logout functionality
@@ -183,21 +189,26 @@ document.addEventListener('DOMContentLoaded', function() {
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
             try {
-                // Logout from Firebase
-                await signOut(auth);
-                
-                // Invalidate the session on the server
-            try {
-                await fetch('/api/logout', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-            } catch (error) {
-                console.error('Error during server-side logout:', error);
+try {
+    await signOut(auth);
+
+    // Invalidate the session on the server
+    try {
+        await fetch('/api/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
             }
-                
+        });
+    } catch (serverError) {
+        console.error('Error during server-side logout:', serverError);
+    }
+
+    localStorage.clear();
+    window.location.href = 'sisu.html';
+} catch (error) {
+    console.error('Error signing out:', error);
+}                
                 localStorage.clear();
                 window.location.href = 'sisu.html';
             } catch (error) {
