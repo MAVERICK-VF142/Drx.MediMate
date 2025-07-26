@@ -350,7 +350,8 @@ window.RoleUtils = {
             pharmacist: 'Pharmacist',
             doctor: 'Doctor',
             student: 'Student',
-            patient: 'Patient'
+            patient: 'Patient',
+            admin: 'Admin'
         };
         return roleNames[role] || 'User';
     },
@@ -360,7 +361,8 @@ window.RoleUtils = {
             pharmacist: 'fas fa-pills',
             doctor: 'fas fa-stethoscope',
             student: 'fas fa-graduation-cap',
-            patient: 'fas fa-user-injured'
+            patient: 'fas fa-user-injured',
+            admin: 'fas fa-user-shield'
         };
         return roleIcons[role] || 'fas fa-user';
     },
@@ -370,7 +372,8 @@ window.RoleUtils = {
             pharmacist: ['inventory', 'prescriptions', 'reports', 'patients'],
             doctor: ['prescriptions', 'patients', 'reports', 'consultations'],
             student: ['learning', 'resources', 'progress', 'assignments'],
-            patient: ['profile', 'medications', 'history', 'appointments']
+            patient: ['profile', 'medications', 'history', 'appointments'],
+            admin: ['users', 'analytics', 'notifications', 'security', 'records', 'appointments', 'prescriptions']
         };
         return permissions[role] || [];
     }
