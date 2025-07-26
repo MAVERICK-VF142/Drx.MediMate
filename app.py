@@ -81,7 +81,7 @@ if not secret_key:
     else:
         raise EnvironmentError("SECRET_KEY must be set in production")
 app.secret_key = secret_key    # Default to localhost for development
-    origins = [
+origins = [
         "http://localhost:5000", 
         "http://127.0.0.1:5000",
         "http://localhost:8000", # Common alternative dev port
