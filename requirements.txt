@@ -6,3 +6,4 @@ google-generativeai
 markdown
 pyrebase4
 firebase-admin
+cachetools
