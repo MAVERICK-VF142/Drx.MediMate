@@ -1,6 +1,7 @@
 python-dotenv
 Flask
 flask-cors
+flask-limiter
 Pillow
 google-generativeai
 markdown
