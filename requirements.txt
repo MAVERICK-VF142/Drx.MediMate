@@ -4,4 +4,4 @@ Flask-Cors==4.0.0
 Pillow==10.0.0
 google-generativeai==0.3.0
 deep-translator==1.11.4
-gunicorn==21.2.0 
+gunicorn==21.2.0
