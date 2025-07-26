@@ -19,7 +19,8 @@ async function getUserNameById(uid) {
     return uid; // fallback
 }
  
-document.addEventListener('DOMContentLoaded', function() {    loadDashboardData();
+document.addEventListener('DOMContentLoaded', function() {
+    loadDashboardData();
     fetchUsers();
     fetchAppointments();
     setupInvitationControls();
