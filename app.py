@@ -98,7 +98,7 @@ CORS(app, origins=origins, supports_credentials=True)
 # You can specify a credentials file via the FIREBASE_CREDENTIALS_PATH env var.
 # If not provided, will look for firebase-credentials.json in the project root.
 # Fallback to Application Default Credentials *only* for local dev.
-firebase_credentials_path = os.getenv("FIREBASE_CREDENTIALS_PATH", "firebase-credentials.json")
+firebase_credentials_path = os.getenv("FIREBASE_CREDENTIALS_JSON", "firebase-credentials.json")
 
 try:
     firebase_admin.get_app()
