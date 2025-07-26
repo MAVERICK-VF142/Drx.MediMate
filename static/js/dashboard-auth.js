@@ -64,13 +64,10 @@ async function syncServerSession(user, userData) {
         const response = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                uid: user.uid,
-                email: user.email,
-                role: userData.role
+                idToken: token
             }),
             signal: controller.signal
         });
