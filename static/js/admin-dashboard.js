@@ -280,11 +280,11 @@ async function addAppointment() {
                 return;
             }
 
-            // Verify doctor exists
-            const doctorDocRef = doc(db, "doctors", doctorId.trim());
+            // Verify doctor exists and has the role of "doctor"
+            const doctorDocRef = doc(db, "users", doctorId.trim());
             const doctorSnap = await getDoc(doctorDocRef);
-            if (!doctorSnap.exists()) {
-                alert("Invalid Doctor ID. No such doctor found.");
+            if (!doctorSnap.exists() || doctorSnap.data().role !== 'doctor') {
+                alert("Invalid Doctor ID. No such doctor found or user is not a doctor.");
                 return;
             }
 
