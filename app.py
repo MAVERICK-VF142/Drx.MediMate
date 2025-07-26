@@ -98,7 +98,7 @@ CORS(app, origins=origins, supports_credentials=True)
 # You can specify a credentials file via the FIREBASE_CREDENTIALS_PATH env var.
 # If not provided, will look for firebase-credentials.json in the project root.
 # Fallback to Application Default Credentials *only* for local dev.
-firebase_credentials_path = os.getenv("FIREBASE_CREDENTIALS_PATH", "firebase-credentials.json")
+FIREBASE_CREDENTIALS_PATH = os.getenv("FIREBASE_CREDENTIALS_PATH", "firebase-credentials.json")
 
 try:
     firebase_admin.get_app()
@@ -112,9 +112,9 @@ except ValueError:
             cred_dict = json.loads(cred_json)
             cred = credentials.Certificate(cred_dict)
             firebase_admin.initialize_app(cred)
-        elif os.path.exists(firebase_credentials_path):
-            logging.info(f"Initializing Firebase Admin SDK with credentials at: {firebase_credentials_path}")
-            cred = credentials.Certificate(firebase_credentials_path)
+        elif os.path.exists(FIREBASE_CREDENTIALS_PATH):
+            logging.info(f"Initializing Firebase Admin SDK with credentials at: {FIREBASE_CREDENTIALS_PATH}")
+            cred = credentials.Certificate(FIREBASE_CREDENTIALS_PATH)
             firebase_admin.initialize_app(cred)
         else:
             logging.warning(
