@@ -273,10 +273,10 @@ async function addAppointment() {
             const db = getFirestore();
 
             // Verify patient exists
-            const patientDocRef = doc(db, "patients", patientId.trim());
+            const patientDocRef = doc(db, "users", patientId.trim());
             const patientSnap = await getDoc(patientDocRef);
             if (!patientSnap.exists()) {
-                alert("Invalid Patient ID. No such patient found.");
+                alert("Invalid Patient ID. No such user found.");
                 return;
             }
 
