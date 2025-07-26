@@ -45,6 +45,32 @@ function getCurrentPageRole() {
     return null;
 }
 
+// Synchronize with server session
+async function syncServerSession(user, userData) {
+    try {
+        const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                uid: user.uid,
+                email: user.email,
+                role: userData.role
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to sync session with server');
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Error syncing session with server:', error);
+        return { success: false };
+    }
+}
+
 // Verify user access to current page
 async function verifyAccess(user) {
     try {
@@ -56,6 +82,12 @@ async function verifyAccess(user) {
         const userData = userDoc.data();
         const userRole = userData.role;
         const requiredRole = getCurrentPageRole();
+        
+        // Sync with server session
+        const serverSync = await syncServerSession(user, userData);
+        if (!serverSync.success) {
+            console.warn('Failed to sync with server, but continuing with client-side verification');
+        }
 
         if (requiredRole && userRole !== requiredRole) {
             // Redirect to correct dashboard
@@ -105,7 +137,19 @@ onAuthStateChanged(auth, async (user) => {
         await verifyAccess(user);
     } else {
         // Not authenticated or email not verified
-        window.location.href = 'sisu.html';
+        
+        // First check if we have a server session that might be active
+        try {
+            const response = await fetch('/api/auth/check');
+            const data = await response.json();
+            
+            if (!data.authenticated) {
+                window.location.href = 'sisu.html';
+            }
+        } catch (error) {
+            console.error('Error checking server authentication:', error);
+            window.location.href = 'sisu.html';
+        }
     }
 });
 
@@ -115,7 +159,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
             try {
+                // Logout from Firebase
                 await signOut(auth);
+                
+                // Logout from server session
+                await fetch('/api/auth/logout', {
+                    method: 'POST'
+                });
+                
                 localStorage.clear();
                 window.location.href = 'sisu.html';
             } catch (error) {
