@@ -92,7 +92,6 @@ else:
     ]
 logging.info(f"CORS enabled for origins: {origins}")
 CORS(app, origins=origins, supports_credentials=True)
-
 # ---------------------------
 # Firebase Admin SDK Setup
 # ---------------------------
@@ -106,7 +105,14 @@ try:
     logging.info("Firebase Admin SDK already initialized.")
 except ValueError:
     try:
-        if os.path.exists(firebase_credentials_path):
+        # First, check for credentials JSON via environment variable (for production like Vercel)
+        cred_json = os.getenv("FIREBASE_CREDENTIALS")
+        if cred_json:
+            logging.info("Initializing Firebase Admin SDK with credentials from FIREBASE_CREDENTIALS environment variable.")
+            cred_dict = json.loads(cred_json)
+            cred = credentials.Certificate(cred_dict)
+            firebase_admin.initialize_app(cred)
+        elif os.path.exists(firebase_credentials_path):
             logging.info(f"Initializing Firebase Admin SDK with credentials at: {firebase_credentials_path}")
             cred = credentials.Certificate(firebase_credentials_path)
             firebase_admin.initialize_app(cred)
@@ -123,6 +129,7 @@ except ValueError:
 
 # Get Firestore database instance
 db = firestore.client()
+
 
 logging.basicConfig(
     level=logging.INFO,
