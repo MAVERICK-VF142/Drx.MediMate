@@ -30,7 +30,8 @@ const ROLE_ROUTES = {
     pharmacist: 'pharmacist-dashboard.html',
     doctor: 'doctor-dashboard.html',
     student: 'student-dashboard.html',
-    patient: 'patient-dashboard.html'
+    patient: 'patient-dashboard.html',
+    admin: 'admin-dashboard.html'
 };
 
 // Get current page role requirement
@@ -44,6 +45,47 @@ function getCurrentPageRole() {
     return null;
 }
 
+// Synchronize with server session
+async function syncServerSession(user, userData) {
+    // 1. Input validation
+    if (!user || !user.uid || !user.email || !userData || !userData.role) {
+        console.error('Invalid user or userData for session sync.');
+        return { success: false, message: 'Invalid input' };
+    }
+
+    // 2. Request timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5-second timeout
+
+    try {
+        // 3. Authentication headers
+        const token = await user.getIdToken();
+
+        const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                idToken: token
+            }),
+            signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+            throw new Error('Failed to sync session with server');
+        }
+
+        return await response.json();
+    } catch (error) {
+        clearTimeout(timeoutId);
+        console.error('Error syncing session with server:', error);
+        return { success: false };
+    }
+}
+
 // Verify user access to current page
 async function verifyAccess(user) {
     try {
@@ -55,6 +97,12 @@ async function verifyAccess(user) {
         const userData = userDoc.data();
         const userRole = userData.role;
         const requiredRole = getCurrentPageRole();
+        
+        // Sync with server session
+        const serverSync = await syncServerSession(user, userData);
+        if (!serverSync.success) {
+            console.warn('Failed to sync with server, but continuing with client-side verification');
+        }
 
         if (requiredRole && userRole !== requiredRole) {
             // Redirect to correct dashboard
@@ -104,8 +152,35 @@ onAuthStateChanged(auth, async (user) => {
         await verifyAccess(user);
     } else {
         // Not authenticated or email not verified
+// First check if we have a server session that might be active
+const controller = new AbortController();
+const timeoutId = setTimeout(() => controller.abort(), 5000); // 5-second timeout
+
+try {
+    const response = await fetch('/api/auth/check', { signal: controller.signal });
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+        throw new Error(`Server check failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (!data || typeof data.authenticated !== 'boolean') {
+        throw new Error('Invalid server response format');
+    }
+
+    if (!data.authenticated) {
+        if (!window.location.pathname.endsWith('sisu.html')) {
+            window.location.href = 'sisu.html';
+        }
+    }
+} catch (error) {
+    clearTimeout(timeoutId);
+    console.error('Error checking server authentication:', error);
+    if (!window.location.pathname.endsWith('sisu.html')) {
         window.location.href = 'sisu.html';
     }
+}    }
 });
 
 // Logout functionality
@@ -114,7 +189,26 @@ document.addEventListener('DOMContentLoaded', function() {
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
             try {
-                await signOut(auth);
+try {
+    await signOut(auth);
+
+    // Invalidate the session on the server
+    try {
+        await fetch('/api/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (serverError) {
+        console.error('Error during server-side logout:', serverError);
+    }
+
+    localStorage.clear();
+    window.location.href = 'sisu.html';
+} catch (error) {
+    console.error('Error signing out:', error);
+}                
                 localStorage.clear();
                 window.location.href = 'sisu.html';
             } catch (error) {
@@ -142,7 +236,8 @@ window.DashboardAuth = {
             pharmacist: ['inventory', 'prescriptions', 'reports', 'patients'],
             doctor: ['prescriptions', 'patients', 'reports', 'consultations'],
             student: ['learning', 'resources', 'progress', 'assignments'],
-            patient: ['profile', 'medications', 'history', 'appointments']
+            patient: ['profile', 'medications', 'history', 'appointments'],
+            admin: ['users', 'analytics', 'notifications', 'security', 'records', 'appointments', 'prescriptions']
         };
         return permissions[role]?.includes(permission) || false;
     }
