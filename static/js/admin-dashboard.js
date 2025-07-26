@@ -1,6 +1,23 @@
 // Admin Dashboard Functionality
-import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
-document.addEventListener('DOMContentLoaded', function() {
+import { getFirestore, collection, getDocs, getDoc, doc, updateDoc, deleteDoc, addDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+// Valid user roles used across admin dashboard
+const VALID_ROLES = ['admin', 'doctor', 'student', 'patient', 'pharmacist'];
+
+// Utility: fetch user's full name by UID (falls back to UID if not found)
+async function getUserNameById(uid) {
+    try {
+        const db = getFirestore();
+        const userDoc = await getDoc(doc(db, "users", uid));
+        if (userDoc.exists()) {
+            const data = userDoc.data();
+            return `${data.firstName ?? ''} ${data.lastName ?? ''}`.trim() || uid;
+        }
+    } catch (err) {
+        console.error(`Error fetching user ${uid}:`, err);
+    }
+    return uid; // fallback
+}document.addEventListener('DOMContentLoaded', function() {
     loadDashboardData();
     fetchUsers();
     fetchAppointments();
@@ -103,8 +120,8 @@ async function editUser(userId) {
         }
         
         // Additional validation - restrict to valid role options
-        const validRoles = ['admin', 'doctor', 'student', 'patient', 'pharmacist'];
-        if (!validRoles.includes(newRole.toLowerCase())) {
+        
+        if (!VALID_ROLES.includes(newRole.toLowerCase())) {
             alert('Invalid role. Please enter: admin, doctor, student, patient, or pharmacist');
             return;
         }
@@ -148,22 +165,29 @@ async function fetchAppointments() {
         
         const apptsSnapshot = await getDocs(collection(db, "appointments"));
         
-        apptsSnapshot.forEach((docSnapshot) => {
+        for (const docSnapshot of apptsSnapshot.docs) {
             const appt = docSnapshot.data();
             const row = document.createElement('tr');
-            
-            // Create and append cells safely
+
+            // Patient name cell
             const patientCell = document.createElement('td');
-            patientCell.textContent = appt.patientId;
+            patientCell.textContent = 'Loading...';
             row.appendChild(patientCell);
-            
+
+            // Doctor name cell
             const doctorCell = document.createElement('td');
-            doctorCell.textContent = appt.doctorId;
+            doctorCell.textContent = 'Loading...';
             row.appendChild(doctorCell);
-            
+
+            // Date cell
             const dateCell = document.createElement('td');
             dateCell.textContent = appt.date;
             row.appendChild(dateCell);
+
+            // Asynchronously resolve names
+            getUserNameById(appt.patientId).then(name => patientCell.textContent = name);
+            getUserNameById(appt.doctorId).then(name => doctorCell.textContent = name);
+            
             
             // Create actions cell
             const actionsCell = document.createElement('td');
@@ -186,7 +210,7 @@ async function fetchAppointments() {
             row.appendChild(actionsCell);
             
             apptsTableBody.appendChild(row);
-        });
+        }
     } catch (error) {
         console.error("Error fetching appointments:", error);
         // Display user-friendly error message
@@ -203,7 +227,7 @@ async function addAppointment() {
     try {
         const patientId = prompt('Patient ID:');
         const doctorId = prompt('Doctor ID:');
-        const date = prompt('Date (YYYY-MM-DD):');
+        const date = prompt('Date (DD-MM-YYYY):');
         
         // Input validation
         if (!patientId || patientId.trim() === '') {
@@ -216,20 +240,59 @@ async function addAppointment() {
             return;
         }
         
-        // Validate date format (YYYY-MM-DD)
-        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        // Validate date format (DD-MM-YYYY)
+        const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
         if (!date || !dateRegex.test(date)) {
-            alert('Please enter a valid date in YYYY-MM-DD format');
+            alert('Please enter a valid date in DD-MM-YYYY format');
+            return;
+        }
+
+        // Parse and validate calendar date
+        const [dayStr, monthStr, yearStr] = date.split('-');
+        const year = Number(yearStr);
+        const month = Number(monthStr) - 1; // JS months 0-11
+        const day = Number(dayStr);
+        const parsedDate = new Date(year, month, day);
+
+        // Check if the constructed date matches the input (handles 2025-02-30)
+        if (parsedDate.getFullYear() !== year || parsedDate.getMonth() !== month || parsedDate.getDate() !== day) {
+            alert('Please enter a valid calendar date');
+            return;
+        }
+
+        // Ensure date is not in the past
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (parsedDate < today) {
+            alert('Cannot schedule appointments in the past');
             return;
         }
         
-        // Proceed with creating the appointment
+        // Check existence of patient and doctor IDs before creating the appointment
         try {
             const db = getFirestore();
-            await addDoc(collection(db, "appointments"), { 
-                patientId: patientId.trim(), 
-                doctorId: doctorId.trim(), 
-                date 
+
+            // Verify patient exists
+            const patientDocRef = doc(db, "patients", patientId.trim());
+            const patientSnap = await getDoc(patientDocRef);
+            if (!patientSnap.exists()) {
+                alert("Invalid Patient ID. No such patient found.");
+                return;
+            }
+
+            // Verify doctor exists
+            const doctorDocRef = doc(db, "doctors", doctorId.trim());
+            const doctorSnap = await getDoc(doctorDocRef);
+            if (!doctorSnap.exists()) {
+                alert("Invalid Doctor ID. No such doctor found.");
+                return;
+            }
+
+            // All good - create appointment
+            await addDoc(collection(db, "appointments"), {
+                patientId: patientId.trim(),
+                doctorId: doctorId.trim(),
+                date
             });
             alert('Appointment added successfully');
             fetchAppointments();
@@ -245,7 +308,7 @@ async function addAppointment() {
 
 async function editAppointment(apptId) {
     try {
-        const newDate = prompt('New Date (YYYY-MM-DD):');
+        const newDate = prompt('New Date (DD-MM-YYYY):');
         
         // Input validation
         if (!newDate) {
@@ -253,18 +316,29 @@ async function editAppointment(apptId) {
             return;
         }
         
-        // Validate date format (YYYY-MM-DD)
-        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        // Validate date format (DD-MM-YYYY)
+        const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
         if (!dateRegex.test(newDate.trim())) {
-            alert('Please enter a valid date in YYYY-MM-DD format');
+            alert('Please enter a valid date in DD-MM-YYYY format');
+            return;
+        }
+
+        // Parse and validate calendar date
+        const [dayStr, monthStr, yearStr] = newDate.trim().split('-');
+        const year = Number(yearStr);
+        const month = Number(monthStr) - 1;
+        const day = Number(dayStr);
+        const selectedDate = new Date(year, month, day);
+
+        // Check for invalid calendar dates
+        if (selectedDate.getFullYear() !== year || selectedDate.getMonth() !== month || selectedDate.getDate() !== day) {
+            alert('Please enter a valid calendar date');
             return;
         }
         
         // Validate that the date is not in the past
-        const selectedDate = new Date(newDate);
         const today = new Date();
-        today.setHours(0, 0, 0, 0); // Reset time part for proper comparison
-        
+        today.setHours(0, 0, 0, 0);
         if (selectedDate < today) {
             alert('Cannot schedule appointments in the past');
             return;
@@ -367,10 +441,15 @@ async function createAdminInvitation() {
     }
     
     try {
+        // Retrieve Firebase ID token for authenticated requests
+        const currentUser = window.DashboardAuth?.getCurrentUser();
+        const token = currentUser ? await currentUser.getIdToken() : null;
+
         const response = await fetch('/api/admin/invitation', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {})
             },
             body: JSON.stringify({ email })
         });
@@ -378,7 +457,13 @@ async function createAdminInvitation() {
         const data = await response.json();
         
         if (data.success) {
-            alert(`Invitation created! Code: ${data.invitation_code}`);
+            try {
+                await navigator.clipboard.writeText(data.invitation_code);
+                alert('Invitation code copied to clipboard!');
+            } catch (clipErr) {
+                console.warn('Clipboard write failed:', clipErr);
+                alert(`Invitation created! Code: ${data.invitation_code}`);
+            }
             document.getElementById('inviteEmail').value = '';
             fetchAdminInvitations();
         } else {
@@ -392,7 +477,17 @@ async function createAdminInvitation() {
 
 async function fetchAdminInvitations() {
     try {
-        const response = await fetch('/api/admin/invitations');
+        // Retrieve Firebase ID token for authenticated requests
+        const currentUser = window.DashboardAuth?.getCurrentUser();
+        const token = currentUser ? await currentUser.getIdToken() : null;
+        
+        const response = await fetch('/api/admin/invitations', {
+            method: 'GET',
+            headers: {
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+                'Content-Type': 'application/json'
+            }
+        });
         const data = await response.json();
         
         if (data.success) {

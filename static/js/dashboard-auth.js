@@ -47,25 +47,43 @@ function getCurrentPageRole() {
 
 // Synchronize with server session
 async function syncServerSession(user, userData) {
+    // 1. Input validation
+    if (!user || !user.uid || !user.email || !userData || !userData.role) {
+        console.error('Invalid user or userData for session sync.');
+        return { success: false, message: 'Invalid input' };
+    }
+
+    // 2. Request timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5-second timeout
+
     try {
+        // 3. Authentication headers
+        const token = await user.getIdToken();
+
         const response = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
                 uid: user.uid,
                 email: user.email,
                 role: userData.role
-            })
+            }),
+            signal: controller.signal
         });
-        
+
+        clearTimeout(timeoutId);
+
         if (!response.ok) {
             throw new Error('Failed to sync session with server');
         }
-        
+
         return await response.json();
     } catch (error) {
+        clearTimeout(timeoutId);
         console.error('Error syncing session with server:', error);
         return { success: false };
     }
@@ -139,16 +157,25 @@ onAuthStateChanged(auth, async (user) => {
         // Not authenticated or email not verified
         
         // First check if we have a server session that might be active
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5-second timeout
+
         try {
-            const response = await fetch('/api/auth/check');
+            const response = await fetch('/api/auth/check', { signal: controller.signal });
+            clearTimeout(timeoutId);
             const data = await response.json();
             
             if (!data.authenticated) {
-                window.location.href = 'sisu.html';
+                if (!window.location.pathname.endsWith('sisu.html')) {
+                    window.location.href = 'sisu.html';
+                }
             }
         } catch (error) {
+            clearTimeout(timeoutId);
             console.error('Error checking server authentication:', error);
-            window.location.href = 'sisu.html';
+            if (!window.location.pathname.endsWith('sisu.html')) {
+                window.location.href = 'sisu.html';
+            }
         }
     }
 });
@@ -162,10 +189,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Logout from Firebase
                 await signOut(auth);
                 
-                // Logout from server session
-                await fetch('/api/auth/logout', {
-                    method: 'POST'
+                // Invalidate the session on the server
+            try {
+                await fetch('/api/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 });
+            } catch (error) {
+                console.error('Error during server-side logout:', error);
+            }
                 
                 localStorage.clear();
                 window.location.href = 'sisu.html';

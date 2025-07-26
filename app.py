@@ -21,7 +21,7 @@ import functools
 
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeout
 import firebase_admin
-from firebase_admin import credentials, firestore
+from firebase_admin import credentials, firestore, auth
 
 # ---------------------------
 # Configuration & Setup
@@ -38,21 +38,41 @@ model = genai.GenerativeModel("gemini-2.5-flash")
 
 # Initialize Flask app
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY", "dev_key_replace_in_production")
+# Configure Flask secret key
+secret_key = os.getenv("SECRET_KEY")
+if not secret_key:
+    logging.warning("SECRET_KEY environment variable not set. Generating a temporary random key. This should ONLY be used for local development.")
+    secret_key = secrets.token_urlsafe(32)
+app.secret_key = secret_key
 CORS(app)  # Enable Cross-Origin Resource Sharing
 
-# Initialize Firebase Admin SDK
+# ---------------------------
+# Firebase Admin SDK Setup
+# ---------------------------
+# You can specify a credentials file via the FIREBASE_CREDENTIALS_PATH env var.
+# If not provided, will look for firebase-credentials.json in the project root.
+# Fallback to Application Default Credentials *only* for local dev.
+firebase_credentials_path = os.getenv("FIREBASE_CREDENTIALS_PATH", "firebase-credentials.json")
+
 try:
-    # Check if Firebase Admin SDK is already initialized
     firebase_admin.get_app()
+    logging.info("Firebase Admin SDK already initialized.")
 except ValueError:
-    # If not initialized, initialize with default credentials
-    # In production, set up proper credentials
-    if os.path.exists('firebase-credentials.json'):
-        cred = credentials.Certificate('firebase-credentials.json')
-        firebase_admin.initialize_app(cred)
-    else:
-        firebase_admin.initialize_app()
+    try:
+        if os.path.exists(firebase_credentials_path):
+            logging.info(f"Initializing Firebase Admin SDK with credentials at: {firebase_credentials_path}")
+            cred = credentials.Certificate(firebase_credentials_path)
+            firebase_admin.initialize_app(cred)
+        else:
+            logging.warning(
+                "Firebase credentials file not found. Attempting to initialize with Application Default Credentials. "
+                "Set FIREBASE_CREDENTIALS_PATH or provide firebase-credentials.json for production deployments."
+            )
+            firebase_admin.initialize_app()
+    except Exception as fb_err:
+        logging.error(f"❌ Failed to initialize Firebase Admin SDK: {fb_err}")
+        # Re-raise so the app fails fast instead of running in a bad state
+        raise
 
 # Get Firestore database instance
 db = firestore.client()
@@ -430,21 +450,42 @@ def login():
     """Handle login requests from the frontend"""
     try:
         data = request.get_json()
-        # In production, verify with Firebase Admin SDK
-        # For now, we'll just set session variables based on client claims
-        
-        user_id = data.get('uid')
-        email = data.get('email')
-        role = data.get('role')
-        
-        if not user_id or not email or not role:
-            return jsonify({'success': False, 'message': 'Missing required fields'}), 400
-            
-        # Store user info in session
+        id_token = data.get('idToken')
+
+        if not id_token:
+            return jsonify({'success': False, 'message': 'ID token is required'}), 400
+
+        # Verify the ID token with Firebase Admin SDK
+        try:
+            decoded_token = auth.verify_id_token(id_token)
+        except Exception as verify_err:
+            logging.error(f"Token verification failed: {verify_err}")
+            return jsonify({'success': False, 'message': 'Invalid or expired token'}), 401
+
+        user_id = decoded_token.get('uid')
+        email = decoded_token.get('email')
+
+        # Attempt to get role from custom claims first
+        role = decoded_token.get('role')
+
+        # If role is not set in custom claims, look it up in Firestore
+        if not role:
+            try:
+                user_doc = db.collection('users').document(user_id).get()
+                if user_doc.exists:
+                    role = user_doc.to_dict().get('role')
+            except Exception as fs_err:
+                logging.error(f"Error retrieving user role from Firestore: {fs_err}")
+
+        if not role:
+            logging.warning(f"Role not found for user {user_id}")
+            return jsonify({'success': False, 'message': 'User role not found'}), 403
+
+        # Store user info in session after successful verification
         session['user_id'] = user_id
         session['email'] = email
         session['role'] = role
-        
+
         return jsonify({'success': True})
     except Exception as e:
         logging.error(f"Login error: {str(e)}")
@@ -571,8 +612,22 @@ def verify_admin_invitation(code):
         return False, "Invitation code has already been used"
     
     # Check if expired
-    expires_at = invitation['expires_at']
-    if isinstance(expires_at, datetime.datetime) and datetime.datetime.now() > expires_at:
+    expires_at = invitation.get('expires_at')
+
+    # Ensure expires_at is a datetime object
+    if not isinstance(expires_at, datetime.datetime):
+        # Firestore Timestamp objects have a to_datetime() helper
+        if hasattr(expires_at, 'to_datetime'):
+            expires_at = expires_at.to_datetime()
+        else:
+            # Fallback: attempt ISO parsing
+            try:
+                expires_at = datetime.datetime.fromisoformat(str(expires_at))
+            except Exception as parse_err:
+                logging.error(f"Unable to parse expires_at field: {parse_err}")
+                return False, "Invalid expiry date format"
+
+    if datetime.datetime.now() > expires_at:
         return False, "Invitation code has expired"
     
     return True, invitation
@@ -605,29 +660,57 @@ def create_invitation():
 
 @app.route('/api/admin/verify-invitation', methods=['POST'])
 def verify_invitation():
-    """Verify an admin invitation code"""
+    """Verify an admin invitation code atomically using a Firestore transaction"""
     try:
         data = request.get_json()
         code = data.get('code')
         email = data.get('email')
-        
+
         if not code or not email:
             return jsonify({'success': False, 'message': 'Code and email are required'}), 400
-            
-        is_valid, invitation = verify_admin_invitation(code)
-        
-        if is_valid:
-            # Check if the invitation is for this email
+
+        invitation_ref = db.collection('admin_invitations').document(code)
+        transaction = db.transaction()
+
+        @firestore.transactional
+        def _verify_and_use_invitation(txn):
+            snapshot = invitation_ref.get(transaction=txn)
+            if not snapshot.exists:
+                return False, "Invalid invitation code"
+
+            invitation = snapshot.to_dict()
+
+            # Validate email match
             if invitation['email'].lower() != email.lower():
-                return jsonify({'success': False, 'message': 'This invitation is not for this email address'}), 400
-                
-            # Mark as used
-            invitation_ref = db.collection('admin_invitations').document(code)
-            invitation_ref.update({'used': True})
-            
+                return False, "This invitation is not for this email address"
+
+            # Already used
+            if invitation.get('used'):
+                return False, "Invitation code has already been used"
+
+            # Expiration check (reuse helper)
+            expires_at = invitation.get('expires_at')
+            if not isinstance(expires_at, datetime.datetime):
+                if hasattr(expires_at, 'to_datetime'):
+                    expires_at = expires_at.to_datetime()
+                else:
+                    try:
+                        expires_at = datetime.datetime.fromisoformat(str(expires_at))
+                    except Exception:
+                        return False, "Invalid expiry date format"
+            if datetime.datetime.now() > expires_at:
+                return False, "Invitation code has expired"
+
+            # All checks passed – mark as used within the same transaction
+            txn.update(invitation_ref, {'used': True})
+            return True, invitation
+
+        success, result = _verify_and_use_invitation(transaction)
+        if success:
             return jsonify({'success': True, 'message': 'Invitation code is valid'})
         else:
-            return jsonify({'success': False, 'message': invitation}), 400
+            return jsonify({'success': False, 'message': result}), 400
+
     except Exception as e:
         logging.error(f"Error verifying admin invitation: {str(e)}")
         return jsonify({'success': False, 'message': str(e)}), 500

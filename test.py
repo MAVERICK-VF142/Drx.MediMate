@@ -252,10 +252,8 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
 
     # Test admin features with simulated database operations
-    @patch('app.flask_cors.CORS')
     @patch('app.genai.GenerativeModel')
-    def test_api_error_handling(self, mock_model, mock_cors):
-        """Test API error handling when AI service fails"""
+    def test_api_error_handling(self, mock_model):        """Test API error handling when AI service fails"""
         # Set up mock for AI service to raise an exception
         mock_model.return_value.generate_content.side_effect = Exception("AI Service Error")
         
