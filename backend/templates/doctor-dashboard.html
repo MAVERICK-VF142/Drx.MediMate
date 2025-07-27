@@ -1,11 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Doctor Dashboard | Aditi Pharmaceutical</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body, html {
+      font-family: 'Inter', sans-serif;
+      background-color: #f7f9fb;
+      color: #444;
+      -webkit-font-smoothing: antialiased;
+      height: 100%;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+      width: 100%;
+    }
+
+    .left-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: linear-gradient(135deg, #5e60ce, #4ea8de);
+      color: white;
+      padding: 60px;
+      border-top-right-radius: 40px;
+      border-bottom-right-radius: 40px;
+    }
+
+    .left-panel h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .left-panel p {
+      font-size: 1.1rem;
+      margin-bottom: 32px;
+      max-width: 400px;
+      line-height: 1.6;
+    }
+
+    .highlight-box {
+      background-color: rgba(255, 255, 255, 0.15);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      max-width: 400px;
+      backdrop-filter: blur(5px);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .highlight-box:hover {
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+    }
+
+    .highlight-box h3 {
+      margin-bottom: 10px;
+      font-size: 1.3rem;
+      color: #e6f0ff;
+    }
+
+    .highlight-box p {
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #dceaff;
+      white-space: pre-line;
+    }
+
+    .right-panel {
+      flex: 1;
+      background-color: #ffffff;
+      padding: 60px 40px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      border-top-left-radius: 40px;
+      border-bottom-left-radius: 40px;
+    }
+
+    .right-panel h2 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 40px;
+      color: #2f3a5a;
+    }
+
+    .card {
+      background: #fdfdff;
+      border: 1px solid #e4e8f4;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 30px;
+      box-shadow: 0 3px 18px rgba(0, 0, 0, 0.05);
+    }
+
+    .card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      color: #2a2f4a;
+    }
+
+    .card ul {
+      list-style: disc inside;
+      line-height: 1.7;
+      color: #555f7a;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(120deg, #4ea8de, #3b7bbe);
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      color: white;
+      text-decoration: none;
+      font-size: 1rem;
+      box-shadow: 0 4px 15px rgba(78, 168, 222, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, #3b7bbe, #2e66a2);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 1024px) {
+      .container {
+        flex-direction: column;
+        height: auto;
+      }
+
+      .left-panel,
+      .right-panel {
+        border-radius: 0;
+        padding: 40px 24px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .left-panel h1 {
+        font-size: 2rem;
+      }
+
+      .right-panel h2 {
+        font-size: 1.8rem;
+      }
+
+      .btn {
+        font-size: 0.95rem;
+        padding: 10px 18px;
+      }
+
+      .highlight-box, .card {
+        width: 100%;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 <body>
-    <h1>Testing purpose</h1>
+  <div class="container">
+    <section class="left-panel">
+      <h1>Welcome, Doctor 👩‍⚕️</h1>
+      <p>Use your AI-powered assistant to manage prescriptions, review patient data, and ensure drug safety effortlessly.</p>
+
+      <div class="highlight-box">
+        <h3>Smart Tools</h3>
+        <p>✔ Drug interaction checker<br />
+           ✔ Allergy alerts<br />
+           ✔ Dosage verification</p>
+      </div>
+
+      <div class="highlight-box">
+        <h3>Secure &amp; Compliant</h3>
+        <p>🔒 HIPAA-ready with end-to-end encryption and secure storage.</p>
+      </div>
+    </section>
+
+    <section class="right-panel">
+      <h2>Doctor's Dashboard</h2>
+
+      <div class="card">
+        <h3>🩺 Patient Summary</h3>
+        <ul>
+          <li>Total Patients: <strong>124</strong></li>
+          <li>Active Prescriptions: <strong>58</strong></li>
+          <li>Drug Alerts: <strong>3</strong> potential interactions</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>🧠 AI Insights</h3>
+        <ul>
+          <li>2 prescriptions flagged for allergy conflict</li>
+          <li>1 high-dosage prescription – review recommended</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>📋 Quick Actions</h3>
+        <div class="actions">
+          <a href="#" class="btn"><i class="fas fa-plus-circle"></i> Add Prescription</a>
+          <a href="#" class="btn"><i class="fas fa-capsules"></i> Check Drug Info</a>
+          <a href="#" class="btn"><i class="fas fa-image"></i> Analyze Image</a>
+        </div>
+      </div>
+    </section>
+  </div>
 </body>
 </html>
