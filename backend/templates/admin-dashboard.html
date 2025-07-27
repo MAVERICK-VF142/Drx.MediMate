@@ -1,0 +1,139 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Drx.MediMate</title>
+    <link rel="stylesheet" href="../static/css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-pills"></i>
+                    Drx.MediMate
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name" id="adminName">Admin User</span>
+                        <span class="user-role">Administrator</span>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li class="menu-item active">
+                    <a href="#">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#users">
+                        <i class="fas fa-users"></i>
+                        Manage Users
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#records">
+                        <i class="fas fa-file-medical"></i>
+                        Manage Records
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#appointments">
+                        <i class="fas fa-calendar-check"></i>
+                        Appointments
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#prescriptions">
+                        <i class="fas fa-prescription-bottle"></i>
+                        Prescriptions
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#notifications">
+                        <i class="fas fa-bell"></i>
+                        Notifications
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#analytics">
+                        <i class="fas fa-chart-bar"></i>
+                        Analytics
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#security">
+                        <i class="fas fa-shield-alt"></i>
+                        Security
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Topbar -->
+            <header class="topbar">
+                <h1>Admin Dashboard</h1>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="search" placeholder="Search...">
+                </div>
+            </header>
+
+            <!-- Dashboard Overview -->
+            <section class="overview-grid">
+                <!-- Add overview cards here -->
+            </section>
+
+            <!-- Main Sections -->
+            <section id="users">
+                <h2>Manage Users</h2>
+                <table id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+            <section id="appointments">
+                <h2>Manage Appointments</h2>
+                <table id="appointmentsTable">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <button onclick="addAppointment()">Add Appointment</button>
+            </section>
+            <!-- Other sections -->
+        </main>
+    </div>
+
+    <script src="../static/js/admin-dashboard.js"></script>
+</body>
+</html> 
