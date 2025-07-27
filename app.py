@@ -25,7 +25,7 @@ from flask_limiter.util import get_remote_address
 from PIL import Image
 
 # Local application imports
-from utils.cache import get_cached_drug, set_cached_drug
+from backend.utils.cache import get_cached_drug, set_cached_drug
 
 # Load environment variables once, right after imports
 load_dotenv()
