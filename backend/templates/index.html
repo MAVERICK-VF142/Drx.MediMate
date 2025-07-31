@@ -3,8 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aditi - Pharmaceutical Assistant</title>
+    <title>Aditi Pharmaceutical - Authentication</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-50: #f0f9ff;
+            --primary-100: #e0f2fe;
+            --primary-200: #bae6fd;
+            --primary-300: #7dd3fc;
+            --primary-400: #38bdf8;
+            --primary-500: #0ea5e9;
+            --primary-600: #0284c7;
+            --primary-700: #0369a1;
+            --primary-800: #075985;
+            --primary-900: #0c4a6e;
+            
+            --success-50: #f0fdf4;
+            --success-500: #22c55e;
+            --success-600: #16a34a;
+            --success-700: #15803d;
+            --success-800: #166534;
+            
+            --error-50: #fef2f2;
+            --error-500: #ef4444;
+            --error-600: #dc2626;
+            --error-700: #b91c1c;
+            --error-800: #991b1b;
+            
+            --warning-50: #fffbeb;
+            --warning-500: #f59e0b;
+            --warning-600: #d97706;
+            --warning-700: #b45309;
+            --warning-800: #92400e;
+            
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            
+            --radius-sm: 0.375rem;
+            --radius: 0.5rem;
+            --radius-md: 0.75rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,231 +71,654 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
-        }
-
-        /* Header */
-        .header {
-            background: white;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #2563eb;
-        }
-
-        /* User Info Section */
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .user-details {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-        }
-
-        .user-name {
-            font-weight: 600;
-            color: #1f2937;
-            font-size: 0.9rem;
-        }
-
-        .role-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .role-pharmacist { background: #ddd6fe; color: #7c3aed; }
-        .role-doctor { background: #dcfce7; color: #16a34a; }
-        .role-student { background: #dbeafe; color: #2563eb; }
-        .role-patient { background: #fef3c7; color: #d97706; }
-
-        .logout-btn {
-            background: #dc2626;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: background 0.2s ease;
-        }
-
-        .logout-btn:hover {
-            background: #b91c1c;
-        }
-
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .dashboard-title {
-            font-size: 2.5rem;
-            color: #1f2937;
-            text-align: center;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-        }
-
-        .brand-highlight {
-            color: #2563eb;
-        }
-
-        .subtitle {
-            color: #6b7280;
-            font-size: 1.1rem;
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        /* Role-specific welcome message */
-        .role-welcome {
+            font-family: var(--font-family);
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: 16px;
-            margin-bottom: 3rem;
-            text-align: center;
+            min-height: 100vh;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--gray-800);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        .role-welcome h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .role-welcome p {
-            opacity: 0.9;
-            font-size: 1rem;
-        }
-
-        /* Cards Grid */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .feature-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            color: inherit;
-            position: relative;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            border-color: #2563eb;
-        }
-
-        .feature-card.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        /* Background Elements */
+        .bg-decoration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
             pointer-events: none;
         }
 
-        .card-icon {
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            right: -150px;
+            animation-delay: 0s;
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            bottom: -100px;
+            left: -100px;
+            animation-delay: 2s;
+        }
+
+        .circle-3 {
+            width: 150px;
+            height: 150px;
+            top: 50%;
+            right: 10%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Main Layout */
+        .auth-wrapper {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Left Panel */
+        .left-panel {
+            flex: 1;
+            padding: 3rem;
+            display: flex;
+            align-items: center;
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .brand-content {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .logo-section {
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo span {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .tagline h1 {
             font-size: 3rem;
-            margin-bottom: 1rem;
+            font-weight: 800;
+            color: white;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .tagline p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        .features-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .feature-icon i {
+            font-size: 1.25rem;
+            color: white;
+        }
+
+        .feature-content h3 {
+            color: white;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .feature-content p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        /* Right Panel */
+        .right-panel {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: white;
+            min-width: 500px;
+        }
+
+        /* Form Container */
+        .form-container {
+            width: 100%;
+            max-width: 400px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+            display: none;
+        }
+
+        .form-container.active {
+            opacity: 1;
+            transform: translateY(0);
             display: block;
         }
 
-        .drug-icon { color: #8b5cf6; }
-        .symptom-icon { color: #10b981; }
-        .camera-icon { color: #3b82f6; }
-        .education-icon { color: #f59e0b; }
-        .inventory-icon { color: #ef4444; }
-        .prescription-icon { color: #06b6d4; }
-        .consultation-icon { color: #84cc16; }
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
 
-        .card-title {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: #1f2937;
+        .form-header h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
             margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
         }
 
-        .card-description {
-            color: #6b7280;
-            font-size: 0.95rem;
-            line-height: 1.6;
+        .form-subtitle {
+            color: var(--gray-600);
+            font-size: 1rem;
+            font-weight: 400;
         }
 
-        .access-badge {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 500;
-            text-transform: uppercase;
-        }
-
-        .access-allowed {
-            background: #dcfce7;
-            color: #16a34a;
-        }
-
-        .access-restricted {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-
-        /* Loading State */
-        .loading {
-            display: flex;
-            justify-content: center;
+        /* Enhanced Alert Messages */
+        .alert-message {
+            display: none;
             align-items: center;
-            height: 50vh;
+            gap: 0.75rem;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .alert-message.show {
+            display: flex;
+        }
+
+        .alert-message.success {
+            background: var(--success-50);
+            color: var(--success-800);
+            border: 1px solid var(--success-200);
+        }
+
+        .alert-message.error {
+            background: var(--error-50);
+            color: var(--error-800);
+            border: 1px solid var(--error-200);
+        }
+
+        .alert-message.warning {
+            background: var(--warning-50);
+            color: var(--warning-800);
+            border: 1px solid var(--warning-200);
+        }
+
+        .alert-message i {
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .alert-close {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+
+        .alert-close:hover {
+            opacity: 1;
+        }
+
+        /* Form Styles */
+        .auth-form {
+            display: flex;
             flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 1rem;
         }
 
-        .spinner {
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 0.25rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            color: var(--gray-400);
+            font-size: 1rem;
+            z-index: 1;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 2.75rem;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 400;
+            background: white;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--gray-400);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--gray-400);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: var(--radius-sm);
+            transition: color 0.2s ease;
+        }
+
+        .password-toggle:hover {
+            color: var(--gray-600);
+        }
+
+        /* Password Strength */
+        .password-strength {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .strength-bars {
+            display: flex;
+            gap: 0.25rem;
+            flex: 1;
+        }
+
+        .strength-bar {
+            height: 4px;
+            flex: 1;
+            background: var(--gray-200);
+            border-radius: 2px;
+            transition: background-color 0.3s ease;
+        }
+
+        .strength-text {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            font-weight: 500;
+            min-width: fit-content;
+        }
+
+        /* Password Requirements */
+        .password-requirements {
+            margin-top: 0.75rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .requirement {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            transition: color 0.2s ease;
+        }
+
+        .requirement.met {
+            color: var(--success-600);
+        }
+
+        .requirement i {
+            font-size: 0.625rem;
+            opacity: 0.3;
+            transition: opacity 0.2s ease;
+        }
+
+        .requirement.met i {
+            opacity: 1;
+        }
+
+        /* Form Options */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            display: none;
+        }
+
+        .checkmark {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--gray-300);
+            border-radius: var(--radius-sm);
+            position: relative;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .checkbox-wrapper input[type="checkbox"]:checked + .checkmark {
+            background: var(--primary-500);
+            border-color: var(--primary-500);
+        }
+
+        .checkbox-wrapper input[type="checkbox"]:checked + .checkmark::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 2px;
+            width: 4px;
+            height: 8px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .checkbox-label {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .forgot-link {
+            color: var(--primary-600);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .forgot-link:hover {
+            color: var(--primary-700);
+            text-decoration: underline;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            background: var(--primary-600);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-700);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-icon {
+            font-size: 0.875rem;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-primary:hover .btn-icon {
+            transform: translateX(2px);
+        }
+
+        .btn-google {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            background: white;
+            color: var(--gray-700);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-google:hover:not(:disabled) {
+            border-color: var(--gray-300);
+            background: var(--gray-50);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-google:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .google-icon {
+            font-size: 1.125rem;
+            color: #4285f4;
+        }
+
+        /* Divider */
+        .divider {
+            position: relative;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--gray-200);
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 1rem;
+            color: var(--gray-500);
+            font-size: 0.875rem;
+            position: relative;
+        }
+
+        /* Form Footer */
+        .form-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .form-footer p {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+
+        .link-primary {
+            color: var(--primary-600);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .link-primary:hover {
+            color: var(--primary-700);
+            text-decoration: underline;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(4px);
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .loading-content {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-xl);
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+            min-width: 200px;
+        }
+
+        .loading-spinner {
             width: 40px;
             height: 40px;
-            border: 4px solid #e5e7eb;
-            border-top: 4px solid #2563eb;
+            border: 4px solid var(--gray-200);
+            border-top: 4px solid var(--primary-500);
             border-radius: 50%;
             animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
         }
 
         @keyframes spin {
@@ -244,273 +726,628 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Hidden content shown after auth */
-        #dashboardContent {
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        #dashboardContent.show {
-            opacity: 1;
-        }
-
-        /* Quick Actions */
-        .quick-actions {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border: 1px solid #e5e7eb;
-        }
-
-        .quick-actions h3 {
-            margin-bottom: 1rem;
-            color: #1f2937;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .action-btn {
-            padding: 0.75rem 1.5rem;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            background: white;
-            color: #374151;
-            text-decoration: none;
+        .loading-text {
+            color: var(--gray-600);
+            font-size: 0.875rem;
             font-weight: 500;
-            transition: all 0.2s ease;
         }
 
-        .action-btn:hover {
-            background: #f9fafb;
-            border-color: #2563eb;
-            color: #2563eb;
+        /* Role Selection Styles */
+        .role-selection {
+            margin: 1rem 0;
         }
 
-        /* Dashboard Navigation Button */
-        .dashboard-nav-btn {
-            background: #2563eb;
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .role-option {
+            position: relative;
+        }
+
+        .role-option input[type="radio"] {
+            display: none;
+        }
+
+        .role-card {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: all 0.3s ease;
+            background: white;
             text-decoration: none;
-            display: inline-block;
-            margin: 1rem auto;
+            color: inherit;
         }
 
-        .dashboard-nav-btn:hover {
-            background: #1d4ed8;
-            color: white;
+        .role-card:hover {
+            border-color: var(--primary-500);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
         }
 
-        /* Role Selection Modal for Google Users */
-        .role-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+        .role-card.selected {
+            border-color: var(--primary-500);
+            background: var(--primary-50);
+            color: var(--primary-700);
+        }
+
+        .role-icon {
+            width: 48px;
+            height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .role-modal {
-            background: white;
-            padding: 2rem;
-            border-radius: 16px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-
-        .role-modal h3 {
-            margin: 0 0 0.5rem 0;
-            color: #1f2937;
+            background: var(--primary-50);
+            border-radius: 10px;
+            margin-right: 1rem;
             font-size: 1.5rem;
-            font-weight: 700;
+            color: var(--primary-500);
         }
 
-        .role-modal p {
-            margin: 0 0 2rem 0;
-            color: #6b7280;
-        }
-
-        .role-modal .cards-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .role-modal .feature-card {
-            padding: 1.5rem 1rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .role-modal .feature-card:hover {
-            transform: translateY(-2px);
-            border-color: #2563eb;
-        }
-
-        .role-modal .feature-card.selected {
-            border-color: #2563eb;
-            background: #f0f9ff;
-        }
-
-        .role-modal .card-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .role-modal .card-title {
-            font-size: 1rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .role-modal .card-description {
-            font-size: 0.8rem;
-        }
-
-        .role-confirm-btn {
-            background: #2563eb;
+        .role-card.selected .role-icon {
+            background: var(--primary-500);
             color: white;
-            border: none;
-            padding: 0.75rem 2rem;
-            border-radius: 8px;
-            cursor: pointer;
+        }
+
+        .role-info h4 {
+            margin: 0 0 0.25rem 0;
+            font-weight: 600;
             font-size: 1rem;
-            font-weight: 500;
-            transition: background 0.2s ease;
         }
 
-        .role-confirm-btn:hover:not(:disabled) {
-            background: #1d4ed8;
+        .role-info p {
+            margin: 0;
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            line-height: 1.3;
         }
 
-        .role-confirm-btn:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
+        .role-card.selected .role-info p {
+            color: var(--primary-600);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        /* Role-specific fields */
+        .role-specific-fields {
+            animation: slideIn 0.3s ease-out;
+            display: none;
         }
 
-        /* Responsive */
+        .role-specific-fields.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .auth-wrapper {
+                flex-direction: column;
+            }
+            
+            .left-panel {
+                flex: none;
+                min-height: 40vh;
+                padding: 2rem;
+            }
+            
+            .tagline h1 {
+                font-size: 2.5rem;
+            }
+            
+            .features-grid {
+                display: none;
+            }
+        }
+
         @media (max-width: 768px) {
-            .header-content {
-                padding: 0 1rem;
+            .left-panel {
+                padding: 1.5rem;
+                min-height: 30vh;
             }
             
-            .container {
-                padding: 1rem;
-            }
-            
-            .dashboard-title {
+            .tagline h1 {
                 font-size: 2rem;
             }
             
-            .cards-grid {
+            .tagline p {
+                font-size: 1.125rem;
+            }
+            
+            .right-panel {
+                padding: 1.5rem;
+                min-width: auto;
+            }
+            
+            .form-container {
+                max-width: none;
+            }
+            
+            .form-row {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
             }
-
-            .user-details {
-                display: none;
+            
+            .password-requirements {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-options {
+                flex-direction: column;
+                align-items: flex-start;
             }
 
-            .action-buttons {
-                justify-content: center;
-            }
-
-            .role-modal .cards-grid {
+            .role-grid {
                 grid-template-columns: 1fr;
             }
         }
+
+        @media (max-width: 480px) {
+            .left-panel {
+                padding: 1rem;
+            }
+            
+            .tagline h1 {
+                font-size: 1.75rem;
+            }
+            
+            .right-panel {
+                padding: 1rem;
+            }
+            
+            .form-header h2 {
+                font-size: 1.875rem;
+            }
+            
+            .logo span {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus styles */
+        button:focus-visible,
+        input:focus-visible,
+        a:focus-visible {
+            outline: 2px solid var(--primary-500);
+            outline-offset: 2px;
+        }
     </style>
 </head>
+
 <body>
-    <!-- Loading State -->
-    <div id="loadingState" class="loading">
-        <div class="spinner"></div>
-        <p>Loading your dashboard...</p>
-    </div>
+    <div class="auth-wrapper">
+        <!-- Background Elements -->
+        <div class="bg-decoration">
+            <div class="bg-circle circle-1"></div>
+            <div class="bg-circle circle-2"></div>
+            <div class="bg-circle circle-3"></div>
+        </div>
 
-    <!-- Header -->
-    <div class="header" style="display: none;" id="mainHeader">
-        <div class="header-content">
-            <div class="logo">🏥 Aditi</div>
-            <div class="user-info">
-                <div class="user-details">
-                    <span class="user-name" id="userName">Loading...</span>
-                    <span class="role-badge" id="userRole">...</span>
+        <!-- Left Panel - Branding -->
+        <div class="left-panel">
+            <div class="brand-content">
+                <div class="logo-section">
+                    <div class="logo">
+                        <i class="fas fa-pills"></i>
+                        <span>Aditi Pharmaceutical</span>
+                    </div>
+                    <div class="tagline">
+                        <h1>Revolutionizing Healthcare Management</h1>
+                        <p>Join thousands of healthcare professionals who trust our AI-powered pharmaceutical assistant
+                            to streamline their operations and enhance patient care.</p>
+                    </div>
                 </div>
-                <button id="logout" class="logout-btn">Logout</button>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h3>Smart Analytics</h3>
+                            <p>Real-time insights and comprehensive reporting</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h3>Enterprise Security</h3>
+                            <p>Bank-level encryption and compliance standards</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h3>AI Assistant</h3>
+                            <p>Intelligent automation and decision support</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel - Forms -->
+        <div class="right-panel">
+            <!-- Sign In Form -->
+            <div class="form-container active" id="signIn">
+                <div class="form-header">
+                    <h2>Welcome back</h2>
+                    <p class="form-subtitle">Sign in to your account to continue</p>
+                </div>
+
+                <div id="signInMessage" class="alert-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span class="alert-text"></span>
+                    <button class="alert-close" onclick="hideAlert('signInMessage')">&times;</button>
+                </div>
+
+                <form class="auth-form" id="signInForm">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope input-icon"></i>
+                            <input
+                                type="email"
+                                id="email"
+                                class="form-input"
+                                placeholder="Enter your email"
+                                required
+                                autocomplete="email"
+                            >
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" id="password" class="form-input" placeholder="Enter your password"
+                                required autocomplete="current-password">
+                            <button type="button" class="password-toggle" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="checkmark"></span>
+                            <span class="checkbox-label">Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-link" id="recoverPasswordLink">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="submitSignIn">
+                        <span class="btn-text">Sign In</span>
+                        <i class="fas fa-arrow-right btn-icon"></i>
+                    </button>
+                </form>
+
+                <div class="divider">
+                    <span>or continue with</span>
+                </div>
+
+                <button class="btn-google" id="googleSignIn">
+                    <i class="fab fa-google google-icon"></i>
+                    <span>Continue with Google</span>
+                </button>
+
+                <div class="form-footer">
+                    <p>Don't have an account? <a href="#" class="link-primary" id="signUpButton">Create account</a></p>
+                </div>
+            </div>
+
+            <!-- Sign Up Form -->
+            <div class="form-container" id="signup">
+                <div class="form-header">
+                    <h2>Create your account</h2>
+                    <p class="form-subtitle">Join thousands of healthcare professionals</p>
+                </div>
+
+                <div id="signUpMessage" class="alert-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span class="alert-text"></span>
+                    <button class="alert-close" onclick="hideAlert('signUpMessage')">&times;</button>
+                </div>
+
+                <form class="auth-form" id="signUpForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fName" class="form-label">First Name</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user input-icon"></i>
+                                <input type="text" id="fName" class="form-input" placeholder="First name" required
+                                    autocomplete="given-name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lName" class="form-label">Last Name</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user input-icon"></i>
+                                <input type="text" id="lName" class="form-input" placeholder="Last name" required
+                                    autocomplete="family-name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rEmail" class="form-label">Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope input-icon"></i>
+                            <input type="email" id="rEmail" class="form-input" placeholder="Enter your email" required
+                                autocomplete="email">
+                        </div>
+                    </div>
+
+                    <!-- Role Selection -->
+                    <div class="form-group">
+                        <label for="userRole" class="form-label">Select Your Role</label>
+                        <div class="role-selection">
+                            <div class="role-grid">
+                                <div class="role-option" data-role="pharmacist">
+                                    <input type="radio" id="rolePharmacist" name="userRole" value="pharmacist" required>
+                                    <label for="rolePharmacist" class="role-card">
+                                        <div class="role-icon">
+                                            <i class="fas fa-pills"></i>
+                                        </div>
+                                        <div class="role-info">
+                                            <h4>Pharmacist</h4>
+                                            <p>Manage prescriptions and inventory</p>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <div class="role-option" data-role="doctor">
+                                    <input type="radio" id="roleDoctor" name="userRole" value="doctor" required>
+                                    <label for="roleDoctor" class="role-card">
+                                        <div class="role-icon">
+                                            <i class="fas fa-stethoscope"></i>
+                                        </div>
+                                        <div class="role-info">
+                                            <h4>Doctor</h4>
+                                            <p>Prescribe medications and patient care</p>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <div class="role-option" data-role="student">
+                                    <input type="radio" id="roleStudent" name="userRole" value="student" required>
+                                    <label for="roleStudent" class="role-card">
+                                        <div class="role-icon">
+                                            <i class="fas fa-graduation-cap"></i>
+                                        </div>
+                                        <div class="role-info">
+                                            <h4>Student</h4>
+                                            <p>Learn and access educational resources</p>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <div class="role-option" data-role="patient">
+                                    <input type="radio" id="rolePatient" name="userRole" value="patient" required>
+                                    <label for="rolePatient" class="role-card">
+                                        <div class="role-icon">
+                                            <i class="fas fa-user-injured"></i>
+                                        </div>
+                                        <div class="role-info">
+                                            <h4>Patient</h4>
+                                            <p>Track medications and health records</p>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Role-specific fields -->
+                    <div class="form-group role-specific-fields" id="pharmacistFields">
+                        <label for="licenseNumber" class="form-label">Pharmacy License Number</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-certificate input-icon"></i>
+                            <input type="text" id="licenseNumber" class="form-input" placeholder="Enter license number">
+                        </div>
+                    </div>
+
+                    <div class="form-group role-specific-fields" id="doctorFields">
+                        <label for="medicalLicense" class="form-label">Medical License Number</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-id-card input-icon"></i>
+                            <input type="text" id="medicalLicense" class="form-input" placeholder="Enter medical license">
+                        </div>
+                        <label for="specialization" class="form-label">Specialization</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user-md input-icon"></i>
+                            <input type="text" id="specialization" class="form-input" placeholder="e.g., Cardiology">
+                        </div>
+                    </div>
+
+                    <div class="form-group role-specific-fields" id="studentFields">
+                        <label for="institution" class="form-label">Institution</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-university input-icon"></i>
+                            <input type="text" id="institution" class="form-input" placeholder="University/College name">
+                        </div>
+                        <label for="studentId" class="form-label">Student ID</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-id-badge input-icon"></i>
+                            <input type="text" id="studentId" class="form-input" placeholder="Student ID number">
+                        </div>
+                    </div>
+
+                    <div class="form-group role-specific-fields" id="patientFields">
+                        <label for="dateOfBirth" class="form-label">Date of Birth</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-calendar input-icon"></i>
+                            <input type="date" id="dateOfBirth" class="form-input">
+                        </div>
+                        <label for="phoneNumber" class="form-label">Phone Number</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-phone input-icon"></i>
+                            <input type="tel" id="phoneNumber" class="form-input" placeholder="Phone number">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rPassword" class="form-label">Password</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" id="rPassword" class="form-input"
+                                placeholder="Create a strong password" required autocomplete="new-password">
+                            <button type="button" class="password-toggle" id="toggleSignUpPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength" id="passwordStrength">
+                            <div class="strength-bars">
+                                <div class="strength-bar"></div>
+                                <div class="strength-bar"></div>
+                                <div class="strength-bar"></div>
+                                <div class="strength-bar"></div>
+                            </div>
+                            <span class="strength-text">Password strength</span>
+                        </div>
+                        <div class="password-requirements">
+                            <div class="requirement" data-requirement="length">
+                                <i class="fas fa-check"></i>
+                                <span>At least 8 characters</span>
+                            </div>
+                            <div class="requirement" data-requirement="uppercase">
+                                <i class="fas fa-check"></i>
+                                <span>One uppercase letter</span>
+                            </div>
+                            <div class="requirement" data-requirement="lowercase">
+                                <i class="fas fa-check"></i>
+                                <span>One lowercase letter</span>
+                            </div>
+                            <div class="requirement" data-requirement="number">
+                                <i class="fas fa-check"></i>
+                                <span>One number</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" id="agreeTerms" required>
+                            <span class="checkmark"></span>
+                            <span class="checkbox-label">
+                                I agree to the <a href="#" class="link-primary">Terms of Service</a>
+                                and <a href="#" class="link-primary">Privacy Policy</a>
+                            </span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="submitSignUp">
+                        <span class="btn-text">Create Account</span>
+                        <i class="fas fa-arrow-right btn-icon"></i>
+                    </button>
+                </form>
+
+                <div class="divider">
+                    <span>or continue with</span>
+                </div>
+
+                <button class="btn-google" id="googleSignUp">
+                    <i class="fab fa-google google-icon"></i>
+                    <span>Continue with Google</span>
+                </button>
+
+                <div class="form-footer">
+                    <p>Already have an account? <a href="#" class="link-primary" id="signInButton">Sign in</a></p>
+                </div>
+            </div>
+
+            <!-- Password Recovery Form -->
+            <div class="form-container" id="recoverPassword">
+                <div class="form-header">
+                    <h2>Reset your password</h2>
+                    <p class="form-subtitle">Enter your email to receive a password reset link</p>
+                </div>
+
+                <div id="recoverMessage" class="alert-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span class="alert-text"></span>
+                    <button class="alert-close" onclick="hideAlert('recoverMessage')">&times;</button>
+                </div>
+
+                <form class="auth-form" id="recoverForm">
+                    <div class="form-group">
+                        <label for="recoverEmail" class="form-label">Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope input-icon"></i>
+                            <input type="email" id="recoverEmail" class="form-input" placeholder="Enter your email"
+                                required autocomplete="email">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="submitRecover">
+                        <span class="btn-text">Send Reset Link</span>
+                        <i class="fas fa-paper-plane btn-icon"></i>
+                    </button>
+                </form>
+
+                <div class="form-footer">
+                    <p><a href="#" class="link-primary" id="backToSignIn">← Back to sign in</a></p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Main Container -->
-    <div class="container" id="dashboardContent" style="display: none;">
-        <!-- Role-specific welcome message -->
-        <div class="role-welcome" id="roleWelcome">
-            <h3 id="welcomeTitle">Welcome!</h3>
-            <p id="welcomeMessage">Loading your personalized dashboard...</p>
-        </div>
-
-        <h2 class="dashboard-title">Welcome to <span class="brand-highlight">Drx.MediMate</span></h2>
-        <p class="subtitle" id="dashboardSubtitle">Your intelligent pharmaceutical assistant</p>
-        
-        <!-- Navigation to Role-Specific Dashboard -->
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <a href="#" class="dashboard-nav-btn" id="roleDashboardBtn">
-                Go to My Dashboard
-            </a>
-        </div>
-
-        <!-- Quick Actions (Role-specific) -->
-        <div class="quick-actions" id="quickActions">
-            <h3>Quick Actions</h3>
-            <div class="action-buttons" id="actionButtons">
-                <!-- Dynamic buttons based on role -->
-            </div>
-        </div>
-
-        <!-- Feature Cards -->
-        <div class="cards-grid" id="featureCards">
-            <!-- Cards will be populated based on user role -->
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Please wait...</p>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-        import { 
-            getAuth, 
-            onAuthStateChanged, 
-            signOut 
+        import {
+            getAuth,
+            onAuthStateChanged,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            sendEmailVerification,
+            sendPasswordResetEmail,
+            GoogleAuthProvider,
+            signInWithPopup
         } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
         import {
             getFirestore,
+            setDoc,
             doc,
-            getDoc,
-            setDoc
+            getDoc
         } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -526,472 +1363,571 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth();
         const db = getFirestore();
+        const provider = new GoogleAuthProvider();
 
-        // Role-based dashboard routes
-        const ROLE_DASHBOARDS = {
-            pharmacist: 'pharmacist-dashboard.html',
-            doctor: 'doctor-dashboard.html',
-            student: 'student-dashboard.html',
-            patient: 'patient-dashboard.html'
+        // Enhanced error message mapping
+        const getErrorMessage = (error) => {
+            const errorMessages = {
+                'auth/user-not-found': 'No account found with this email address.',
+                'auth/wrong-password': 'Incorrect password. Please try again.',
+                'auth/invalid-credential': 'Invalid email or password. Please check your credentials.',
+                'auth/invalid-email': 'Please enter a valid email address.',
+                'auth/user-disabled': 'This account has been disabled. Please contact support.',
+                'auth/too-many-requests': 'Too many failed attempts. Please try again later.',
+                'auth/network-request-failed': 'Network error. Please check your connection and try again.',
+                'auth/email-already-in-use': 'An account with this email already exists.',
+                'auth/weak-password': 'Password should be at least 6 characters long.',
+                'auth/operation-not-allowed': 'This sign-in method is not enabled.',
+                'auth/popup-closed-by-user': 'Sign-in was cancelled.',
+                'auth/cancelled-popup-request': 'Sign-in was cancelled.',
+                'auth/popup-blocked': 'Pop-up was blocked by your browser. Please allow pop-ups and try again.',
+                'auth/requires-recent-login': 'Please sign out and sign in again to perform this action.',
+                'auth/credential-already-in-use': 'This credential is already associated with a different account.',
+                'auth/account-exists-with-different-credential': 'An account already exists with the same email but different sign-in credentials.'
+            };
+
+            return errorMessages[error.code] || 'An unexpected error occurred. Please try again.';
         };
 
-        // Role-based features configuration
-        const ROLE_FEATURES = {
-            pharmacist: {
-                welcome: {
-                    title: "Welcome, Pharmacist!",
-                    message: "Manage your pharmacy operations with AI-powered tools"
-                },
-                subtitle: "Professional pharmacy management tools",
-                quickActions: [
-                    { text: "View Inventory", href: "inventory-management" },
-                    { text: "Process Prescriptions", href: "prescription-processing" },
-                    { text: "Generate Reports", href: "reports" }
-                ],
-                features: [
-                    {
-                        href: "drug-info-page",
-                        icon: "💊",
-                        iconClass: "drug-icon",
-                        title: "Drug Information",
-                        description: "Look up clinical drug info powered by Gemini AI.",
-                        allowed: true
-                    },
-                    {
-                        href: "inventory-management",
-                        icon: "📦",
-                        iconClass: "inventory-icon",
-                        title: "Inventory Management",
-                        description: "Track stock levels, expiry dates, and manage suppliers.",
-                        allowed: true
-                    },
-                    {
-                        href: "prescription-processing",
-                        icon: "📋",
-                        iconClass: "prescription-icon",
-                        title: "Prescription Processing",
-                        description: "Verify and process patient prescriptions efficiently.",
-                        allowed: true
-                    },
-                    {
-                        href: "upload-image-page",
-                        icon: "📷",
-                        iconClass: "camera-icon",
-                        title: "Medicine Image",
-                        description: "Upload a medicine photo to get full details.",
-                        allowed: true
-                    },
-                    {
-                        href: "allergy-checker",
-                        icon: "⚕️",
-                        iconClass: "symptom-icon",
-                        title: "Allergy Checker",
-                        description: "AI-powered tool to check medicine safety based on your allergies.",
-                        allowed: true
-                    }
+        // Enhanced message function
+        function showMessage(message, divId, type = 'error') {
+            const messageDiv = document.getElementById(divId);
+            const alertText = messageDiv.querySelector('.alert-text');
+            const alertIcon = messageDiv.querySelector('i');
+            
+            // Update icon based on type
+            alertIcon.className = `fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'exclamation-circle'}`;
+            
+            // Update message and styling
+            alertText.textContent = message;
+            messageDiv.className = `alert-message ${type} show`;
 
-                ]
-            },
-            doctor: {
-                welcome: {
-                    title: "Welcome, Doctor!",
-                    message: "Enhance your practice with intelligent diagnostic tools"
-                },
-                subtitle: "Advanced clinical decision support",
-                quickActions: [
-                    { text: "Patient Records", href: "patient-records" },
-                    { text: "Write Prescription", href: "prescribe" },
-                    { text: "Drug Interactions", href: "drug-interactions" }
-                ],
-                features: [
-                    {
-                        href: "drug-info-page",
-                        icon: "💊",
-                        iconClass: "drug-icon",
-                        title: "Drug Information",
-                        description: "Look up clinical drug info powered by Gemini AI.",
-                        allowed: true
-                    },
-                    {
-                        href: "symptom-checker-page",
-                        icon: "🩺",
-                        iconClass: "symptom-icon",
-                        title: "Symptom Checker",
-                        description: "AI-powered symptom analysis and differential diagnosis.",
-                        allowed: true
-                    },
-                    {
-                        href: "consultation-tools",
-                        icon: "👨‍⚕️",
-                        iconClass: "consultation-icon",
-                        title: "Consultation Tools",
-                        description: "Digital tools to enhance patient consultations.",
-                        allowed: true
-                    },
-                    {
-                        href: "upload-image-page",
-                        icon: "📷",
-                        iconClass: "camera-icon",
-                        title: "Medicine Image",
-                        description: "Upload a medicine photo to get full details.",
-                        allowed: true
-                    },
-                    {
-                        href: "allergy-checker",
-                        icon: "⚕️",
-                        iconClass: "symptom-icon",
-                        title: "Allergy Checker",
-                        description: "AI-powered tool to check medicine safety based on your allergies.",
-                        allowed: true
-                    }
-                ]
-            },
-            student: {
-                welcome: {
-                    title: "Welcome, Student!",
-                    message: "Learn and explore pharmaceutical knowledge"
-                },
-                subtitle: "Educational resources and learning tools",
-                quickActions: [
-                    { text: "Study Materials", href: "study-materials" },
-                    { text: "Practice Tests", href: "practice-tests" },
-                    { text: "Drug Flashcards", href: "flashcards" }
-                ],
-                features: [
-                    {
-                        href: "drug-info-page",
-                        icon: "💊",
-                        iconClass: "drug-icon",
-                        title: "Drug Information",
-                        description: "Learn about medications with detailed explanations.",
-                        allowed: true
-                    },
-                    {
-                        href: "educational-resources",
-                        icon: "📚",
-                        iconClass: "education-icon",
-                        title: "Educational Resources",
-                        description: "Access curated learning materials and references.",
-                        allowed: true
-                    },
-                    {
-                        href: "symptom-checker-page",
-                        icon: "🩺",
-                        iconClass: "symptom-icon",
-                        title: "Symptom Checker",
-                        description: "Learn symptom-drug relationships (educational only).",
-                        allowed: true
-                    },
-                    {
-                        href: "#",
-                        icon: "📋",
-                        iconClass: "prescription-icon",
-                        title: "Prescription Writing",
-                        description: "Advanced feature - Available after graduation.",
-                        allowed: false
-                    },
-                    {
-                        href: "allergy-checker",
-                        icon: "⚕️",
-                        iconClass: "symptom-icon",
-                        title: "Allergy Checker",
-                        description: "AI-powered tool to check medicine safety based on your allergies.",
-                        allowed: true
-                    }
-                ]
-            },
-            patient: {
-                welcome: {
-                    title: "Welcome, Patient!",
-                    message: "Manage your health and medications safely"
-                },
-                subtitle: "Personal health management tools",
-                quickActions: [
-                    { text: "My Medications", href: "my-medications" },
-                    { text: "Health Records", href: "health-records" },
-                    { text: "Find Pharmacy", href: "pharmacy-locator" }
-                ],
-                features: [
-                    {
-                        href: "symptom-checker-page",
-                        icon: "🩺",
-                        iconClass: "symptom-icon",
-                        title: "Symptom Checker",
-                        description: "Get suggestions for safe OTC medications.",
-                        allowed: true
-                    },
-                    {
-                        href: "medication-tracker",
-                        icon: "⏰",
-                        iconClass: "drug-icon",
-                        title: "Medication Tracker",
-                        description: "Track your medications and set reminders.",
-                        allowed: true
-                    },
-                    {
-                        href: "upload-image-page",
-                        icon: "📷",
-                        iconClass: "camera-icon",
-                        title: "Medicine Image",
-                        description: "Identify your medications by photo.",
-                        allowed: true
-                    },
-                    {
-                        href: "prescription-validator-page",
-                        icon: "📝",
-                        iconClass: "camera-icon",
-                        title: "Prescription Validator",
-                        description: "Validate your medical prescription by photo.",
-                        allowed: true
-                    },
-                    {
-                        href: "#",
-                        icon: "💊",
-                        iconClass: "drug-icon",
-                        title: "Clinical Drug Info",
-                        description: "Professional feature - Consult your doctor.",
-                        allowed: false
-                    },
-                    {
-                        href: "allergy-checker",
-                        icon: "⚕️",
-                        iconClass: "symptom-icon",
-                        title: "Allergy Checker",
-                        description: "AI-powered tool to check medicine safety based on your allergies.",
-                        allowed: true
-                    }
-                ]
+            // Auto-hide success messages after 5 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    hideAlert(divId);
+                }, 5000);
             }
-        };
-
-        // Show role selection modal for Google users without role
-        function showRoleSelectionModal(user) {
-            return new Promise((resolve) => {
-                const modal = document.createElement('div');
-                modal.className = 'role-modal-overlay';
-                modal.innerHTML = `
-                    <div class="role-modal">
-                        <h3>Complete Your Profile</h3>
-                        <p>Please select your role to personalize your experience:</p>
-                        <div class="cards-grid">
-                            <div class="feature-card" data-role="pharmacist">
-                                <div class="card-icon drug-icon">💊</div>
-                                <h5 class="card-title">Pharmacist</h5>
-                                <p class="card-description">Manage prescriptions and inventory</p>
-                            </div>
-                            <div class="feature-card" data-role="doctor">
-                                <div class="card-icon symptom-icon">🩺</div>
-                                <h5 class="card-title">Doctor</h5>
-                                <p class="card-description">Prescribe medications and patient care</p>
-                            </div>
-                            <div class="feature-card" data-role="student">
-                                <div class="card-icon education-icon">📚</div>
-                                <h5 class="card-title">Student</h5>
-                                <p class="card-description">Learn and access educational resources</p>
-                            </div>
-                            <div class="feature-card" data-role="patient">
-                                <div class="card-icon camera-icon">👤</div>
-                                <h5 class="card-title">Patient</h5>
-                                <p class="card-description">Track medications and health records</p>
-                            </div>
-                        </div>
-                        <button class="role-confirm-btn" disabled>Continue</button>
-                    </div>
-                `;
-                
-                document.body.appendChild(modal);
-                
-                let selectedRole = null;
-                const confirmBtn = modal.querySelector('.role-confirm-btn');
-                
-                // Handle role selection
-                modal.querySelectorAll('.feature-card').forEach(card => {
-                    card.addEventListener('click', () => {
-                        modal.querySelectorAll('.feature-card').forEach(c => c.classList.remove('selected'));
-                        card.classList.add('selected');
-                        selectedRole = card.dataset.role;
-                        confirmBtn.disabled = false;
-                    });
-                });
-                
-                // Handle confirmation
-                confirmBtn.addEventListener('click', async () => {
-                    if (selectedRole) {
-                        try {
-                            const nameParts = user.displayName ? user.displayName.split(' ') : ["", ""];
-                            
-                            const userData = {
-                                email: user.email,
-                                firstName: nameParts[0] || "User",
-                                lastName: nameParts.slice(1).join(' ') || "",
-                                role: selectedRole,
-                                createdAt: new Date().toISOString(),
-                                emailVerified: true
-                            };
-                            
-                            await setDoc(doc(db, "users", user.uid), userData);
-                            document.body.removeChild(modal);
-                            resolve(userData);
-                        } catch (error) {
-                            console.error("Error saving user role:", error);
-                            alert("Error saving your role. Please try again.");
-                        }
-                    }
-                });
-            });
         }
 
-        function populateDashboard(userData) {
-            const role = userData.role;
-            const config = ROLE_FEATURES[role];
+        // Hide alert function
+        window.hideAlert = function(divId) {
+            const messageDiv = document.getElementById(divId);
+            messageDiv.classList.remove('show');
+        };
+
+        // Loading functions
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.add('show');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('show');
+        }
+
+        // Update button loading state
+        function setButtonLoading(buttonId, loading, loadingText = 'Please wait...') {
+            const button = document.getElementById(buttonId);
+            const btnText = button.querySelector('.btn-text');
+            const btnIcon = button.querySelector('.btn-icon');
             
-            if (!config) {
-                console.error('Unknown role:', role);
-                userData.role = 'patient';
-                populateDashboard(userData);
+            if (loading) {
+                button.disabled = true;
+                btnText.textContent = loadingText;
+                btnIcon.className = 'fas fa-spinner fa-spin btn-icon';
+            } else {
+                button.disabled = false;
+                // Reset to original text based on button
+                if (buttonId === 'submitSignIn') {
+                    btnText.textContent = 'Sign In';
+                    btnIcon.className = 'fas fa-arrow-right btn-icon';
+                } else if (buttonId === 'submitSignUp') {
+                    btnText.textContent = 'Create Account';
+                    btnIcon.className = 'fas fa-arrow-right btn-icon';
+                } else if (buttonId === 'submitRecover') {
+                    btnText.textContent = 'Send Reset Link';
+                    btnIcon.className = 'fas fa-paper-plane btn-icon';
+                }
+            }
+        }
+
+        // Role-based redirection
+        function redirectBasedOnRole(userRole) {
+            const roleRoutes = {
+                pharmacist: 'pharmacist-dashboard.html',
+                doctor: 'doctor-dashboard.html',
+                student: 'student-dashboard.html',
+                patient: 'patient-dashboard.html'
+            };
+            
+            const route = roleRoutes[userRole] || 'index.html';
+            window.location.href = route;
+        }
+
+        // Check authentication state and redirect
+        onAuthStateChanged(auth, async (user) => {
+            if (user && user.emailVerified) {
+                try {
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        localStorage.setItem('userRole', userData.role);
+                        localStorage.setItem('loggedInUserId', user.uid);
+                        redirectBasedOnRole(userData.role);
+                    }
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                }
+            }
+        });
+
+        // Form switching
+        document.getElementById('signUpButton').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('signIn').classList.remove('active');
+            document.getElementById('signup').classList.add('active');
+            hideAlert('signInMessage');
+        });
+
+        document.getElementById('signInButton').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('signup').classList.remove('active');
+            document.getElementById('signIn').classList.add('active');
+            hideAlert('signUpMessage');
+        });
+
+        document.getElementById('recoverPasswordLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('signIn').classList.remove('active');
+            document.getElementById('recoverPassword').classList.add('active');
+            hideAlert('signInMessage');
+        });
+
+        document.getElementById('backToSignIn').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('recoverPassword').classList.remove('active');
+            document.getElementById('signIn').classList.add('active');
+            hideAlert('recoverMessage');
+        });
+
+        // Password toggle functionality
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+
+        document.getElementById('toggleSignUpPassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('rPassword');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+
+        // Role selection handling
+        document.querySelectorAll('input[name="userRole"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Hide all role-specific fields
+                document.querySelectorAll('.role-specific-fields').forEach(field => {
+                    field.classList.remove('show');
+                });
+                
+                // Show selected role's fields
+                const selectedRole = this.value;
+                const roleFields = document.getElementById(`${selectedRole}Fields`);
+                if (roleFields) {
+                    roleFields.classList.add('show');
+                }
+
+                // Update role cards visual state
+                document.querySelectorAll('.role-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                this.nextElementSibling.classList.add('selected');
+            });
+        });
+
+        // Password strength checker
+        document.getElementById('rPassword').addEventListener('input', function() {
+            const password = this.value;
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /\d/.test(password)
+            };
+
+            const score = Object.values(requirements).filter(Boolean).length;
+            
+            // Update strength bars
+            const strengthBars = document.querySelectorAll('.strength-bar');
+            const strengthText = document.querySelector('.strength-text');
+            
+            strengthBars.forEach((bar, index) => {
+                if (index < score) {
+                    if (score === 4) {
+                        bar.style.backgroundColor = 'var(--success-500)';
+                    } else if (score >= 3) {
+                        bar.style.backgroundColor = 'var(--warning-500)';
+                    } else {
+                        bar.style.backgroundColor = 'var(--error-500)';
+                    }
+                } else {
+                    bar.style.backgroundColor = 'var(--gray-200)';
+                }
+            });
+
+            // Update strength text
+            const strengthTexts = ['Very weak', 'Weak', 'Fair', 'Good', 'Strong'];
+            strengthText.textContent = password ? strengthTexts[score] || 'Very weak' : 'Password strength';
+
+            // Update requirements
+            Object.keys(requirements).forEach(req => {
+                const element = document.querySelector(`[data-requirement="${req}"]`);
+                if (requirements[req]) {
+                    element.classList.add('met');
+                } else {
+                    element.classList.remove('met');
+                }
+            });
+        });
+
+        // Enhanced Sign In with better error handling
+        document.getElementById('submitSignIn').addEventListener('click', (event) => {
+            event.preventDefault();
+            hideAlert('signInMessage');
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            // Client-side validation
+            if (!email || !password) {
+                showMessage('Please fill in all fields.', 'signInMessage', 'warning');
                 return;
             }
 
-            // Update user info
-            document.getElementById('userName').textContent = `${userData.firstName} ${userData.lastName}`;
-            const roleElement = document.getElementById('userRole');
-            roleElement.textContent = role.charAt(0).toUpperCase() + role.slice(1);
-            roleElement.className = `role-badge role-${role}`;
-
-            // Update welcome message
-            document.getElementById('welcomeTitle').textContent = config.welcome.title;
-            document.getElementById('welcomeMessage').textContent = config.welcome.message;
-            document.getElementById('dashboardSubtitle').textContent = config.subtitle;
-
-            // Set up role dashboard navigation
-            const roleDashboardBtn = document.getElementById('roleDashboardBtn');
-            const dashboardRoute = ROLE_DASHBOARDS[role];
-            if (dashboardRoute) {
-                roleDashboardBtn.href = dashboardRoute;
-                roleDashboardBtn.textContent = `Go to ${role.charAt(0).toUpperCase() + role.slice(1)} Dashboard`;
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showMessage('Please enter a valid email address.', 'signInMessage', 'warning');
+                return;
             }
 
-            // Populate quick actions
-            const actionButtons = document.getElementById('actionButtons');
-            actionButtons.innerHTML = config.quickActions.map(action => 
-                `<a href="${action.href}" class="action-btn">${action.text}</a>`
-            ).join('');
+            setButtonLoading('submitSignIn', true, 'Signing in...');
 
-            // Populate feature cards
-            const featureCards = document.getElementById('featureCards');
-            featureCards.innerHTML = config.features.map(feature => `
-                <a href="${feature.href}" class="feature-card ${!feature.allowed ? 'disabled' : ''}">
-                    <div class="access-badge ${feature.allowed ? 'access-allowed' : 'access-restricted'}">
-                        ${feature.allowed ? 'Available' : 'Restricted'}
-                    </div>
-                    <div class="card-icon ${feature.iconClass}">${feature.icon}</div>
-                    <h5 class="card-title">${feature.title}</h5>
-                    <p class="card-description">${feature.description}</p>
-                </a>
-            `).join('');
-
-            // Show the dashboard
-            document.getElementById('loadingState').style.display = 'none';
-            document.getElementById('mainHeader').style.display = 'block';
-            document.getElementById('dashboardContent').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('dashboardContent').classList.add('show');
-            }, 100);
-        }
-
-        async function verifyUserAndLoadDashboard(user) {
-            try {
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                let userData;
-                
-                if (!userDoc.exists()) {
-                    userData = await showRoleSelectionModal(user);
-                } else {
-                    userData = userDoc.data();
-                    
-                    if (!userData.role) {
-                        userData = await showRoleSelectionModal(user);
+            signInWithEmailAndPassword(auth, email, password)
+                .then(async (userCredential) => {
+                    const user = userCredential.user;
+                    if (user.emailVerified) {
+                        try {
+                            const userDoc = await getDoc(doc(db, "users", user.uid));
+                            if (userDoc.exists()) {
+                                const userData = userDoc.data();
+                                showMessage('Welcome back! Redirecting...', 'signInMessage', 'success');
+                                localStorage.setItem('loggedInUserId', user.uid);
+                                localStorage.setItem('userRole', userData.role);
+                                
+                                setTimeout(() => {
+                                    redirectBasedOnRole(userData.role);
+                                }, 1500);
+                            } else {
+                                setButtonLoading('submitSignIn', false);
+                                showMessage('User profile not found. Please contact support.', 'signInMessage', 'error');
+                                auth.signOut();
+                            }
+                        } catch (error) {
+                            setButtonLoading('submitSignIn', false);
+                            console.error("Error fetching user data:", error);
+                            showMessage('Error retrieving user data. Please try again.', 'signInMessage', 'error');
+                        }
+                    } else {
+                        setButtonLoading('submitSignIn', false);
+                        showMessage('Please verify your email before signing in. Check your inbox for the verification link.', 'signInMessage', 'warning');
+                        auth.signOut();
                     }
-                }
-                
-                // Store user data for other scripts
-                localStorage.setItem('loggedInUserId', user.uid);
-                localStorage.setItem('userRole', userData.role);
-                localStorage.setItem('userData', JSON.stringify(userData));
-                
-                populateDashboard(userData);
-                
-            } catch (error) {
-                console.error('Error loading user data:', error);
-                setTimeout(() => {
-                    window.location.href = "sisu.html";
-                }, 3000);
-            }
-        }
-
-        // Authentication state observer
-        onAuthStateChanged(auth, (user) => {
-            if (user && user.emailVerified) {
-                verifyUserAndLoadDashboard(user);
-            } else if (user && !user.emailVerified) {
-                document.getElementById('loadingState').innerHTML = `
-                    <div class="spinner"></div>
-                    <p>Please verify your email before continuing...</p>
-                    <button onclick="window.location.href='sisu.html'" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer;">Back to Login</button>
-                `;
-            } else {
-                window.location.href = "sisu.html";
-            }
-        });
-
-        // Logout functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const logoutBtn = document.getElementById('logout');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', async () => {
-                    try {
-                        await signOut(auth);
-                        localStorage.clear();
-                        window.location.href = "sisu.html";
-                    } catch (error) {
-                        console.error("Logout error:", error);
-                    }
+                })
+                .catch((error) => {
+                    setButtonLoading('submitSignIn', false);
+                    console.error("Sign-in error:", error);
+                    showMessage(getErrorMessage(error), 'signInMessage', 'error');
                 });
+        });
+
+        // Enhanced Sign Up with role data
+        document.getElementById('submitSignUp').addEventListener('click', (event) => {
+            event.preventDefault();
+            hideAlert('signUpMessage');
+            
+            const signUpForm = document.getElementById('signUpForm');
+            const formData = new FormData(signUpForm);
+            
+            const email = document.getElementById('rEmail').value.trim();
+            const password = document.getElementById('rPassword').value;
+            const firstName = document.getElementById('fName').value.trim();
+            const lastName = document.getElementById('lName').value.trim();
+            const selectedRole = document.querySelector('input[name="userRole"]:checked');
+            const agreeTerms = document.getElementById('agreeTerms').checked;
+
+            // Enhanced validation
+            if (!firstName || !lastName || !email || !password) {
+                showMessage('Please fill in all required fields.', 'signUpMessage', 'warning');
+                return;
+            }
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showMessage('Please enter a valid email address.', 'signUpMessage', 'warning');
+                return;
+            }
+
+            if (!selectedRole) {
+                showMessage('Please select your role.', 'signUpMessage', 'warning');
+                return;
+            }
+
+            if (!agreeTerms) {
+                showMessage('Please agree to the Terms of Service and Privacy Policy.', 'signUpMessage', 'warning');
+                return;
+            }
+
+            // Check password strength
+            const passwordRequirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /\d/.test(password)
+            };
+
+            const passwordScore = Object.values(passwordRequirements).filter(Boolean).length;
+            if (passwordScore < 4) {
+                showMessage('Please create a stronger password that meets all requirements.', 'signUpMessage', 'warning');
+                return;
+            }
+
+            setButtonLoading('submitSignUp', true, 'Creating account...');
+
+            // Collect role-specific data
+            const roleData = {
+                role: selectedRole.value,
+                email,
+                firstName,
+                lastName,
+                createdAt: new Date().toISOString(),
+                emailVerified: false
+            };
+
+            // Add role-specific fields
+            switch (selectedRole.value) {
+                case 'pharmacist':
+                    const licenseNumber = document.getElementById('licenseNumber').value.trim();
+                    if (licenseNumber) roleData.licenseNumber = licenseNumber;
+                    break;
+                case 'doctor':
+                    const medicalLicense = document.getElementById('medicalLicense').value.trim();
+                    const specialization = document.getElementById('specialization').value.trim();
+                    if (medicalLicense) roleData.medicalLicense = medicalLicense;
+                    if (specialization) roleData.specialization = specialization;
+                    break;
+                case 'student':
+                    const institution = document.getElementById('institution').value.trim();
+                    const studentId = document.getElementById('studentId').value.trim();
+                    if (institution) roleData.institution = institution;
+                    if (studentId) roleData.studentId = studentId;
+                    break;
+                case 'patient':
+                    const dateOfBirth = document.getElementById('dateOfBirth').value;
+                    const phoneNumber = document.getElementById('phoneNumber').value.trim();
+                    if (dateOfBirth) roleData.dateOfBirth = dateOfBirth;
+                    if (phoneNumber) roleData.phoneNumber = phoneNumber;
+                    break;
+            }
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    sendEmailVerification(user)
+                        .then(() => {
+                            setDoc(doc(db, "users", user.uid), roleData)
+                                .then(() => {
+                                    setButtonLoading('submitSignUp', false);
+                                    showMessage('Account created successfully! Please check your email for verification before signing in.', 'signUpMessage', 'success');
+                                    
+                                    // Reset form
+                                    document.getElementById('signUpForm').reset();
+                                    
+                                    // Hide role-specific fields
+                                    document.querySelectorAll('.role-specific-fields').forEach(field => {
+                                        field.classList.remove('show');
+                                    });
+                                    
+                                    // Reset role selection visuals
+                                    document.querySelectorAll('.role-card').forEach(card => {
+                                        card.classList.remove('selected');
+                                    });
+                                    
+                                    // Reset password strength indicator
+                                    document.querySelectorAll('.strength-bar').forEach(bar => {
+                                        bar.style.backgroundColor = 'var(--gray-200)';
+                                    });
+                                    document.querySelector('.strength-text').textContent = 'Password strength';
+                                    document.querySelectorAll('.requirement').forEach(req => {
+                                        req.classList.remove('met');
+                                    });
+                                })
+                                .catch((error) => {
+                                    setButtonLoading('submitSignUp', false);
+                                    console.error("Firestore error:", error);
+                                    showMessage('Account created but profile save failed. Please try again.', 'signUpMessage', 'warning');
+                                });
+                        })
+                        .catch((error) => {
+                            setButtonLoading('submitSignUp', false);
+                            console.error("Verification error:", error);
+                            showMessage('Account created but verification email failed. Please try again.', 'signUpMessage', 'warning');
+                        });
+                })
+                .catch((error) => {
+                    setButtonLoading('submitSignUp', false);
+                    console.error("Sign-up error:", error);
+                    showMessage(getErrorMessage(error), 'signUpMessage', 'error');
+                });
+        });
+
+        // Password Recovery
+        document.getElementById('submitRecover').addEventListener('click', (event) => {
+            event.preventDefault();
+            hideAlert('recoverMessage');
+            
+            const recoverEmail = document.getElementById('recoverEmail').value.trim();
+
+            if (!recoverEmail) {
+                showMessage('Please enter your email address.', 'recoverMessage', 'warning');
+                return;
+            }
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recoverEmail)) {
+                showMessage('Please enter a valid email address.', 'recoverMessage', 'warning');
+                return;
+            }
+
+            setButtonLoading('submitRecover', true, 'Sending reset link...');
+
+            sendPasswordResetEmail(auth, recoverEmail)
+                .then(() => {
+                    setButtonLoading('submitRecover', false);
+                    showMessage('Password reset email sent! Check your inbox and follow the instructions.', 'recoverMessage', 'success');
+                    document.getElementById('recoverEmail').value = '';
+                })
+                .catch(error => {
+                    setButtonLoading('submitRecover', false);
+                    console.error("Password reset error:", error);
+                    showMessage(getErrorMessage(error), 'recoverMessage', 'error');
+                });
+        });
+
+        // Google Sign In with enhanced error handling
+        document.getElementById('googleSignIn').addEventListener('click', (event) => {
+            event.preventDefault();
+            hideAlert('signInMessage');
+            
+            const button = event.target;
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin google-icon"></i><span>Signing in...</span>';
+
+            signInWithPopup(auth, provider)
+                .then(async (result) => {
+                    const user = result.user;
+                    
+                    // Check if user already exists
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    
+                    if (userDoc.exists()) {
+                        // Existing user - redirect based on role
+                        const userData = userDoc.data();
+                        localStorage.setItem('loggedInUserId', user.uid);
+                        localStorage.setItem('userRole', userData.role);
+                        showMessage('Welcome back! Redirecting...', 'signInMessage', 'success');
+                        
+                        setTimeout(() => {
+                            redirectBasedOnRole(userData.role);
+                        }, 1500);
+                    } else {
+                        // New user - show message to use email signup for role selection
+                        button.disabled = false;
+                        button.innerHTML = '<i class="fab fa-google google-icon"></i><span>Continue with Google</span>';
+                        showMessage('New Google user detected. Please use email signup to select your role first.', 'signInMessage', 'warning');
+                        await auth.signOut();
+                    }
+                })
+                .catch((error) => {
+                    button.disabled = false;
+                    button.innerHTML = '<i class="fab fa-google google-icon"></i><span>Continue with Google</span>';
+                    console.error("Google Sign-In Error:", error);
+                    showMessage(getErrorMessage(error), 'signInMessage', 'error');
+                });
+        });
+
+        // Google Sign Up (same as sign in for existing users)
+        document.getElementById('googleSignUp').addEventListener('click', (event) => {
+            event.preventDefault();
+            hideAlert('signUpMessage');
+            showMessage('Please use the email signup form above to select your role and create an account.', 'signUpMessage', 'warning');
+        });
+
+        // Email validation on input
+        document.getElementById('email').addEventListener('blur', function() {
+            const email = this.value.trim();
+            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showMessage('Please enter a valid email address.', 'signInMessage', 'warning');
+            } else {
+                hideAlert('signInMessage');
             }
         });
 
-        // Handle role-specific navigation
+        document.getElementById('rEmail').addEventListener('blur', function() {
+            const email = this.value.trim();
+            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showMessage('Please enter a valid email address.', 'signUpMessage', 'warning');
+            } else {
+                hideAlert('signUpMessage');
+            }
+        });
+
+        document.getElementById('recoverEmail').addEventListener('blur', function() {
+            const email = this.value.trim();
+            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showMessage('Please enter a valid email address.', 'recoverMessage', 'warning');
+            } else {
+                hideAlert('recoverMessage');
+            }
+        });
+
+        // Clear alerts when switching forms
         document.addEventListener('click', function(e) {
-            const featureCard = e.target.closest('.feature-card');
-            if (featureCard && featureCard.classList.contains('disabled')) {
-                e.preventDefault();
-                alert('This feature is not available for your role. Please contact support if you need access.');
+            if (e.target.classList.contains('link-primary')) {
+                setTimeout(() => {
+                    hideAlert('signInMessage');
+                    hideAlert('signUpMessage');
+                    hideAlert('recoverMessage');
+                }, 100);
             }
         });
 
-        // Export utilities for compatibility
-        window.DashboardAuth = {
-            getCurrentUser: () => auth.currentUser,
-            getUserData: () => JSON.parse(localStorage.getItem('userData') || '{}'),
-            getUserRole: () => localStorage.getItem('userRole'),
-            hasPermission: (permission) => {
-                const role = localStorage.getItem('userRole');
-                const permissions = {
-                    pharmacist: ['inventory', 'prescriptions', 'reports', 'patients'],
-                    doctor: ['prescriptions', 'patients', 'reports', 'consultations'],
-                    student: ['learning', 'resources', 'progress', 'assignments'],
-                    patient: ['profile', 'medications', 'history', 'appointments']
-                };
-                return permissions[role]?.includes(permission) || false;
-            }
-        };
-
-        // Security: Clear sensitive data on page unload
-        window.addEventListener('beforeunload', () => {
-            if (window.userData) {
-                window.userData = null;
-            }
-        });
+        console.log('Enhanced authentication system loaded successfully');
     </script>
 </body>
 </html>
