@@ -1,0 +1,13 @@
+{
+  "symptom": "fever",
+  "medicines": [
+    {"name": "Paracetamol", "confidence": "93%"},
+    {"name": "Ibuprofen", "confidence": "89%"},
+    {"name": "Naproxen", "confidence": "87%"}
+  ],
+  "nearby_doctors": [
+    {"name": "Dr. Zihan", "specialty": "Emergency", "distance_km": 0.3},
+    {"name": "Dr. Mim", "specialty": "Family Medicine", "distance_km": 0.7},
+    {"name": "Dr. Shuvo", "specialty": "General", "distance_km": 1.1}
+  ]
+}
