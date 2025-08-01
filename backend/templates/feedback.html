@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Feedback</title>
+</head>
+<body>
+    <h2>📝 Submit Feedback</h2>
+
+    {% if message %}
+        <p style="color: green;">{{ message }}</p>
+    {% endif %}
+
+    <form method="POST" action="/feedback">
+        <label for="role">Role:</label><br>
+        <select name="role" required>
+            <option value="">-- Select Role --</option>
+            <option value="Doctor">Doctor</option>
+            <option value="Patient">Patient</option>
+            <option value="Pharmacist">Pharmacist</option>
+            <option value="Student">Student</option>
+        </select><br><br>
+
+        <label for="name">Name (optional):</label><br>
+        <input type="text" name="name"><br><br>
+
+        <label for="rating">Rating (1 to 5):</label><br>
+        <input type="number" name="rating" min="1" max="5" required><br><br>
+
+        <label for="message">Feedback:</label><br>
+        <textarea name="message" rows="4" required></textarea><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
