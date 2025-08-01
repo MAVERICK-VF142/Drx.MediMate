@@ -10,5 +10,5 @@ if __name__ == '__main__':
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s"
 )
-    debug_mode = os.getenv("FLASK_DEBUG", "false").lower() == "true"
+    debug_mode = os.getenv("FLASK_DEBUG", "True").lower() == "true"
     app.run(debug=debug_mode)

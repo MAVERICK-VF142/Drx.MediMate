@@ -1,108 +1,387 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Dashboard Under Construction</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #fff;
-      overflow: hidden;
-    }
-
-    .container {
-      text-align: center;
-      animation: fadeIn 1s ease-in-out;
-      padding: 2rem;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px);
-      max-width: 500px;
-      width: 90%;
-    }
-
-    h1 {
-      font-size: 2.8rem;
-      margin-bottom: 1rem;
-      animation: slideIn 1s ease-in-out;
-    }
-
-    p {
-      font-size: 1.2rem;
-      margin-bottom: 2rem;
-      animation: fadeIn 1.2s ease-in-out;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 0.8rem 2rem;
-      background-color: #ff7e5f;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 50px;
-      font-weight: bold;
-      font-size: 1rem;
-      transition: 0.3s ease;
-      animation: bounceIn 1.5s ease forwards;
-    }
-
-    .btn:hover {
-      background-color: #feb47b;
-      transform: scale(1.05);
-    }
-
-    .gear {
-      font-size: 5rem;
-      animation: spin 4s linear infinite;
-      margin-bottom: 1rem;
-    }
-
-    /* Animations */
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes slideIn {
-      from { transform: translateY(-20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    @keyframes bounceIn {
-      0% { transform: scale(0.8); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    @media (max-width: 480px) {
-      h1 { font-size: 2rem; }
-      .gear { font-size: 4rem; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Student Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f8fafc;
+            margin: 0;
+            padding: 0;
+            color: #22223b;
+        }
+        .navbar {
+            background: #2563eb;
+            color: #fff;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .navbar-menu {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar-menu li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .navbar-menu li a:hover {
+            color: #ffd600;
+        }
+        .dashboard-container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(40,53,147,0.08);
+        }
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .welcome-section h1 {
+            font-size: 2.2rem;
+            color: #2563eb;
+            margin-bottom: 0.5rem;
+        }
+        .welcome-section p {
+            color: #555;
+            font-size: 1.1rem;
+        }
+        .dashboard-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+        }
+        .dashboard-card {
+            background: #f1f6fb;
+            border: 1px solid #e0e7ef;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(40,53,147,0.04);
+            padding: 2rem 1.5rem;
+            width: 300px;
+            text-align: center;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .dashboard-card:hover {
+            box-shadow: 0 6px 24px rgba(40,53,147,0.10);
+            transform: translateY(-4px) scale(1.03);
+        }
+        .dashboard-card h2 {
+            color: #2563eb;
+            margin-bottom: 0.7rem;
+            font-size: 1.3rem;
+        }
+        .dashboard-card p {
+            color: #444;
+            font-size: 1rem;
+            margin-bottom: 1.2rem;
+        }
+        .btn {
+            display: inline-block;
+            background: #2563eb;
+            color: #fff;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background: #3949ab;
+        }
+        .section-title {
+            color: #283593;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        .appointments, .records, .notifications, .study-materials {
+            margin-bottom: 2rem;
+            background: #f8fafc;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(40,53,147,0.04);
+            padding: 1.5rem 2rem;
+        }
+       
+        .appointments-table, .records-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+        .appointments-table th, .appointments-table td,
+        .records-table th, .records-table td {
+            padding: 0.7rem 1rem;
+            text-align: left;
+        }
+        .appointments-table th, .records-table th {
+            background: #283593;
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.05rem;
+            border-bottom: 2px solid #e0e7ef;
+        }
+        .appointments-table tr:nth-child(even),
+        .records-table tr:nth-child(even) {
+            background: #f1f6fb;
+        }
+        .appointments-table tr:hover,
+        .records-table tr:hover {
+            background: #e3eafc;
+        }
+        .appointments-table td, .records-table td {
+            color: #22223b;
+            font-size: 1rem;
+            border-bottom: 1px solid #e0e7ef;
+        }
+        .notifications-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .notifications-list li {
+            background: #fffbe7;
+            border-left: 4px solid #ffd600;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 6px;
+            color: #7c6f00;
+            font-size: 1rem;
+        }
+        .study-materials-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        .study-material-card {
+            background: #fff;
+            border: 1px solid #e0e7ef;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(40,53,147,0.04);
+            padding: 1rem 1.2rem;
+            width: 220px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .study-material-card:hover {
+            box-shadow: 0 6px 24px rgba(40,53,147,0.10);
+            transform: translateY(-2px) scale(1.03);
+        }
+        .study-material-title {
+            font-weight: 600;
+            color: #283593;
+            margin-bottom: 0.5rem;
+            font-size: 1.08rem;
+        }
+        .study-material-link {
+            margin-top: auto;
+            color: #283593;
+            text-decoration: underline;
+            font-size: 0.98rem;
+            transition: color 0.2s;
+        }
+        .study-material-link:hover {
+            color: #3949ab;
+        }
+        @media (max-width: 900px) {
+            .dashboard-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+            .dashboard-card {
+                width: 90%;
+            }
+            .study-materials-list {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div class="gear">⚙️</div>
-    <h1>Dashboard Under Construction</h1>
-    <p>We're working hard to bring this feature to life. Until then, you can test your functionality using the index page.</p>
-    <a class="btn" href="index.html">Go to index.html</a>
-  </div>
+    <nav class="navbar">
+        <div class="navbar-brand">MediMate Student Dashboard</div>
+        <ul class="navbar-menu">
+            <li><a href="/my-account">Profile</a></li>
+        </ul>
+    </nav>
+    <main class="dashboard-container">
+        <section class="welcome-section">
+            <h1>Welcome, {{ user.name if user else "Student" }}!</h1>
+            <p>Here you can access your learning resources, appointments, records, and notifications.</p>
+        </section>
+        <section class="dashboard-cards">
+            <div class="dashboard-card">
+                <h2>Assignments</h2>
+                <p>View and submit your current assignments.</p>
+                <a href="/assignments" class="btn">Go to Assignments</a>
+            </div>
+            <div class="dashboard-card">
+                <h2>Learning Resources</h2>
+                <p>Access study materials and helpful links.</p>
+                <a href="#study-materials" class="btn">View Resources</a>
+            </div>
+            <div class="dashboard-card">
+                <h2>Progress</h2>
+                <p>Track your progress and achievements.</p>
+                <a href="/progress" class="btn">View Progress</a>
+            </div>
+        </section>
+
+        <section class="appointments">
+            <div class="section-title">Appointments</div>
+            <table class="appointments-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>With</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2025-08-10</td>
+                        <td>10:00 AM</td>
+                        <td>Dr. Smith</td>
+                        <td>Confirmed</td>
+                    </tr>
+                    <tr>
+                        <td>2025-08-18</td>
+                        <td>2:00 PM</td>
+                        <td>Counselor Jane</td>
+                        <td>Pending</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="records">
+            <div class="section-title">Academic Records</div>
+            <button id="add-record-btn" class="btn" style="margin-bottom:1rem;">+ Add Academic Record</button>
+            <table class="records-table" id="records-table">
+                <thead>
+                    <tr>
+                        <th>Record</th>
+                        <th>Date</th>
+                        <th>Details</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="records-tbody">
+                    <script>console.log(tbody)</script>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="notifications">
+            <div class="section-title">Notifications</div>
+            <ul class="notifications-list">
+                <li>New assignment uploaded for Pharmaceutics I.</li>
+                <li>Your appointment with Dr. Smith is confirmed for 10th August.</li>
+                <li>Semester I results are now available.</li>
+            </ul>
+        </section>
+
+        <section class="study-materials" id="study-materials">
+            <div class="section-title">Study Materials</div>
+            <div class="study-materials-list">
+                <div class="study-material-card">
+                    <div class="study-material-title">Human Anatomy Notes</div>
+                    <a href="#" class="study-material-link" target="_blank">Download PDF</a>
+                </div>
+                <div class="study-material-card">
+                    <div class="study-material-title">Pharmaceutical Analysis Slides</div>
+                    <a href="#" class="study-material-link" target="_blank">View Slides</a>
+                </div>
+                <div class="study-material-card">
+                    <div class="study-material-title">Communication Skills Workbook</div>
+                    <a href="#" class="study-material-link" target="_blank">Download Workbook</a>
+                </div>
+                <div class="study-material-card">
+                    <div class="study-material-title">Remedial Biology Video</div>
+                    <a href="#" class="study-material-link" target="_blank">Watch Video</a>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer style="justify-content:center; text-align:center; padding:1.5rem 0; background:#283593; color:#fff; position:relative;">
+        <p>&copy; 2025 MediMate. All rights reserved.</p>
+    </footer>
+
+    <!-- Modal for adding a record -->
+    <div id="record-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(40,53,147,0.10); z-index:1000; align-items:center; justify-content:center;">
+        <div style="background:#fff; border-radius:10px; padding:2rem; min-width:300px; box-shadow:0 4px 24px rgba(40,53,147,0.15);">
+            <h3 style="margin-top:0; color:#283593;">Add Academic Record</h3>
+            <form id="record-form">
+                <div style="margin-bottom:1rem;">
+                    <label>Record</label><br>
+                    <input type="text" id="record-name" required style="width:100%;padding:0.5rem;">
+                </div>
+                <div style="margin-bottom:1rem;">
+                    <label>Date</label><br>
+                    <input type="date" id="record-date" required style="width:100%;padding:0.5rem;">
+                </div>
+                <div style="margin-bottom:1rem;">
+                    <label>Details</label><br>
+                    <input type="text" id="record-details" required style="width:100%;padding:0.5rem;">
+                </div>
+                <button type="submit" class="btn">Add</button>
+                <button type="button" class="btn" style="background:#eee;color:#283593;margin-left:1rem;" id="close-modal-btn">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Show modal
+        document.getElementById('add-record-btn').onclick = function() {
+            document.getElementById('record-modal').style.display = 'flex';
+        };
+        // Hide modal
+        document.getElementById('close-modal-btn').onclick = function() {
+            document.getElementById('record-modal').style.display = 'none';
+        };
+        // Add record to table
+        document.getElementById('record-form').onsubmit = function(e) {
+            e.preventDefault();
+            const name = document.getElementById('record-name').value.trim();
+            const date = document.getElementById('record-date').value;
+            const details = document.getElementById('record-details').value.trim();
+            if(name && date && details) {
+                const tbody = document.getElementById('records-tbody');
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${name}</td><td>${date}</td><td>${details}</td>`;
+                tbody.appendChild(tr);
+                document.getElementById('record-form').reset();
+                document.getElementById('record-modal').style.display = 'none';
+            }
+        };
+        // Close modal on outside click
+        document.getElementById('record-modal').onclick = function(e) {
+            if(e.target === this) this.style.display = 'none';
+        };
+    </script>
 </body>
 </html>

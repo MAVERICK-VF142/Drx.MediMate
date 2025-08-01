@@ -12,7 +12,8 @@ def create_app():
     load_dotenv()
 
     # Load API key
-    api_key = os.getenv("GEMINI_KEY")
+    # api_key = os.getenv("GEMINI_KEY")
+    api_key = "AIzaSyChjHgo28K4gosHkBlFXmo-3Dc1Vnal_98"
     if not api_key:
         raise EnvironmentError("❌ GEMINI_KEY not set.")
     genai.configure(api_key=api_key)

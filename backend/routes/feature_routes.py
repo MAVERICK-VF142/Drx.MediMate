@@ -7,7 +7,6 @@ feature_bp = Blueprint('features', __name__)
 # Feature Page Routes
 # ---------------------------
 
-
 @feature_bp.route('/drug-info-page')
 def drug_info():
     return render_template('drug_info.html')
