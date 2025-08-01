@@ -241,7 +241,7 @@
             <div class="dashboard-card">
                 <h2>Learning Resources</h2>
                 <p>Access study materials and helpful links.</p>
-                <a href="#study-materials" class="btn">View Resources</a>
+                <a href="/resources" class="btn">View Resources</a>
             </div>
             <div class="dashboard-card">
                 <h2>Progress</h2>
@@ -252,27 +252,31 @@
 
         <section class="appointments">
             <div class="section-title">Appointments</div>
-            <table class="appointments-table">
+            <button id="add-appointment-btn" class="btn" style="margin-bottom:1rem;">+ Add Appointment</button>
+            <table class="appointments-table" id="appointments-table">
                 <thead>
                     <tr>
                         <th>Date</th>
                         <th>Time</th>
                         <th>With</th>
                         <th>Status</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="appointments-tbody">
                     <tr>
                         <td>2025-08-10</td>
                         <td>10:00 AM</td>
                         <td>Dr. Smith</td>
                         <td>Confirmed</td>
+                        <td><button class="btn" onclick="this.parentElement.parentElement.remove()">Delete</button></td>
                     </tr>
                     <tr>
                         <td>2025-08-18</td>
                         <td>2:00 PM</td>
                         <td>Counselor Jane</td>
                         <td>Pending</td>
+                        <td><button class="btn" onclick="this.parentElement.parentElement.remove()">Delete</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -354,6 +358,37 @@
         </div>
     </div>
 
+    <!-- Modal for adding an appointment -->
+    <div id="appointment-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(40,53,147,0.10); z-index:1000; align-items:center; justify-content:center;">
+        <div style="background:#fff; border-radius:10px; padding:2rem; min-width:300px; box-shadow:0 4px 24px rgba(40,53,147,0.15);">
+            <h3 style="margin-top:0; color:#283593;">Add Appointment</h3>
+            <form id="appointment-form">
+                <div style="margin-bottom:1rem;">
+                    <label>Date</label><br>
+                    <input type="date" id="appointment-date" required style="width:100%;padding:0.5rem;">
+                </div>
+                <div style="margin-bottom:1rem;">
+                    <label>Time</label><br>
+                    <input type="time" id="appointment-time" required style="width:100%;padding:0.5rem;">
+                </div>
+                <div style="margin-bottom:1rem;">
+                    <label>With</label><br>
+                    <input type="text" id="appointment-with" required style="width:100%;padding:0.5rem;">
+                </div>
+                <div style="margin-bottom:1rem;">
+                    <label>Status</label><br>
+                    <select id="appointment-status" required style="width:100%;padding:0.5rem;">
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Add</button>
+                <button type="button" class="btn" style="background:#eee;color:#283593;margin-left:1rem;" id="close-appointment-modal-btn">Cancel</button>
+            </form>
+        </div>
+    </div>
+
     <script>
         // Show modal
         document.getElementById('add-record-btn').onclick = function() {
@@ -363,7 +398,7 @@
         document.getElementById('close-modal-btn').onclick = function() {
             document.getElementById('record-modal').style.display = 'none';
         };
-        // Add record to table
+        // Add record to table with delete button
         document.getElementById('record-form').onsubmit = function(e) {
             e.preventDefault();
             const name = document.getElementById('record-name').value.trim();
@@ -372,14 +407,43 @@
             if(name && date && details) {
                 const tbody = document.getElementById('records-tbody');
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${name}</td><td>${date}</td><td>${details}</td>`;
+                tr.innerHTML = `<td>${name}</td><td>${date}</td><td>${details}</td>
+                    <td><button class="btn" onclick="this.parentElement.parentElement.remove()">Delete</button></td>`;
                 tbody.appendChild(tr);
                 document.getElementById('record-form').reset();
                 document.getElementById('record-modal').style.display = 'none';
             }
         };
+        // Show appointment modal
+        document.getElementById('add-appointment-btn').onclick = function() {
+            document.getElementById('appointment-modal').style.display = 'flex';
+        };
+        // Hide appointment modal
+        document.getElementById('close-appointment-modal-btn').onclick = function() {
+            document.getElementById('appointment-modal').style.display = 'none';
+        };
+        // Add appointment to table
+        document.getElementById('appointment-form').onsubmit = function(e) {
+            e.preventDefault();
+            const date = document.getElementById('appointment-date').value;
+            const time = document.getElementById('appointment-time').value;
+            const withWhom = document.getElementById('appointment-with').value.trim();
+            const status = document.getElementById('appointment-status').value;
+            if(date && time && withWhom && status) {
+                const tbody = document.getElementById('appointments-tbody');
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${date}</td><td>${time}</td><td>${withWhom}</td><td>${status}</td>
+                    <td><button class="btn" onclick="this.parentElement.parentElement.remove()">Delete</button></td>`;
+                tbody.appendChild(tr);
+                document.getElementById('appointment-form').reset();
+                document.getElementById('appointment-modal').style.display = 'none';
+            }
+        };
         // Close modal on outside click
         document.getElementById('record-modal').onclick = function(e) {
+            if(e.target === this) this.style.display = 'none';
+        };
+        document.getElementById('appointment-modal').onclick = function(e) {
             if(e.target === this) this.style.display = 'none';
         };
     </script>
