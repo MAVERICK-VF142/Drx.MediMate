@@ -24,6 +24,7 @@ def create_app():
     from .routes.feature_routes import feature_bp
     from .routes.api_routes import api_bp
     from .routes.error_handlers import errors_bp
+    from .routes.feedback_routes import feedback_bp
 
     # Register blueprints
     app.register_blueprint(auth_bp)
@@ -31,5 +32,7 @@ def create_app():
     app.register_blueprint(feature_bp)
     app.register_blueprint(api_bp)
     app.register_blueprint(errors_bp)
+    app.register_blueprint(feedback_bp)
+    
 
     return app
