@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -72,10 +73,25 @@
             letter-spacing: 0.5px;
         }
 
-        .role-pharmacist { background: #ddd6fe; color: #7c3aed; }
-        .role-doctor { background: #dcfce7; color: #16a34a; }
-        .role-student { background: #dbeafe; color: #2563eb; }
-        .role-patient { background: #fef3c7; color: #d97706; }
+        .role-pharmacist {
+            background: #ddd6fe;
+            color: #7c3aed;
+        }
+
+        .role-doctor {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .role-student {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .role-patient {
+            background: #fef3c7;
+            color: #d97706;
+        }
 
         .logout-btn {
             background: #dc2626;
@@ -182,13 +198,33 @@
             display: block;
         }
 
-        .drug-icon { color: #8b5cf6; }
-        .symptom-icon { color: #10b981; }
-        .camera-icon { color: #3b82f6; }
-        .education-icon { color: #f59e0b; }
-        .inventory-icon { color: #ef4444; }
-        .prescription-icon { color: #06b6d4; }
-        .consultation-icon { color: #84cc16; }
+        .drug-icon {
+            color: #8b5cf6;
+        }
+
+        .symptom-icon {
+            color: #10b981;
+        }
+
+        .camera-icon {
+            color: #3b82f6;
+        }
+
+        .education-icon {
+            color: #f59e0b;
+        }
+
+        .inventory-icon {
+            color: #ef4444;
+        }
+
+        .prescription-icon {
+            color: #06b6d4;
+        }
+
+        .consultation-icon {
+            color: #84cc16;
+        }
 
         .card-title {
             font-size: 1.4rem;
@@ -244,8 +280,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* Hidden content shown after auth */
@@ -413,8 +454,13 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         /* Responsive */
@@ -422,15 +468,15 @@
             .header-content {
                 padding: 0 1rem;
             }
-            
+
             .container {
                 padding: 1rem;
             }
-            
+
             .dashboard-title {
                 font-size: 2rem;
             }
-            
+
             .cards-grid {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
@@ -450,6 +496,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Loading State -->
     <div id="loadingState" class="loading">
@@ -483,7 +530,7 @@
 
         <h2 class="dashboard-title">Welcome to <span class="brand-highlight">Drx.MediMate</span></h2>
         <p class="subtitle" id="dashboardSubtitle">Your intelligent pharmaceutical assistant</p>
-        
+
         <!-- Navigation to Role-Specific Dashboard -->
         <div style="text-align: center; margin-bottom: 2rem;">
             <a href="#" class="dashboard-nav-btn" id="roleDashboardBtn">
@@ -507,10 +554,10 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-        import { 
-            getAuth, 
-            onAuthStateChanged, 
-            signOut 
+        import {
+            getAuth,
+            onAuthStateChanged,
+            signOut
         } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
         import {
             getFirestore,
@@ -588,6 +635,14 @@
                         allowed: true
                     },
                     {
+                        href: "drug-comparison",
+                        icon: "⚖️",
+                        iconClass: "drug-icon",
+                        title: "Drug Comparison",
+                        description: "Compare drugs side-by-side using AI-powered info.",
+                        allowed: true
+                    },
+                    {
                         href: "allergy-checker",
                         icon: "⚕️",
                         iconClass: "symptom-icon",
@@ -643,6 +698,14 @@
                         allowed: true
                     },
                     {
+                        href: "drug-comparison",
+                        icon: "⚖️",
+                        iconClass: "drug-icon",
+                        title: "Drug Comparison",
+                        description: "Compare drugs side-by-side using AI-powered info.",
+                        allowed: true,
+                    },
+                    {
                         href: "allergy-checker",
                         icon: "⚕️",
                         iconClass: "symptom-icon",
@@ -650,6 +713,7 @@
                         description: "AI-powered tool to check medicine safety based on your allergies.",
                         allowed: true
                     }
+
                 ]
             },
             student: {
@@ -697,6 +761,14 @@
                         allowed: false
                     },
                     {
+                        href: "drug-comparison",
+                        icon: "⚖️",
+                        iconClass: "drug-icon",
+                        title: "Drug Comparison",
+                        description: "Compare drugs side-by-side using AI-powered info.",
+                        allowed: true
+                    },
+                    {
                         href: "allergy-checker",
                         icon: "⚕️",
                         iconClass: "symptom-icon",
@@ -704,6 +776,7 @@
                         description: "AI-powered tool to check medicine safety based on your allergies.",
                         allowed: true
                     }
+
                 ]
             },
             patient: {
@@ -759,6 +832,14 @@
                         allowed: false
                     },
                     {
+                        href: "drug-comparison",
+                        icon: "⚖️",
+                        iconClass: "drug-icon",
+                        title: "Drug Comparison",
+                        description: "Compare drugs side-by-side using AI-powered info.",
+                        allowed: true
+                    },
+                    {
                         href: "allergy-checker",
                         icon: "⚕️",
                         iconClass: "symptom-icon",
@@ -766,6 +847,7 @@
                         description: "AI-powered tool to check medicine safety based on your allergies.",
                         allowed: true
                     }
+
                 ]
             }
         };
@@ -804,12 +886,12 @@
                         <button class="role-confirm-btn" disabled>Continue</button>
                     </div>
                 `;
-                
+
                 document.body.appendChild(modal);
-                
+
                 let selectedRole = null;
                 const confirmBtn = modal.querySelector('.role-confirm-btn');
-                
+
                 // Handle role selection
                 modal.querySelectorAll('.feature-card').forEach(card => {
                     card.addEventListener('click', () => {
@@ -819,13 +901,13 @@
                         confirmBtn.disabled = false;
                     });
                 });
-                
+
                 // Handle confirmation
                 confirmBtn.addEventListener('click', async () => {
                     if (selectedRole) {
                         try {
                             const nameParts = user.displayName ? user.displayName.split(' ') : ["", ""];
-                            
+
                             const userData = {
                                 email: user.email,
                                 firstName: nameParts[0] || "User",
@@ -834,7 +916,7 @@
                                 createdAt: new Date().toISOString(),
                                 emailVerified: true
                             };
-                            
+
                             await setDoc(doc(db, "users", user.uid), userData);
                             document.body.removeChild(modal);
                             resolve(userData);
@@ -850,7 +932,7 @@
         function populateDashboard(userData) {
             const role = userData.role;
             const config = ROLE_FEATURES[role];
-            
+
             if (!config) {
                 console.error('Unknown role:', role);
                 userData.role = 'patient';
@@ -879,7 +961,7 @@
 
             // Populate quick actions
             const actionButtons = document.getElementById('actionButtons');
-            actionButtons.innerHTML = config.quickActions.map(action => 
+            actionButtons.innerHTML = config.quickActions.map(action =>
                 `<a href="${action.href}" class="action-btn">${action.text}</a>`
             ).join('');
 
@@ -909,24 +991,24 @@
             try {
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 let userData;
-                
+
                 if (!userDoc.exists()) {
                     userData = await showRoleSelectionModal(user);
                 } else {
                     userData = userDoc.data();
-                    
+
                     if (!userData.role) {
                         userData = await showRoleSelectionModal(user);
                     }
                 }
-                
+
                 // Store user data for other scripts
                 localStorage.setItem('loggedInUserId', user.uid);
                 localStorage.setItem('userRole', userData.role);
                 localStorage.setItem('userData', JSON.stringify(userData));
-                
+
                 populateDashboard(userData);
-                
+
             } catch (error) {
                 console.error('Error loading user data:', error);
                 setTimeout(() => {
@@ -956,7 +1038,7 @@
         });
 
         // Logout functionality
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const logoutBtn = document.getElementById('logout');
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', async () => {
@@ -972,7 +1054,7 @@
         });
 
         // Handle role-specific navigation
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             const featureCard = e.target.closest('.feature-card');
             if (featureCard && featureCard.classList.contains('disabled')) {
                 e.preventDefault();
@@ -1005,4 +1087,5 @@
         });
     </script>
 </body>
+
 </html>

@@ -10,6 +10,7 @@ import markdown
 import logging
 import time
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeout
+from bs4 import BeautifulSoup
 
 
 
@@ -124,10 +125,10 @@ def get_drug_information(drug_name):
         response = gemini_generate_with_retry(prompt)
         if response and hasattr(response, 'text'):
             text = response.text.strip()
-            formatted = format_markdown_response(text)
-            set_cached_drug(drug_name, formatted)
+            set_cached_drug(drug_name, text) # <--- Store raw text in cache
             logging.info("✅ Cached new drug info response.")
-            return formatted
+            return format_markdown_response(text) # <--- Still return formatted for display
+    
         else:
             logging.warning("No text in AI response.")
             return "❌ No response from AI."
@@ -209,6 +210,30 @@ def analyze_image_with_gemini(image_data):
         logging.error(f"❌ Error during image analysis: {str(e)}")
         return f"❌ Error during image analysis: {str(e)}"
 
+      
+def get_drug_comparison_summary(drug1, drug2):
+    prompt = (
+        f"Compare the drugs **{drug1}** and **{drug2}** side by side in a Markdown table.\n"
+        "\nInclude the following aspects as rows:\n"
+        "- Therapeutic Uses\n"
+        "- Dosage\n"
+        "- Common Side Effects\n"
+        "- Serious Side Effects\n"
+        "- Contraindications\n"
+        "- Drug Interactions\n"
+        "- Drug Class\n"
+        "- Cost/Availability\n"
+        "\nUse column headers: `Aspect`, `" + drug1 + "`, `" + drug2 + "`.\n"
+        "Keep the output clean and do not include explanations outside the table."
+    )
+
+    logging.info(f"Prompt to Gemini (summary compare): {prompt}")
+    response = gemini_generate_with_retry(prompt)
+    if response and hasattr(response, 'text'):
+        return response.text.strip()
+    return "❌ Failed to generate comparison summary."
+  
+  
 def analyze_prescription_with_gemini(image_data):
     try:
         if not image_data.startswith("data:image/"):

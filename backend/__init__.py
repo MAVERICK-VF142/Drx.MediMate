@@ -2,7 +2,9 @@ from flask import Flask
 from flask_cors import CORS
 import os
 import google.generativeai as genai
+from dotenv import load_dotenv
 
+load_dotenv()
 
 
 def create_app():

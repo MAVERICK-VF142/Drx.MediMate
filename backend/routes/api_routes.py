@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify
-from ..utils.gemini_utils import get_drug_information, get_symptom_recommendation, analyze_image_with_gemini, analyze_prescription_with_gemini, analyze_allergies
-
+from ..utils.gemini_utils import get_drug_information, get_symptom_recommendation, analyze_image_with_gemini, analyze_prescription_with_gemini, analyze_allergies, get_drug_comparison_summary
 import logging
 logging.basicConfig(level=logging.INFO,format="%(asctime)s [%(levelname)s] %(message)s")
 
@@ -64,6 +63,24 @@ def process_upload():
     else:
         logging.warning("❌ No image data received in request")
     return jsonify({'result': '❌ No image received from camera.'})
+
+@api_bp.route('/compare_drugs_summary', methods=['POST'])
+def compare_drugs_summary():
+    logging.info("API /compare_drugs_summary called")
+    try:
+        data = request.get_json()
+        drug1 = data.get('drug1')
+        drug2 = data.get('drug2')
+
+        if not drug1 or not drug2:
+            return api_response("❌ Both drug names are required.", 400)
+
+        summary = get_drug_comparison_summary(drug1, drug2)
+        return jsonify({'summary': summary})
+
+    except Exception as e:
+        logging.exception("❌ Exception in /compare_drugs_summary")
+        return api_response(f"❌ Internal error: {str(e)}", 500)
 
 @api_bp.route('/validate-prescription', methods=['POST'])
 def validate_prescription():
