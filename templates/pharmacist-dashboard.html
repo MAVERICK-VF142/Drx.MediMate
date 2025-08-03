@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pharmacist Verification</title>
+</head>
+<body>
+  <h2>Upload Certificate (PDF only)</h2>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <input type="text" name="name" placeholder="Your Name" required />
+    <input type="file" name="file" accept=".pdf" required />
+    <button type="submit">Upload</button>
+  </form>
+
+  <br>
+  <h2>Check Verification Status</h2>
+  <input type="text" id="checkName" placeholder="Your Name" />
+  <button onclick="checkStatus()">Check</button>
+  <p id="statusMsg"></p>
+
+  <script>
+    const form = document.getElementById("uploadForm");
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const res = await fetch("http://localhost:8000/upload_certificate/", {
+        method: "POST",
+        body: formData
+      });
+      const data = await res.json();
+      alert(data.message);
+    }
+
+    async function checkStatus() {
+      const name = document.getElementById("checkName").value;
+      const res = await fetch(`http://localhost:8000/check_verification/${name}`);
+      const data = await res.json();
+      document.getElementById("statusMsg").innerText =
+        data.verified ? "✅ Verified Pharmacist" : "❌ Not Verified Yet";
+    }
+  </script>
+</body>
+</html>
