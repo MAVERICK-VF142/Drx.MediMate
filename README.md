@@ -184,6 +184,47 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
   <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="600">
 </p>
 
+## Admin Panel & Backend Setup (Flask + MongoDB)
 
+### Overview
+Drx.MediMate’s admin panel provides a modern interface for managing the platform. Key features:
+- Modern UI with sidebar and dashboard cards
+- Real-time data integration with MongoDB
+- Flask-based backend with modular routing
 
+### Setup Instructions
+#### Prerequisites
+- Python 3.10+
+- MongoDB Atlas or local MongoDB server
+- Flask
+- Git
 
+#### Folder Structure
+
+app/
+├── backend/
+│   ├── routes/
+│   │   ├── admin_routes.py
+│   │   └── api_routes.py
+│   ├── models/
+│   └── __init__.py
+├── frontend/
+│   ├── templates/
+│   └── static/
+├── main.py
+
+#### Environment Variables
+Create a `.env` file in the root directory:
+MONGO_URI=mongodb+srv://healthmate:ryj87xV8ILbI6yjM@healthmate.dp7dwgd.mongodb.net/
+DB_NAME=healthmate
+#### How to Run
+1. Install dependencies: `pip install -r requirements.txt`
+2. Start the Flask app: `python main.py`
+3. Access the app:
+   - Main Page: `http://localhost:5000/`
+   - Admin Panel:`http://localhost:5000/admin`
+
+### Features
+- 🧠 Real-time dashboard with MongoDB
+- 🛠 Flask-based backend with modular routing
+- 📁 Clean folder structure for scalability

@@ -1,30 +1,18 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, current_app
+from flask_login import login_required, current_user
 
 dashboard_bp = Blueprint('dashboard', __name__)
 
-@dashboard_bp.route('/index.html')
-def index():
-    return render_template('index.html')
-
-# Alternative route for index
-@dashboard_bp.route('/dashboard')
-def dashboard():
-    return render_template('index.html')
-
-
-# Role-specific Dashboard Routes
-@dashboard_bp.route('/doctor-dashboard.html')
-def doctor_dashboard():
-    return render_template('doctor-dashboard.html')
-
-@dashboard_bp.route('/pharmacist-dashboard.html')
-def pharmacist_dashboard():
-    return render_template('pharmacist-dashboard.html')
-
-@dashboard_bp.route('/student-dashboard.html')
-def student_dashboard():
-    return render_template('student-dashboard.html')
-
-@dashboard_bp.route('/patient-dashboard.html')
+@dashboard_bp.route('/patient_dashboard')
+@login_required
 def patient_dashboard():
-    return render_template('patient-dashboard.html')
+    mongo = current_app.mongo
+    user = mongo.db.users.find_one({'email': current_user.email})
+    if not user:
+        return {"error": "User not found"}, 404
+    user_data = {
+        'email': user['email'],
+        'role': user.get('role', 'patient'),
+        'name': user.get('name', 'N/A'),  # Add fields as per your schema
+    }
+    return render_template('patient_dashboard.html', user=user_data)

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HealthMate Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+    :root {
+      --primary: #6a5acd;
+      --secondary: #7f8fa6;
+      --background: #f4f6fc;
+      --card-bg: #ffffff;
+      --text-dark: #2f3542;
+      --text-light: #57606f;
+      --hover: #a29bfe;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--background);
+      color: var(--text-dark);
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 230px;
+      height: 100%;
+      background-color: var(--primary);
+      color: white;
+      padding: 25px 20px;
+    }
+
+    .sidebar h2 {
+      font-size: 22px;
+      margin-bottom: 30px;
+    }
+
+    .sidebar a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      margin: 18px 0;
+      font-weight: 500;
+    }
+
+    .main {
+      margin-left: 250px;
+      padding: 30px;
+    }
+
+    .navbar {
+      background-color: white;
+      padding: 20px 30px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+
+    .dashboard-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      font-size: 20px;
+      color: var(--primary);
+    }
+
+    .card p {
+      font-size: 16px;
+      color: var(--text-light);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>HealthMate Admin</h2>
+    <a href="#">Dashboard</a>
+    <a href="#">Users</a>
+    <a href="#">Drugs</a>
+    <a href="#">Analytics</a>
+    <a href="#">Feedback</a>
+    <a href="#">Notifications</a>
+    <a href="#">Audit Logs</a>
+    <a href="#">Settings</a>
+  </div>
+
+  <div class="main">
+    <div class="navbar">
+      <h1>Welcome, Admin</h1>
+      <p>Manage users, data, and system configurations</p>
+    </div>
+
+    <div class="dashboard-cards">
+      <div class="card">
+        <h3>Total Users</h3>
+        <p id="total-users">Loading...</p>
+      </div>
+      <div class="card">
+        <h3>Drugs in Database</h3>
+        <p id="total-drugs">Loading...</p>
+      </div>
+      <div class="card">
+        <h3>API Usage</h3>
+        <p id="api-usage">0 calls this month</p>
+      </div>
+      <div class="card">
+        <h3>System Alerts</h3>
+        <p>2 critical issues</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = axios.create({
+      baseURL: 'http://127.0.0.1:8001/api',
+    });
+
+    // Example: Login User
+    function loginUser() {
+      const credentials = {
+        email: "admin@example.com",
+        password: "admin123"
+      };
+
+      API.post('/login', credentials)
+        .then(res => {
+          console.log('Login success:', res.data);
+          alert("Login successful!");
+        })
+        .catch(err => {
+          console.error('Login failed:', err);
+          alert("Login failed.");
+        });
+    }
+
+    // Call login for demo (remove in production)
+    loginUser();
+
+    // Health data (fetch GET)
+    fetch('/api/health-data')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('total-users').innerText = data.totalUsers || "0";
+        document.getElementById('total-drugs').innerText = data.totalDrugs || "0";
+      })
+      .catch(err => console.error('Health GET error:', err));
+
+    // Health data (POST dummy)
+    const newHealthData = {
+      heartRate: 72,
+      bloodPressure: '120/80',
+      temperature: 98.6
+    };
+
+    fetch('/api/health-data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newHealthData)
+    })
+    .then(res => res.json())
+    .then(response => {
+      console.log('Health POST response:', response);
+    })
+    .catch(error => {
+      console.error('Health POST error:', error);
+    });
+  </script>
+
+</body>
+</html>
