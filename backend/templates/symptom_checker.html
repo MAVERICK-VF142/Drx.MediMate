@@ -356,6 +356,10 @@
             animation: profileMenuSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        #myAccount { background: #38dc26; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; width: 100%; font-size: 0.9rem; font-weight: 500; margin-bottom: 5px; }
+        #myAccount:hover { background: #19a531; }
+
+
         @keyframes profileMenuSlide {
             from {
                 opacity: 0;
@@ -1163,8 +1167,9 @@
 
         /* Status indicators */
         .status-widget {
-            position: fixed;
-            bottom: 20px;
+            position: absolute;
+            max-width: 200px;
+            top: 120px;
             left: 20px;
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(20px);
@@ -1179,7 +1184,46 @@
             color: var(--text-medium);
             animation: statusFloat 4s ease-in-out infinite;
         }
+/* Hide status widget on mobile devices */
+@media (max-width: 768px) {
+    .status-widget {
+        display: none !important;
+    }
+}
 
+/* Alternative: Hide on smaller screens (phones only, keep on tablets) */
+@media (max-width: 480px) {
+    .status-widget {
+        display: none !important;
+    }
+}
+
+/* More specific targeting for very small screens */
+@media screen and (max-width: 425px) {
+    .status-widget {
+        display: none !important;
+    }
+}
+/* Hide status widget for specific device widths */
+@media (max-width: 820px) {
+    .status-widget {
+        display: none !important;
+    }
+}
+
+/* Alternative: Target specific tablet/device widths */
+@media screen and (max-width: 1024px) {
+    .status-widget {
+        display: none !important;
+    }
+}
+
+/* Most specific: Hide for tablets and smaller devices */
+@media screen and (max-width: 912px) {
+    .status-widget {
+        display: none !important;
+    }
+}
         @keyframes statusFloat {
 
             0%,
@@ -1327,10 +1371,10 @@
     <div class="notification-container" id="notificationContainer"></div>
 
     <!-- Status widget -->
-    <div class="status-widget">
+    <span class="status-widget">
         <div class="status-dot"></div>
         <span>AI System Online</span>
-    </div>
+    </span>
 
     <!-- Premium header -->
     <div class="header">
@@ -1357,6 +1401,7 @@
                         </div>
                         <div class="user-email" id="loggedUserEmail"></div>
                     </div>
+                    <button id="myAccount">My-Account</button>
                     <button id="logout">
                         <i class="fas fa-sign-out-alt" style="margin-right: 0.5rem;"></i>
                         Logout
@@ -1480,6 +1525,12 @@
     </div>
 
     <script>
+
+        //My-account href
+        document.getElementById('myAccount').addEventListener('click', function () {
+             window.location.href = '/my-account';  
+        });
+
         // Initialize particle system
         function initParticles() {
             const particlesContainer = document.getElementById('particles');

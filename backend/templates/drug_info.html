@@ -129,6 +129,9 @@
             background: #b91c1c;
         }
 
+        #myAccount { background: #38dc26; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; width: 100%; font-size: 0.9rem; font-weight: 500; margin-bottom: 5px; }
+        #myAccount:hover { background: #19a531; }
+
         /* Container */
         .container {
             max-width: 1000px;
@@ -384,6 +387,7 @@
                         </div>
                         <div class="user-email" id="loggedUserEmail"></div>
                     </div>
+                    <button id="myAccount">My-Account</button>
                     <button id="logout">Logout</button>
                 </div>
             </div>
@@ -478,7 +482,12 @@
             window.location.href = "/";
           }
         });
-      
+        
+        //My-account href
+        document.getElementById('myAccount').addEventListener('click', function () {
+             window.location.href = '/my-account'; 
+        });
+        
         document.getElementById('logout').addEventListener('click', () => {
           signOut(auth)
             .then(() => {

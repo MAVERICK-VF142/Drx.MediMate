@@ -29,6 +29,8 @@
         .user-email { color: #6b7280; font-size: 0.875rem; }
         #logout { background: #dc2626; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; width: 100%; font-size: 0.9rem; font-weight: 500; }
         #logout:hover { background: #b91c1c; }
+        #myAccount { background: #38dc26; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; width: 100%; font-size: 0.9rem; font-weight: 500; margin-bottom: 5px; }
+        #myAccount:hover { background: #19a531; }
 
         .container { max-width: 700px; margin: 0 auto; padding: 2rem; }
         .page-title { font-size: 2.5rem; color: #1f2937; margin-bottom: 0.5rem; text-align: center; }
@@ -98,6 +100,7 @@
                         </div>
                         <div class="user-email" id="loggedUserEmail"></div>
                     </div>
+                    <button id="myAccount">My-Account</button>
                     <button id="logout">Logout</button>
                 </div>
             </div>
@@ -172,7 +175,12 @@
             window.location.href = "/";
           }
         });
-      
+        
+        //My-account href
+        document.getElementById('myAccount').addEventListener('click', function () {
+             window.location.href = '/my-account';  
+        });
+
         document.getElementById('logout').addEventListener('click', () => {
           signOut(auth)
             .then(() => {

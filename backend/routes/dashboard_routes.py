@@ -6,6 +6,7 @@ dashboard_bp = Blueprint('dashboard', __name__)
 @dashboard_bp.route('/patient_dashboard')
 @login_required
 def patient_dashboard():
+
     mongo = current_app.mongo
     user = mongo.db.users.find_one({'email': current_user.email})
     if not user:
@@ -30,3 +31,14 @@ def my_account():
         'notifications': user.get('notifications', True)
     }
     return render_template('my_account.html', user=user_data)
+
+    return render_template('patient-dashboard.html')
+
+@dashboard_bp.route('/my-account')
+def my_account():
+    return render_template('my_account.html', user={
+        "name": "Demo User",
+        "email": "demo@example.com",
+        "notifications": True
+    })
+

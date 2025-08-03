@@ -93,6 +93,10 @@
             background: #b91c1c;
         }
 
+        #myAccount { background: #38dc26; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; width: 100%; font-size: 0.9rem; font-weight: 500; margin-bottom: 5px; }
+        #myAccount:hover { background: #19a531; }
+
+
         /* Container */
         .container {
             max-width: 1200px;
@@ -463,6 +467,8 @@
                     <span class="role-badge" id="userRole">...</span>
                 </div>
                 <button id="logout" class="logout-btn">Logout</button>
+                <button id="myAccount">My-Account</button>
+
             </div>
         </div>
     </div>
@@ -941,6 +947,11 @@
             } else {
                 window.location.href = "sisu.html";
             }
+        });
+
+        //My-account href
+        document.getElementById('myAccount').addEventListener('click', function () {
+             window.location.href = '/my-account';  
         });
 
         // Logout functionality

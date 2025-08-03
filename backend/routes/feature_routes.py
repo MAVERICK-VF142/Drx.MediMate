@@ -24,13 +24,6 @@ def upload_image():
 def prescription_validator():
     return render_template('prescription_validator.html')
 
-@feature_bp.route('/my-account')
-def my_account():
-    return render_template('my_account.html', user={
-        "name": "Demo User",
-        "email": "demo@example.com",
-        "notifications": True
-    })
 
 
 # Additional feature routes that may be referenced in the dashboard
