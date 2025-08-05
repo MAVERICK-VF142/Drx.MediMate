@@ -127,3 +127,49 @@ def allergy_checker():
         logging.error(f"❌ Exception in /allergy_checker: {str(e)}")
         return api_response(f'❌ Error during allergy checking: {str(e)}', 500)
 
+
+@api_bp.route('/compare_drugs', methods=['POST'])
+def compare_drugs():
+    """
+    Endpoint to compare 2-3 drugs side by side using existing drug info API.
+    """
+    logging.info("📩 API /compare_drugs called")
+    
+    try:
+        data = request.get_json()
+        logging.info(f"Request JSON: {data}")
+        
+        drugs = data.get('drugs', [])
+        
+        if not drugs or len(drugs) < 2:
+            logging.warning("❌ At least 2 drugs required for comparison.")
+            return api_response('❌ At least 2 drugs are required for comparison.', 400)
+        
+        if len(drugs) > 3:
+            logging.warning("❌ Maximum 3 drugs allowed for comparison.")
+            return api_response('❌ Maximum 3 drugs allowed for comparison.', 400)
+        
+        # Get individual drug information for each drug
+        drug_info_results = {}
+        for drug in drugs:
+            if not drug.strip():
+                continue
+            logging.info(f"Getting info for drug: {drug}")
+            drug_info = get_drug_information(drug.strip())
+            drug_info_results[drug.strip()] = drug_info
+        
+        if len(drug_info_results) < 2:
+            logging.warning("❌ Could not retrieve information for at least 2 drugs.")
+            return api_response('❌ Could not retrieve information for at least 2 drugs.', 400)
+        
+        # Return the comparison data
+        return jsonify({
+            'status': 'success',
+            'drugs': list(drug_info_results.keys()),
+            'comparison_data': drug_info_results
+        })
+        
+    except Exception as e:
+        logging.error(f"❌ Exception in /compare_drugs: {str(e)}")
+        return api_response(f'❌ Error during drug comparison: {str(e)}', 500)
+

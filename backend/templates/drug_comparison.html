@@ -313,6 +313,8 @@
                     placeholder="Enter first drug name (e.g., Ibuprofen)">
                 <input type="text" class="comparison-input" id="drug2"
                     placeholder="Enter second drug name (e.g., Paracetamol)">
+                <input type="text" class="comparison-input" id="drug3"
+                    placeholder="Enter third drug name (optional)">
                 <button class="compare-btn" id="compareBtn" onclick="compareDrugs()">
                     Compare
                 </button>
@@ -401,13 +403,19 @@
         async function compareDrugs() {
             const drug1 = document.getElementById('drug1').value.trim();
             const drug2 = document.getElementById('drug2').value.trim();
+            const drug3 = document.getElementById('drug3').value.trim();
             const loader = document.getElementById('loader');
             const compareBtn = document.getElementById('compareBtn');
             const markdownContainer = document.getElementById('comparisonMarkdown');
 
             if (!drug1 || !drug2) {
-                alert('Please enter both drug names.');
+                alert('Please enter at least two drug names.');
                 return;
+            }
+
+            const drugs = [drug1, drug2];
+            if (drug3) {
+                drugs.push(drug3);
             }
 
             loader.style.display = 'block';
@@ -417,14 +425,35 @@
             compareBtn.innerHTML = `Comparing... <span class="loading"></span>`;
 
             try {
-                const res = await fetch('/compare_drugs_summary', {
+                // Use the new compare_drugs endpoint for detailed comparison
+                const res = await fetch('/compare_drugs', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ drug1, drug2 }),
+                    body: JSON.stringify({ drugs: drugs }),
                 });
 
                 const data = await res.json();
-                markdownContainer.innerHTML = marked.parse(data.summary || '❌ No summary available.');
+                
+                if (data.status === 'success') {
+                    // Create a detailed side-by-side comparison
+                    const comparisonHTML = createDetailedComparison(data.drugs, data.comparison_data);
+                    markdownContainer.innerHTML = comparisonHTML;
+                } else {
+                    // Fallback to summary comparison for 2 drugs only
+                    if (drugs.length === 2) {
+                        const summaryRes = await fetch('/compare_drugs_summary', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ drug1, drug2 }),
+                        });
+                        
+                        const summaryData = await summaryRes.json();
+                        markdownContainer.innerHTML = marked.parse(summaryData.summary || '❌ No summary available.');
+                    } else {
+                        markdownContainer.innerHTML = `<p style="color: #dc2626;">❌ ${data.response || 'Failed to compare drugs'}</p>`;
+                    }
+                }
+                
                 markdownContainer.style.display = 'block';
             } catch (error) {
                 console.error('Comparison error:', error);
@@ -436,6 +465,80 @@
             }
         }
 
+        function createDetailedComparison(drugNames, comparisonData) {
+            let html = `<div class="detailed-comparison">
+                <h2 style="text-align: center; margin-bottom: 2rem; color: #1f2937;">
+                    Detailed Comparison: ${drugNames.join(' vs ')}
+                </h2>
+                <div class="comparison-grid">`;
+
+            // Create side-by-side cards for each drug
+            drugNames.forEach((drug, index) => {
+                const drugInfo = comparisonData[drug];
+                html += `
+                    <div class="drug-card">
+                        <h3 class="drug-title">${drug}</h3>
+                        <div class="drug-content">
+                            ${drugInfo || 'Information not available'}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div></div>`;
+
+            // Add CSS for the detailed comparison
+            html += `
+                <style>
+                    .detailed-comparison {
+                        margin-top: 2rem;
+                    }
+                    .comparison-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+                        gap: 2rem;
+                        margin-top: 1rem;
+                    }
+                    .drug-card {
+                        background: #f9fafb;
+                        border: 1px solid #e5e7eb;
+                        border-radius: 12px;
+                        padding: 1.5rem;
+                        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                    }
+                    .drug-title {
+                        color: #2563eb;
+                        font-size: 1.25rem;
+                        font-weight: bold;
+                        margin-bottom: 1rem;
+                        padding-bottom: 0.5rem;
+                        border-bottom: 2px solid #2563eb;
+                    }
+                    .drug-content {
+                        line-height: 1.6;
+                    }
+                    .drug-content h2, .drug-content h3, .drug-content h4 {
+                        color: #374151;
+                        margin: 1rem 0 0.5rem 0;
+                    }
+                    .drug-content ul {
+                        margin: 0.5rem 0;
+                        padding-left: 1.5rem;
+                    }
+                    .drug-content li {
+                        margin-bottom: 0.25rem;
+                    }
+                    @media (max-width: 768px) {
+                        .comparison-grid {
+                            grid-template-columns: 1fr;
+                        }
+                    }
+                </style>
+            `;
+
+            return html;
+        }
+
         // Enter key functionality for comparison inputs
         document.getElementById('drug1').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
@@ -444,6 +547,12 @@
         });
 
         document.getElementById('drug2').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('drug3').focus(); // Move to third input
+            }
+        });
+
+        document.getElementById('drug3').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 compareDrugs();
             }
