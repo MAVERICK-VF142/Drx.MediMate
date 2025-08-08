@@ -4,6 +4,19 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeLearningTracking();
     initializeAssignmentManagement();
     loadDashboardData();
+
+    // Accessibility: Add keyboard navigation for dashboard cards
+    const dashboardCards = document.querySelectorAll('.dashboard-card');
+    dashboardCards.forEach(card => {
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                const link = card.querySelector('.btn');
+                if (link) {
+                    link.click();
+                }
+            }
+        });
+    });
 });
 
 function initializeLearningTracking() {

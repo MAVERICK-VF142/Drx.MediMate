@@ -2,6 +2,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const chatbox = document.getElementById('chatbox');
     showMessage("Hello! I'm Aditi, your Pharmaceutical Assistant. How can I help you today?", "aditi");
     document.getElementById("userInput").focus();
+
+    // Accessibility: Focus on the chat input when the page loads
+    const chatInput = document.getElementById('userInput');
+    if (chatInput) {
+        chatInput.focus();
+    }
 });
 
 async function sendMessage() {
@@ -73,6 +79,17 @@ function formatResponse(text) {
 
 document.getElementById("userInput").addEventListener("keypress", function(event) {
     if (event.key === "Enter") sendMessage();
+});
+
+// Accessibility: Add keyboard navigation for the chat input
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab') {
+        const focusedElement = document.activeElement;
+        if (focusedElement && focusedElement.id === 'userInput') {
+            e.preventDefault();
+            document.getElementById('sendBtn').focus();
+        }
+    }
 });
 
 // Toggle the profile menu visibility

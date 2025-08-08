@@ -8,6 +8,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const signInButton = document.getElementById('signInButton');
     const recoverPasswordLink = document.getElementById('recoverPasswordLink');
     const backToSignIn = document.getElementById('backToSignIn');
+
+    // Add event listeners for accessibility
+    signUpButton.addEventListener('keydown', handleTabNavigation);
+    signInButton.addEventListener('keydown', handleTabNavigation);
+    recoverPasswordLink.addEventListener('keydown', handleTabNavigation);
+    backToSignIn.addEventListener('keydown', handleTabNavigation);
     
     // Password visibility toggles
     const togglePassword = document.getElementById('togglePassword');
@@ -335,6 +341,23 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+
+    // Accessibility: Handle tab navigation for non-form elements
+    function handleTabNavigation(event) {
+        if (event.key === 'Tab') {
+            event.preventDefault();
+            const focusableElements = document.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+            const first = focusableElements[0];
+            const last = focusableElements[focusableElements.length - 1];
+            const isBackward = event.shiftKey;
+
+            if (isBackward && document.activeElement === first) {
+                last.focus();
+            } else if (!isBackward && document.activeElement === last) {
+                first.focus();
+            }
+        }
+    }
     
     // Initialize role features
     initializeRoleFeatures();

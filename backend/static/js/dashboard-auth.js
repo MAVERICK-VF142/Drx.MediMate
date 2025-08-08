@@ -124,6 +124,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Accessibility: Add keyboard navigation for logout button
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab') {
+        const focusedElement = document.activeElement;
+        if (focusedElement && focusedElement.id === 'logoutBtn') {
+            e.preventDefault();
+            document.getElementById('userName').focus();
+        }
+    }
+});
+
 // Security: Clear sensitive data on page unload
 window.addEventListener('beforeunload', () => {
     if (window.userData) {
