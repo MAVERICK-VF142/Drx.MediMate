@@ -169,8 +169,13 @@
             margin-bottom: 1.5rem;
         }
 
-        .search-input {
+        .search-input-container {
             flex: 1;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
             padding: 0.75rem 1rem;
             border: 1px solid #d1d5db;
             border-radius: 8px;
@@ -181,6 +186,36 @@
             outline: none;
             border-color: #2563eb;
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .drug-autocomplete-suggestions {
+            position: absolute;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 0 0 8px 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            width: 100%;
+            z-index: 1000;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            top: 100%;
+            left: 0;
+        }
+
+        .drug-autocomplete-suggestions li {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .drug-autocomplete-suggestions li:hover,
+        .drug-autocomplete-suggestions li.selected {
+            background-color: #e5e7eb;
+            font-weight: 500;
         }
 
         .search-btn {
@@ -403,7 +438,9 @@
         <!-- Search Section -->
         <div class="search-section">
             <div class="search-form">
-                <input type="text" class="search-input" id="drugSearch" placeholder="Enter drug name (e.g., Paracetamol, Ibuprofen, Amoxicillin...)">
+                <div class="search-input-container">
+                    <input type="text" class="search-input drug-autocomplete" id="drugSearch" placeholder="Enter drug name (e.g., Paracetamol, Ibuprofen, Amoxicillin...)">
+                </div>
                 <button class="search-btn" id="searchBtn" onclick="searchDrug()">
                     🔍 Search
                 </button>
@@ -443,6 +480,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"></script>
     <script src="../static/js/auth.js"></script>
     <script src="../static/js/main.js"></script>
+    <script src="../static/js/autocomplete.js"></script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";

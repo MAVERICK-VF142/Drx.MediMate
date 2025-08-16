@@ -166,6 +166,7 @@
             flex-direction: column;
             gap: 1rem;
             margin-bottom: 1.5rem;
+            position: relative;
         }
 
         .comparison-input {
@@ -174,12 +175,44 @@
             border: 1px solid #d1d5db;
             border-radius: 8px;
             font-size: 1rem;
+            position: relative;
+            z-index: 2;
         }
 
         .comparison-input:focus {
             outline: none;
             border-color: #2563eb;
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .drug-autocomplete-suggestions {
+            position: absolute;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 0 0 8px 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            width: 100%;
+            z-index: 1000;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            top: 100%;
+            left: 0;
+        }
+
+        .drug-autocomplete-suggestions li {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .drug-autocomplete-suggestions li:hover,
+        .drug-autocomplete-suggestions li.selected {
+            background-color: #e5e7eb;
+            font-weight: 500;
         }
 
         .compare-btn {
@@ -309,9 +342,9 @@
         <!-- Comparison Section -->
         <div class="comparison-section">
             <div class="comparison-form">
-                <input type="text" class="comparison-input" id="drug1"
+                <input type="text" class="comparison-input drug-autocomplete" id="drug1"
                     placeholder="Enter first drug name (e.g., Ibuprofen)">
-                <input type="text" class="comparison-input" id="drug2"
+                <input type="text" class="comparison-input drug-autocomplete" id="drug2"
                     placeholder="Enter second drug name (e.g., Paracetamol)">
                 <button class="compare-btn" id="compareBtn" onclick="compareDrugs()">
                     Compare
@@ -331,6 +364,7 @@
     <!-- Assuming auth.js and main.js are still relevant for overall site functionality -->
     <script src="../static/js/auth.js"></script>
     <script src="../static/js/main.js"></script>
+    <script src="../static/js/autocomplete.js"></script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
