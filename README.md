@@ -13,6 +13,7 @@
 ## 🔧 Features
 
 - **Drug Information**: Get detailed clinical summaries for any drug, tailored for pharmacists and healthcare professionals.
+- **Drug Comparison**: Compare 2-3 drugs side-by-side with responsive layout through an integrated popup modal.
 - **Symptom Checker**: Input symptoms and receive AI-generated drug recommendations.
 - **Role-based Dashboards**: Separate dashboards for doctors, pharmacists, students, and patients.
 - **Structured Codebase**: Fully modular backend and organized frontend for easy contributions.
@@ -128,7 +129,10 @@ This modular structure makes it simple to extend the application.
 2. **Drug Information**: `POST /get_drug_info`
    - Input: JSON payload with `drug_name`.
    - Output: JSON response containing clinical drug information.
-3. **Symptom Checker**: `POST /symptom_checker`
+3. **Drug Comparison**: `POST /compare_drugs`
+   - Input: JSON payload with `drugs` array (2-3 drug names).
+   - Output: JSON response with side-by-side comparison data.
+4. **Symptom Checker**: `POST /symptom_checker`
    - Input: JSON payload with `symptoms`.
    - Output: JSON response with recommended drugs and safety information.
 
