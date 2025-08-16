@@ -202,6 +202,26 @@
             cursor: not-allowed;
         }
 
+        .compare-btn {
+            background: #059669;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-left: 0.5rem;
+        }
+
+        .compare-btn:hover {
+            background: #047857;
+        }
+
+        .compare-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
         .search-examples {
             color: #6b7280;
             font-size: 0.9rem;
@@ -343,6 +363,245 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Compare Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 2% auto;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 95%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .close {
+            color: #6b7280;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: #374151;
+        }
+
+        .drug-input-group {
+            margin-bottom: 1rem;
+        }
+
+        .drug-input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .drug-input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .drug-input-group input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .modal-btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .modal-btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .modal-btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .modal-btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .comparison-results {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .modern-comparison {
+            margin-top: 1rem;
+        }
+
+        .comparison-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .comparison-header h3 {
+            color: #1f2937;
+            font-size: 1.25rem;
+            margin: 0;
+        }
+
+        .comparison-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .drug-comparison-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .drug-comparison-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .drug-card-header {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .drug-card-header h4 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .drug-card-content {
+            padding: 1.5rem;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .info-section {
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .info-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .info-section strong {
+            color: #374151;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-content {
+            color: #4b5563;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .info-content ul {
+            margin: 0.5rem 0;
+            padding-left: 1.25rem;
+        }
+
+        .info-content li {
+            margin-bottom: 0.25rem;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .comparison-table th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .comparison-table td {
+            background-color: white;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #2563eb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header-content {
@@ -407,6 +666,9 @@
                 <button class="search-btn" id="searchBtn" onclick="searchDrug()">
                     🔍 Search
                 </button>
+                <button class="compare-btn" id="compareBtn" onclick="openCompareModal()">
+                    ⚖️ Compare Drugs
+                </button>
             </div>
             <div class="search-examples">
                 <strong>Examples:</strong> Aspirin, Metformin, Lisinopril, Atorvastatin
@@ -433,6 +695,45 @@
             <div class="input-container">
                 <input type="text" id="userInput" placeholder="Ask about drug interactions, dosages, side effects..." autofocus>
                 <button class="send-button" id="sendBtn" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Compare Drugs Modal -->
+    <div id="compareModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">⚖️ Compare Drugs</h2>
+                <span class="close" onclick="closeCompareModal()">&times;</span>
+            </div>
+            
+            <div class="modal-body">
+                <div class="drug-input-group">
+                    <label for="compareDrug1">Drug 1 *</label>
+                    <input type="text" id="compareDrug1" placeholder="Enter first drug name (e.g., Ibuprofen)">
+                </div>
+                
+                <div class="drug-input-group">
+                    <label for="compareDrug2">Drug 2 *</label>
+                    <input type="text" id="compareDrug2" placeholder="Enter second drug name (e.g., Paracetamol)">
+                </div>
+                
+                <div class="drug-input-group">
+                    <label for="compareDrug3">Drug 3 (Optional)</label>
+                    <input type="text" id="compareDrug3" placeholder="Enter third drug name (optional)">
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="modal-btn modal-btn-secondary" onclick="closeCompareModal()">Cancel</button>
+                    <button class="modal-btn modal-btn-primary" id="startCompareBtn" onclick="startComparison()">
+                        Compare Drugs
+                    </button>
+                </div>
+                
+                <div id="comparisonResults" class="comparison-results">
+                    <h3>Comparison Results</h3>
+                    <div id="comparisonContent"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -670,6 +971,197 @@
         document.getElementById('userInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 sendMessage();
+            }
+        });
+
+        // Compare Drugs Modal Functions
+        function openCompareModal() {
+            document.getElementById('compareModal').style.display = 'block';
+            // Pre-fill first drug if there's a search value
+            const searchValue = document.getElementById('drugSearch').value.trim();
+            if (searchValue) {
+                document.getElementById('compareDrug1').value = searchValue;
+            }
+        }
+
+        function closeCompareModal() {
+            document.getElementById('compareModal').style.display = 'none';
+            // Clear inputs
+            document.getElementById('compareDrug1').value = '';
+            document.getElementById('compareDrug2').value = '';
+            document.getElementById('compareDrug3').value = '';
+            // Hide results
+            document.getElementById('comparisonResults').style.display = 'none';
+            document.getElementById('comparisonContent').innerHTML = '';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('compareModal');
+            if (event.target === modal) {
+                closeCompareModal();
+            }
+        }
+
+        async function startComparison() {
+            const drug1 = document.getElementById('compareDrug1').value.trim();
+            const drug2 = document.getElementById('compareDrug2').value.trim();
+            const drug3 = document.getElementById('compareDrug3').value.trim();
+            
+            if (!drug1 || !drug2) {
+                alert('Please enter at least two drug names for comparison.');
+                return;
+            }
+
+            const drugs = [drug1, drug2];
+            if (drug3) {
+                drugs.push(drug3);
+            }
+
+            const startBtn = document.getElementById('startCompareBtn');
+            const resultsDiv = document.getElementById('comparisonResults');
+            const contentDiv = document.getElementById('comparisonContent');
+
+            // Show loading state
+            startBtn.disabled = true;
+            startBtn.innerHTML = '<span class="loading-spinner"></span>Comparing...';
+            resultsDiv.style.display = 'block';
+            contentDiv.innerHTML = '<p>Fetching drug information and preparing comparison...</p>';
+
+            try {
+                const response = await fetch('/compare_drugs', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ drugs: drugs })
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    displayComparisonResults(data.drugs, data.comparison_data);
+                } else {
+                    contentDiv.innerHTML = `<p style="color: #dc2626;">❌ ${data.response || 'Failed to compare drugs'}</p>`;
+                }
+            } catch (error) {
+                console.error('Comparison error:', error);
+                contentDiv.innerHTML = `<p style="color: #dc2626;">❌ An error occurred while comparing drugs: ${error.message}</p>`;
+            } finally {
+                startBtn.disabled = false;
+                startBtn.innerHTML = 'Compare Drugs';
+            }
+        }
+
+        function displayComparisonResults(drugNames, comparisonData) {
+            const contentDiv = document.getElementById('comparisonContent');
+            
+            // Create modern side-by-side comparison cards
+            let comparisonHTML = `
+                <div class="modern-comparison">
+                    <div class="comparison-header">
+                        <h3>Drug Comparison: ${drugNames.join(' vs ')}</h3>
+                    </div>
+                    <div class="comparison-cards">
+            `;
+            
+            // Create cards for each drug
+            drugNames.forEach((drug, index) => {
+                const drugInfo = comparisonData[drug];
+                comparisonHTML += `
+                    <div class="drug-comparison-card">
+                        <div class="drug-card-header">
+                            <h4>${drug}</h4>
+                        </div>
+                        <div class="drug-card-content">
+                            ${formatDrugInfoForCard(drugInfo)}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            comparisonHTML += `
+                    </div>
+                </div>
+            `;
+            
+            contentDiv.innerHTML = comparisonHTML;
+        }
+        
+        function formatDrugInfoForCard(drugInfo) {
+            if (!drugInfo) return '<p style="color: #6b7280; font-style: italic;">Information not available</p>';
+            
+            // Extract key sections from the drug info
+            const sections = [
+                { label: 'Therapeutic Uses', key: 'uses' },
+                { label: 'Standard Dosage', key: 'dosage' },
+                { label: 'Common Side Effects', key: 'side_effects' },
+                { label: 'Contraindications', key: 'contraindications' },
+                { label: 'Drug Interactions', key: 'interactions' }
+            ];
+            
+            let formattedInfo = '';
+            
+            sections.forEach(section => {
+                const info = extractAspectFromDrugInfo(drugInfo, section.label);
+                if (info && info !== 'Not specified' && info.trim().length > 0) {
+                    formattedInfo += `
+                        <div class="info-section">
+                            <strong>${section.label}:</strong>
+                            <div class="info-content">${info}</div>
+                        </div>
+                    `;
+                }
+            });
+            
+            return formattedInfo || '<p style="color: #6b7280; font-style: italic;">Complete drug information displayed above</p>';
+        }
+
+        function extractAspectFromDrugInfo(drugInfo, aspectLabel) {
+            if (!drugInfo || typeof drugInfo !== 'string') {
+                return 'Information not available';
+            }
+
+            // Remove HTML tags for text processing
+            const cleanInfo = drugInfo.replace(/<[^>]*>/g, '');
+            
+            // Define patterns to match different sections
+            const patterns = {
+                'Therapeutic Uses': /(?:therapeutic uses?|indications?)[:\s]*([^#]*?)(?=##|$)/i,
+                'Standard Dosage': /(?:standard dosage|dosage)[:\s]*([^#]*?)(?=##|$)/i,
+                'Common Side Effects': /(?:common side effects?)[:\s]*([^#]*?)(?=##|$)/i,
+                'Serious Side Effects': /(?:serious side effects?)[:\s]*([^#]*?)(?=##|$)/i,
+                'Contraindications': /(?:contraindications?)[:\s]*([^#]*?)(?=##|$)/i,
+                'Drug Interactions': /(?:drug interactions?|important.*interactions?)[:\s]*([^#]*?)(?=##|$)/i
+            };
+
+            const pattern = patterns[aspectLabel];
+            if (pattern) {
+                const match = cleanInfo.match(pattern);
+                if (match && match[1]) {
+                    return match[1].trim().substring(0, 200) + (match[1].trim().length > 200 ? '...' : '');
+                }
+            }
+
+            return 'Information not available';
+        }
+
+        // Enter key functionality for modal inputs
+        document.getElementById('compareDrug1').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('compareDrug2').focus();
+            }
+        });
+
+        document.getElementById('compareDrug2').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('compareDrug3').focus();
+            }
+        });
+
+        document.getElementById('compareDrug3').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                startComparison();
             }
         });
     </script>
