@@ -4,8 +4,11 @@ from backend.utils.gemini_utils import (
     get_drug_information,
     get_symptom_recommendation,
     analyze_image_with_gemini,
+    drug_side_effect_checker,
     analyze_prescription_with_gemini
 )
+
+
 
 ai_bp = Blueprint("ai", __name__)
 
@@ -24,6 +27,22 @@ def ask_gemini():
     return jsonify({"response": response})
 
 
+
+
+
+# @ai_bp.route("/predict_side_effects", methods=["POST"])
+# def predict_side_effects():
+#     data = request.json
+#     drug_name = data.get("drug_name")
+#     if not drug_name:
+#         return jsonify({"error": "Drug name required"}), 400
+#     try:
+#         result = drug_side_effect_checker(drug_name)
+#         return jsonify({"response": result})
+#     except Exception as e:
+#         return jsonify({"error": str(e)}), 500
+    
+
 @ai_bp.route("/upload-image", methods=["POST"])
 def upload_image():
     image = request.files.get("image")
@@ -36,6 +55,9 @@ def upload_image():
         return jsonify({"response": result})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
+
 
 
         

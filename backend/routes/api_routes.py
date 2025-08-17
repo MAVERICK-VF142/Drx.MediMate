@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from ..utils.gemini_utils import get_drug_information, get_symptom_recommendation, analyze_image_with_gemini, analyze_prescription_with_gemini, analyze_allergies, get_drug_comparison_summary
+from ..utils.gemini_utils import get_drug_information,drug_side_effect_checker, get_symptom_recommendation, analyze_image_with_gemini, analyze_prescription_with_gemini, analyze_allergies, get_drug_comparison_summary
 import logging
 logging.basicConfig(level=logging.INFO,format="%(asctime)s [%(levelname)s] %(message)s")
 
@@ -33,6 +33,41 @@ def get_drug_info():
         logging.error(f"Exception in /get_drug_info: {str(e)}")
         return api_response(f"❌ Error: {str(e)}", 500)
 
+
+# @api_bp.route("/predict_side_effects", methods=["POST"])
+# def predict_side_effects():
+#     """Predict drug side effects using Gemini API and return structured JSON."""
+#     data = request.get_json()
+#     drug_name = data.get("drug_name")
+
+#     if not drug_name:
+#         return jsonify({"error": "Drug name is required"}), 400
+#     result = drug_side_effect_checker(drug_name)
+#     return jsonify(result)
+  
+from flask import render_template
+@api_bp.route("/drug_sideeffect_chech", methods=["GET"])
+def drug_sideeffect_check_page():
+    return render_template("drug_sideeffect_chech.html")
+
+
+@api_bp.route("/predict_side_effects", methods=["POST"])
+def predict_side_effects():
+    """Predict drug side effects using Gemini API and return structured JSON."""
+    logging.info("API /predict_side_effects called")
+    try:
+        data = request.get_json()
+        logging.info(f"Request JSON: {data}")
+        drug_name = data.get("drug_name")
+
+        if not drug_name:
+            logging.warning("No drug name provided")
+            return jsonify({"error": "Drug name is required"}), 400
+        result = drug_side_effect_checker(drug_name)
+        return jsonify(result)   
+    except Exception as e:
+        logging.error(f"❌ Exception in /predict_side_effects: {str(e)}")
+        return jsonify({"error": "Internal server error"}), 500
 
 
 @api_bp.route('/symptom_checker', methods=['POST'])
