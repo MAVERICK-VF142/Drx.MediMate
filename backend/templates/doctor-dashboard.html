@@ -2,109 +2,164 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard Under Construction</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
+  <title>Doctor Dashboard</title>
   <style>
-    * {
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: #f4f6f9;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
+      color: #333;
     }
-
-    body {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #fff;
-      overflow: hidden;
-    }
-
-    .container {
+    header {
+      background: #007bff;
+      color: white;
+      padding: 15px;
       text-align: center;
-      animation: fadeIn 1s ease-in-out;
-      padding: 2rem;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px);
-      max-width: 500px;
-      width: 90%;
-    }
-
-    h1 {
-      font-size: 2.8rem;
-      margin-bottom: 1rem;
-      animation: slideIn 1s ease-in-out;
-    }
-
-    p {
-      font-size: 1.2rem;
-      margin-bottom: 2rem;
-      animation: fadeIn 1.2s ease-in-out;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 0.8rem 2rem;
-      background-color: #ff7e5f;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 50px;
+      font-size: 22px;
       font-weight: bold;
-      font-size: 1rem;
-      transition: 0.3s ease;
-      animation: bounceIn 1.5s ease forwards;
     }
-
-    .btn:hover {
-      background-color: #feb47b;
-      transform: scale(1.05);
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
     }
-
-    .gear {
-      font-size: 5rem;
-      animation: spin 4s linear infinite;
-      margin-bottom: 1rem;
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
-
-    /* Animations */
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    h2 {
+      margin-top: 0;
+      font-size: 18px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+      color: #007bff;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    /* Doctor Info */
+    .doctor-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
     }
-
-    @keyframes slideIn {
-      from { transform: translateY(-20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+    .doctor-info img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
     }
-
-    @keyframes bounceIn {
-      0% { transform: scale(0.8); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
+    /* Patient Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
     }
-
-    @media (max-width: 480px) {
-      h1 { font-size: 2rem; }
-      .gear { font-size: 4rem; }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    th {
+      background: #f9fafb;
+      text-align: left;
+    }
+    tr:hover { background: #f5f9ff; }
+    /* Form */
+    form {
+      margin-bottom: 12px;
+    }
+    form input {
+      padding: 8px;
+      margin: 5px 5px 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    form button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    form button:hover { background: #0056b3; }
+    /* Appointments */
+    .appointments ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .appointments li {
+      background: #f9f9f9;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-left: 4px solid #007bff;
+      border-radius: 4px;
+    }
+    /* Summary */
+    .summary p {
+      font-size: 16px;
+      margin: 8px 0;
+      display: flex;
+      justify-content: space-between;
+    }
+    .summary span {
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
+  <header>
+    Doctor Dashboard
+  </header>
+
   <div class="container">
-    <div class="gear">⚙️</div>
-    <h1>Dashboard Under Construction</h1>
-    <p>We're working hard to bring this feature to life. Until then, you can test your functionality using the index page.</p>
-    <a class="btn" href="index.html">Go to index.html</a>
+
+    <div class="card" style="grid-column: span 3;">
+      <h2>Doctor Info</h2>
+      <div class="doctor-info">
+        <img src="https://via.placeholder.com/60" alt="Doctor Avatar">
+        <div id="doctorInfo"></div>
+      </div>
+    </div>
+
+
+    <div class="card">
+      <h2>Patients</h2>
+      <form id="addPatientForm">
+        <input type="text" id="pname" placeholder="Name" required>
+        <input type="number" id="page" placeholder="Age">
+        <input type="text" id="pcondition" placeholder="Condition">
+        <button type="submit">Add</button>
+      </form>
+      <table>
+        <thead>
+          <tr><th>Name</th><th>Age</th><th>Condition</th></tr>
+        </thead>
+        <tbody id="patientTableBody"></tbody>
+      </table>
+    </div>
+
+
+    <div class="card appointments">
+      <h2>Appointments</h2>
+      <ul id="appointmentList"></ul>
+    </div>
+
+
+    <div class="card summary">
+      <h2>Summary</h2>
+      <p>Total Patients: <span id="totalPatients">0</span></p>
+      <p>Appointments Today: <span id="todayAppointments">0</span></p>
+    </div>
   </div>
-  {% include "goToTop.html" %}
+
+
+  <script src="{{ url_for('static', filename='js/doctor-dashboard.js') }}"></script>
 </body>
 </html>
