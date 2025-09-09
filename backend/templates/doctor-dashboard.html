@@ -34,7 +34,6 @@
       box-shadow: 0 3px 8px rgba(0,0,0,0.08);
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
     }
     h2 {
       margin-top: 0;
@@ -55,6 +54,16 @@
       height: 60px;
       border-radius: 50%;
     }
+    #doctorInfo h3 {
+      margin: 0;
+      font-size: 18px;
+      color: #333;
+    }
+    #doctorInfo p {
+      margin: 2px 0 0;
+      font-size: 14px;
+      color: #555;
+    }
     /* Patient Table */
     table {
       width: 100%;
@@ -73,11 +82,12 @@
     form {
       margin-bottom: 12px;
     }
-    form input {
+    form input, form textarea, form select {
       padding: 8px;
       margin: 5px 5px 5px 0;
       border: 1px solid #ccc;
       border-radius: 4px;
+      width: calc(100% - 20px);
     }
     form button {
       background: #007bff;
@@ -101,6 +111,19 @@
       border-left: 4px solid #007bff;
       border-radius: 4px;
     }
+    /* AI Tools */
+    .ai-tools button {
+      margin: 5px 0;
+      width: 100%;
+      padding: 10px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      background: #28a745;
+      color: white;
+      font-weight: bold;
+    }
+    .ai-tools button:hover { background: #1e7e34; }
     /* Summary */
     .summary p {
       font-size: 16px;
@@ -120,15 +143,19 @@
 
   <div class="container">
 
+    <!-- Doctor Info -->
     <div class="card" style="grid-column: span 3;">
       <h2>Doctor Info</h2>
       <div class="doctor-info">
         <img src="https://via.placeholder.com/60" alt="Doctor Avatar">
-        <div id="doctorInfo"></div>
+        <div id="doctorInfo">
+          <h3>Dr. Ramesh Kumar</h3>
+          <p>General Physician</p>
+        </div>
       </div>
     </div>
 
-
+    <!-- Patients -->
     <div class="card">
       <h2>Patients</h2>
       <form id="addPatientForm">
@@ -145,20 +172,46 @@
       </table>
     </div>
 
-
+    <!-- Appointments -->
     <div class="card appointments">
       <h2>Appointments</h2>
+      <form id="addAppointmentForm">
+        <input type="text" id="aname" placeholder="Patient Name" required>
+        <input type="datetime-local" id="adate" required>
+        <button type="submit">Add Appointment</button>
+      </form>
       <ul id="appointmentList"></ul>
     </div>
 
+    <!-- Prescription Module -->
+    <div class="card">
+      <h2>Prescription</h2>
+      <form id="prescriptionForm">
+        <input type="text" id="presPatient" placeholder="Patient Name" required>
+        <textarea id="presMedicine" placeholder="Medicines & Dosage" required></textarea>
+        <button type="submit">Save Prescription</button>
+      </form>
+      <div id="prescriptionList"></div>
+    </div>
 
+    <!-- AI Tools -->
+    <div class="card ai-tools">
+      <h2>AI Tools</h2>
+      <button onclick="useAITool('symptom')">Symptom Checker</button>
+      <button onclick="useAITool('drug')">Drug Interaction Checker</button>
+      <button onclick="useAITool('analysis')">Medical Analysis</button>
+      <div id="aiOutput" style="margin-top:10px; font-size:14px; color:#555;"></div>
+    </div>
+
+    <!-- Summary -->
     <div class="card summary">
       <h2>Summary</h2>
       <p>Total Patients: <span id="totalPatients">0</span></p>
       <p>Appointments Today: <span id="todayAppointments">0</span></p>
+      <p>Total Prescriptions: <span id="totalPrescriptions">0</span></p>
     </div>
-  </div>
 
+  </div>
 
   <script src="{{ url_for('static', filename='js/doctor-dashboard.js') }}"></script>
 </body>
