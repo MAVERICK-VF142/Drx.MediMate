@@ -1,472 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Student Dashboard</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
-    <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f8fafc;
-            margin: 0;
-            padding: 0;
-            color: #22223b;
-        }
-        .navbar {
-            background: #283593;
-            color: #fff;
-            padding: 1rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-        .navbar-menu {
-            list-style: none;
-            display: flex;
-            gap: 2rem;
-            margin: 0;
-            padding: 0;
-        }
-        .navbar-menu li a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-        .navbar-menu li a:hover {
-            color: #ffd600;
-        }
-        .dashboard-container {
-            max-width: 1100px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 24px rgba(40,53,147,0.08);
-        }
-        .welcome-section {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-        .welcome-section h1 {
-            font-size: 2.2rem;
-            color: #283593;
-            margin-bottom: 0.5rem;
-        }
-        .welcome-section p {
-            color: #555;
-            font-size: 1.1rem;
-        }
-        .dashboard-cards {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            justify-content: center;
-        }
-        .dashboard-card {
-            background: #f1f6fb;
-            border: 1px solid #e0e7ef;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(40,53,147,0.04);
-            padding: 2rem 1.5rem;
-            width: 300px;
-            text-align: center;
-            transition: box-shadow 0.2s, transform 0.2s;
-        }
-        .dashboard-card:hover {
-            box-shadow: 0 6px 24px rgba(40,53,147,0.10);
-            transform: translateY(-4px) scale(1.03);
-        }
-        .dashboard-card h2 {
-            color: #283593;
-            margin-bottom: 0.7rem;
-            font-size: 1.3rem;
-        }
-        .dashboard-card p {
-            color: #444;
-            font-size: 1rem;
-            margin-bottom: 1.2rem;
-        }
-        .btn {
-            display: inline-block;
-            background: #283593;
-            color: #fff;
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: background 0.2s;
-        }
-        .btn:hover {
-            background: #3949ab;
-        }
-        .section-title {
-            color: #283593;
-            margin-top: 2.5rem;
-            margin-bottom: 1rem;
-            font-size: 1.4rem;
-            font-weight: 600;
-        }
-        .appointments, .records, .notifications, .study-materials {
-            margin-bottom: 2rem;
-            background: #f8fafc;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(40,53,147,0.04);
-            padding: 1.5rem 2rem;
-        }
-        .appointments-table, .records-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-            margin-top: 1rem;
-        }
-        .appointments-table th, .appointments-table td,
-        .records-table th, .records-table td {
-            padding: 0.7rem 1rem;
-            text-align: left;
-        }
-        .appointments-table th, .records-table th {
-            background: #283593;
-            color: #fff;
-            font-weight: 600;
-            font-size: 1.05rem;
-            border-bottom: 2px solid #e0e7ef;
-        }
-        .appointments-table tr:nth-child(even),
-        .records-table tr:nth-child(even) {
-            background: #f1f6fb;
-        }
-        .appointments-table tr:hover,
-        .records-table tr:hover {
-            background: #e3eafc;
-        }
-        .appointments-table td, .records-table td {
-            color: #22223b;
-            font-size: 1rem;
-            border-bottom: 1px solid #e0e7ef;
-        }
-        .notifications-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .notifications-list li {
-            background: #fffbe7;
-            border-left: 4px solid #ffd600;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 6px;
-            color: #7c6f00;
-            font-size: 1rem;
-        }
-        .study-materials-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            margin-top: 1rem;
-        }
-        .study-material-card {
-            background: #fff;
-            border: 1px solid #e0e7ef;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(40,53,147,0.04);
-            padding: 1rem 1.2rem;
-            width: 220px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            transition: box-shadow 0.2s, transform 0.2s;
-        }
-        .study-material-card:hover {
-            box-shadow: 0 6px 24px rgba(40,53,147,0.10);
-            transform: translateY(-2px) scale(1.03);
-        }
-        .study-material-title {
-            font-weight: 600;
-            color: #283593;
-            margin-bottom: 0.5rem;
-            font-size: 1.08rem;
-        }
-        .study-material-link {
-            margin-top: auto;
-            color: #283593;
-            text-decoration: underline;
-            font-size: 0.98rem;
-            transition: color 0.2s;
-        }
-        .study-material-link:hover {
-            color: #3949ab;
-        }
-        footer {
-            text-align: center;
-            padding: 1.5rem 0 1rem 0;
-            color: #888;
-            font-size: 1rem;
-            background: none;
-            margin-top: 2rem;
-            border-top: 1px solid #e0e7ef;
-        }
-        @media (max-width: 900px) {
-            .dashboard-cards {
-                flex-direction: column;
-                align-items: center;
-            }
-            .dashboard-card {
-                width: 90%;
-            }
-            .study-materials-list {
-                flex-direction: column;
-                gap: 1rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Doctor Dashboard</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background: #007bff;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 15px;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 18px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+      color: #007bff;
+    }
+    /* Patient Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    th {
+      background: #f9fafb;
+      text-align: left;
+    }
+    tr:hover { background: #f5f9ff; }
+    /* Form */
+    form input {
+      padding: 8px;
+      margin: 5px 5px 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    form button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    form button:hover { background: #0056b3; }
+    /* Appointments */
+    .appointments ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .appointments li {
+      background: #f9f9f9;
+      margin-bottom: 8px;
+      padding: 10px;
+      border-left: 4px solid #007bff;
+      border-radius: 4px;
+    }
+    /* Summary */
+    .summary p {
+      font-size: 16px;
+      margin: 8px 0;
+    }
+  </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-brand">MediMate Student Dashboard</div>
-        <ul class="navbar-menu">
-            <li><a href="/my-account">Profile</a></li>
-        </ul>
-    </nav>
-    <main class="dashboard-container">
-        <section class="welcome-section">
-            <h1>Welcome, {{ user.name if user else "Student" }}!</h1>
-            <p>Here you can access your learning resources, appointments, records, and notifications.</p>
-        </section>
-        <section class="dashboard-cards">
-            <div class="dashboard-card">
-                <h2>Assignments</h2>
-                <p>View and submit your current assignments.</p>
-                <a href="/assignments" class="btn">Go to Assignments</a>
-            </div>
-            <div class="dashboard-card">
-                <h2>Learning Resources</h2>
-                <p>Access study materials and helpful links.</p>
-                <a href="/resources" class="btn">View Resources</a>
-            </div>
-            <div class="dashboard-card">
-                <h2>Progress</h2>
-                <p>Track your progress and achievements.</p>
-                <a href="/progress" class="btn">View Progress</a>
-            </div>
-        </section>
+  <header>
+    Doctor Dashboard
+  </header>
 
-        <section class="appointments">
-            <div class="section-title">Appointments</div>
-            <button id="add-appointment-btn" class="btn" style="margin-bottom:1rem;">+ Add Appointment</button>
-            <table class="appointments-table" id="appointments-table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>With</th>
-                        <th>Status</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody id="appointments-tbody">
-                    <tr>
-                        <td>2025-08-10</td>
-                        <td>10:00 AM</td>
-                        <td>Dr. Smith</td>
-                        <td>Confirmed</td>
-                        <td><button class="btn" onclick="this.parentElement.parentElement.remove()">Delete</button></td>
-                    </tr>
-                    <tr>
-                        <td>2025-08-18</td>
-                        <td>2:00 PM</td>
-                        <td>Counselor Jane</td>
-                        <td>Pending</td>
-                        <td><button class="btn" onclick="this.parentElement.parentElement.remove()">Delete</button></td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
+  <div class="container">
+    <!-- Left Section -->
+    <div>
+      <!-- Doctor Info -->
+      <div class="card">
+        <h2>Doctor Info</h2>
+        <div id="doctorInfo"></div>
+      </div>
 
-        <section class="records">
-            <div class="section-title">Academic Records</div>
-            <button id="add-record-btn" class="btn" style="margin-bottom:1rem;">+ Add Academic Record</button>
-            <table class="records-table" id="records-table">
-                <thead>
-                    <tr>
-                        <th>Record</th>
-                        <th>Date</th>
-                        <th>Details</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody id="records-tbody">
-                    <tr>
-                        <td>Semester I Result</td>
-                        <td>2025-07-15</td>
-                        <td>Passed with Distinction</td>
-                        <td><button class="btn" onclick="this.parentElement.parentElement.remove()">Delete</button></td>
-                    </tr>
-                    <tr>
-                        <td>Health Checkup</td>
-                        <td>2025-06-20</td>
-                        <td>All parameters normal</td>
-                        <td><button class="btn" onclick="this.parentElement.parentElement.remove()">Delete</button></td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-
-        <section class="notifications">
-            <div class="section-title">Notifications</div>
-            <ul class="notifications-list">
-                <li>New assignment uploaded for Pharmaceutics I.</li>
-                <li>Your appointment with Dr. Smith is confirmed for 10th August.</li>
-                <li>Semester I results are now available.</li>
-            </ul>
-        </section>
-
-        <section class="study-materials" id="study-materials">
-            <div class="section-title">Study Materials</div>
-            <div class="study-materials-list">
-                <div class="study-material-card">
-                    <div class="study-material-title">Human Anatomy Notes</div>
-                    <a href="#" class="study-material-link" target="_blank">Download PDF</a>
-                </div>
-                <div class="study-material-card">
-                    <div class="study-material-title">Pharmaceutical Analysis Slides</div>
-                    <a href="#" class="study-material-link" target="_blank">View Slides</a>
-                </div>
-                <div class="study-material-card">
-                    <div class="study-material-title">Communication Skills Workbook</div>
-                    <a href="#" class="study-material-link" target="_blank">Download Workbook</a>
-                </div>
-                <div class="study-material-card">
-                    <div class="study-material-title">Remedial Biology Video</div>
-                    <a href="#" class="study-material-link" target="_blank">Watch Video</a>
-                </div>
-            </div>
-        </section>
-    </main>
-    <footer style="background:#283593; padding:1.5rem 0; border-top:1px solid #e0e7ef; color:#888;">
-        <p>&copy; 2025 MediMate. All rights reserved.</p>
-    </footer>
-
-    <!-- Modal for adding a record -->
-    <div id="record-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(40,53,147,0.10); z-index:1000; align-items:center; justify-content:center;">
-        <div style="background:#fff; border-radius:10px; padding:2rem; min-width:300px; box-shadow:0 4px 24px rgba(40,53,147,0.15);">
-            <h3 style="margin-top:0; color:#283593;">Add Academic Record</h3>
-            <form id="record-form">
-                <div style="margin-bottom:1rem;">
-                    <label>Record</label><br>
-                    <input type="text" id="record-name" required style="width:100%;padding:0.5rem;">
-                </div>
-                <div style="margin-bottom:1rem;">
-                    <label>Date</label><br>
-                    <input type="date" id="record-date" required style="width:100%;padding:0.5rem;">
-                </div>
-                <div style="margin-bottom:1rem;">
-                    <label>Details</label><br>
-                    <input type="text" id="record-details" required style="width:100%;padding:0.5rem;">
-                </div>
-                <button type="submit" class="btn">Add</button>
-                <button type="button" class="btn" style="background:#eee;color:#283593;margin-left:1rem;" id="close-modal-btn">Cancel</button>
-            </form>
-        </div>
+      <!-- Patient Management -->
+      <div class="card">
+        <h2>Patients</h2>
+        <form id="addPatientForm">
+          <input type="text" id="pname" placeholder="Name" required>
+          <input type="number" id="page" placeholder="Age">
+          <input type="text" id="pcondition" placeholder="Condition">
+          <button type="submit">Add</button>
+        </form>
+        <table>
+          <thead>
+            <tr><th>Name</th><th>Age</th><th>Condition</th></tr>
+          </thead>
+          <tbody id="patientTableBody"></tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- Modal for adding an appointment -->
-    <div id="appointment-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(40,53,147,0.10); z-index:1000; align-items:center; justify-content:center;">
-        <div style="background:#fff; border-radius:10px; padding:2rem; min-width:300px; box-shadow:0 4px 24px rgba(40,53,147,0.15);">
-            <h3 style="margin-top:0; color:#283593;">Add Appointment</h3>
-            <form id="appointment-form">
-                <div style="margin-bottom:1rem;">
-                    <label>Date</label><br>
-                    <input type="date" id="appointment-date" required style="width:100%;padding:0.5rem;">
-                </div>
-                <div style="margin-bottom:1rem;">
-                    <label>Time</label><br>
-                    <input type="time" id="appointment-time" required style="width:100%;padding:0.5rem;">
-                </div>
-                <div style="margin-bottom:1rem;">
-                    <label>With</label><br>
-                    <input type="text" id="appointment-with" required style="width:100%;padding:0.5rem;">
-                </div>
-                <div style="margin-bottom:1rem;">
-                    <label>Status</label><br>
-                    <select id="appointment-status" required style="width:100%;padding:0.5rem;">
-                        <option value="Confirmed">Confirmed</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Cancelled">Cancelled</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn">Add</button>
-                <button type="button" class="btn" style="background:#eee;color:#283593;margin-left:1rem;" id="close-appointment-modal-btn">Cancel</button>
-            </form>
-        </div>
-    </div>
+    <!-- Right Section -->
+    <div>
+      <!-- Appointments -->
+      <div class="card appointments">
+        <h2>Appointments</h2>
+        <ul id="appointmentList"></ul>
+      </div>
 
-    <script>
-        // Show modal
-        document.getElementById('add-record-btn').onclick = function() {
-            document.getElementById('record-modal').style.display = 'flex';
-        };
-        // Hide modal
-        document.getElementById('close-modal-btn').onclick = function() {
-            document.getElementById('record-modal').style.display = 'none';
-        };
-        // Add record to table with delete button
-        document.getElementById('record-form').onsubmit = function(e) {
-            e.preventDefault();
-            const name = document.getElementById('record-name').value.trim();
-            const date = document.getElementById('record-date').value;
-            const details = document.getElementById('record-details').value.trim();
-            if(name && date && details) {
-                const tbody = document.getElementById('records-tbody');
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${name}</td><td>${date}</td><td>${details}</td>
-                    <td><button class="btn" onclick="this.parentElement.parentElement.remove()">Delete</button></td>`;
-                tbody.appendChild(tr);
-                document.getElementById('record-form').reset();
-                document.getElementById('record-modal').style.display = 'none';
-            }
-        };
-        // Show appointment modal
-        document.getElementById('add-appointment-btn').onclick = function() {
-            document.getElementById('appointment-modal').style.display = 'flex';
-        };
-        // Hide appointment modal
-        document.getElementById('close-appointment-modal-btn').onclick = function() {
-            document.getElementById('appointment-modal').style.display = 'none';
-        };
-        // Add appointment to table
-        document.getElementById('appointment-form').onsubmit = function(e) {
-            e.preventDefault();
-            const date = document.getElementById('appointment-date').value;
-            const time = document.getElementById('appointment-time').value;
-            const withWhom = document.getElementById('appointment-with').value.trim();
-            const status = document.getElementById('appointment-status').value;
-            if(date && time && withWhom && status) {
-                const tbody = document.getElementById('appointments-tbody');
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${date}</td><td>${time}</td><td>${withWhom}</td><td>${status}</td>
-                    <td><button class="btn" onclick="this.parentElement.parentElement.remove()">Delete</button></td>`;
-                tbody.appendChild(tr);
-                document.getElementById('appointment-form').reset();
-                document.getElementById('appointment-modal').style.display = 'none';
-            }
-        };
-        // Close modal on outside click
-        document.getElementById('record-modal').onclick = function(e) {
-            if(e.target === this) this.style.display = 'none';
-        };
-        document.getElementById('appointment-modal').onclick = function(e) {
-            if(e.target === this) this.style.display = 'none';
-        };
-    </script>
-    {% include "goToTop.html" %}
+      <!-- Summary -->
+      <div class="card summary">
+        <h2>Summary</h2>
+        <p>Total Patients: <span id="totalPatients">0</span></p>
+        <p>Appointments Today: <span id="todayAppointments">0</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- External JS -->
+  <script src="{{ url_for('static', filename='js/doctor-dashboard.js') }}"></script>
 </body>
 </html>

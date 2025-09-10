@@ -1,4 +1,5 @@
 // Doctor Dashboard Functionality
+// Add this functionalities in my html page
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize dashboard features
     initializePatientManagement();
