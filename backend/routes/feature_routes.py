@@ -56,3 +56,7 @@ def tracker():
 @feature_bp.route('/allergy-checker')
 def allergy():
     return render_template('allergy-checker.html')
+
+@feature_bp.route('/inventory-management')
+def allergy():
+    return render_template('inventory-management.html')

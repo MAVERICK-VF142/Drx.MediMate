@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medicine Inventory</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      background: #f8f9fa;
+    }
+    header {
+      background: #2b6cb0;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 3px 6px rgba(0,0,0,0.1);
+    }
+    h2 { margin-bottom: 10px; color: #2b6cb0; }
+    form {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      margin-bottom: 20px;
+    }
+    input {
+      padding: 8px;
+      flex: 1;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: #2b6cb0;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover { background: #1a4c80; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background: #2b6cb0;
+      color: white;
+    }
+    .low-stock { background: #ffe5e5; color: red; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <header>💊 Medicine Inventory Tracker</header>
+  <div class="container">
+    <h2>Add Medicine</h2>
+    <form id="medicineForm">
+      <input type="text" id="name" placeholder="Medicine Name" required>
+      <input type="number" id="quantity" placeholder="Quantity" required>
+      <input type="date" id="expiry" required>
+      <button type="submit">Add</button>
+    </form>
+
+    <h2>Inventory List</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Quantity</th>
+          <th>Expiry</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="medicineTable"></tbody>
+    </table>
+  </div>
+
+  <script>
+    const form = document.getElementById("medicineForm");
+    const tableBody = document.getElementById("medicineTable");
+
+    let medicines = [];
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const quantity = parseInt(document.getElementById("quantity").value);
+      const expiry = document.getElementById("expiry").value;
+
+      medicines.push({ name, quantity, expiry });
+      renderTable();
+      form.reset();
+    });
+
+    function renderTable() {
+      tableBody.innerHTML = "";
+      medicines.forEach((med, index) => {
+        const row = document.createElement("tr");
+        if (med.quantity <= 5) row.classList.add("low-stock");
+
+        row.innerHTML = `
+          <td>${med.name}</td>
+          <td>${med.quantity}</td>
+          <td>${med.expiry}</td>
+          <td>
+            <button onclick="updateStock(${index}, 1)">+ Add</button>
+            <button onclick="updateStock(${index}, -1)">- Remove</button>
+            <button onclick="deleteMed(${index})" style="background:red;">Delete</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    function updateStock(index, change) {
+      medicines[index].quantity += change;
+      if (medicines[index].quantity < 0) medicines[index].quantity = 0;
+      renderTable();
+    }
+
+    function deleteMed(index) {
+      medicines.splice(index, 1);
+      renderTable();
+    }
+  </script>
+</body>
+</html>
