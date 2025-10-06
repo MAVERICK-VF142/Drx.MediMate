@@ -1378,39 +1378,11 @@
     </span>
 
     <!-- Premium header -->
-    <div class="header">
-        <div class="header-content">
-            <div class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-heartbeat"></i>
-                </div>
-                <span>Aditi Healthcare</span>
-            </div>
-            <div class="breadcrumb">
-                <div class="activity-pulse"></div>
-                <a href="index.html"><i class="fas fa-home"></i> Home</a> / Medical Analysis
-            </div>
-            <div class="profile-container">
-                <button id="profileButton" onclick="toggleProfileMenu()">
-                    <i class="fas fa-user-md"></i>
-                    Profile
-                </button>
-                <div id="profileMenu" class="profile-menu">
-                    <div class="user-info">
-                        <div class="user-name">
-                            <span id="loggedUserFName"></span> <span id="loggedUserLName"></span>
-                        </div>
-                        <div class="user-email" id="loggedUserEmail"></div>
-                    </div>
-                    <button id="myAccount">My-Account</button>
-                    <button id="logout">
-                        <i class="fas fa-sign-out-alt" style="margin-right: 0.5rem;"></i>
-                        Logout
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% include "includes/header.html" %}
+    {% block breadcrumb %}
+        <div class="activity-pulse"></div>
+        <a href="index.html"><i class="fas fa-home"></i> Home</a> / Medical Analysis
+    {% endblock %}
 
     <div class="container">
         <div class="hero-section">

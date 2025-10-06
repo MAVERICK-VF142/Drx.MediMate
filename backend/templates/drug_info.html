@@ -843,28 +843,10 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">
-        <div class="header-content">
-            <div class="logo">🏥 Aditi</div>
-            <div class="breadcrumb">
-                <a href="index.html">🏠 Home</a> / Drug Information
-            </div>
-            <div class="profile-container">
-                <button id="profileButton" onclick="toggleProfileMenu()">Profile</button>
-                <div id="profileMenu" class="profile-menu">
-                    <div class="user-info">
-                        <div class="user-name">
-                            <span id="loggedUserFName"></span> <span id="loggedUserLName"></span>
-                        </div>
-                        <div class="user-email" id="loggedUserEmail"></div>
-                    </div>
-                    <button id="myAccount">My-Account</button>
-                    <button id="logout">Logout</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% include "includes/header.html" %}
+    {% block breadcrumb %}
+        <a href="index.html">🏠 Home</a> / Drug Information
+    {% endblock %}
 
     <!-- Main Container -->
     <div class="container">

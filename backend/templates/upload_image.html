@@ -354,28 +354,10 @@
     </style>
 </head>
 <body>
-    <!-- Header - EXACT SAME AS DRUG_INFO -->
-    <div class="header">
-        <div class="header-content">
-            <div class="logo">🏥 Aditi</div>
-            <div class="breadcrumb">
-                <a href="index.html">🏠 Home</a> / Medicine Scanner
-            </div>
-            <div class="profile-container">
-                <button id="profileButton" onclick="toggleProfileMenu()">Profile</button>
-                <div id="profileMenu" class="profile-menu">
-                    <div class="user-info">
-                        <div class="user-name">
-                            <span id="loggedUserFName"></span> <span id="loggedUserLName"></span>
-                        </div>
-                        <div class="user-email" id="loggedUserEmail"></div>
-                    </div>
-                    <button id="myAccount">My-Account</button>                    
-                    <button id="logout">Logout</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% include "includes/header.html" %}
+    {% block breadcrumb %}
+        <a href="index.html">🏠 Home</a> / Medicine Scanner
+    {% endblock %}
 
     <div class="container">
         <h1 class="page-title">📸 Capture Medicine Image</h1>
@@ -415,6 +397,7 @@
                     🔍 Analyze with Gemini Vision
                 </button>
             </form>
+            <div id="uploadFormError" style="color:#dc2626; margin-top:0.5rem; display:none;"></div>
         </div>
 
         <div id="resultBox" class="result-section hidden">
@@ -657,9 +640,13 @@
 
         function handleSubmit(event) {
             event.preventDefault();
+            const errorDiv = document.getElementById('uploadFormError');
+            errorDiv.style.display = 'none';
+            errorDiv.textContent = '';
 
             if (!imageDataInput.value) {
-                alert("Please capture an image first");
+                errorDiv.textContent = "Please capture or upload an image before submitting.";
+                errorDiv.style.display = 'block';
                 return false;
             }
 
@@ -684,7 +671,6 @@
             .then(data => {
                 const formatted = (data.result || "No result returned from AI.").replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
                 resultText.innerHTML = formatted;
-                
                 // Scroll to results
                 setTimeout(() => {
                     resultBox.scrollIntoView({ 

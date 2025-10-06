@@ -85,28 +85,10 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">
-        <div class="header-content">
-            <div class="logo">🏥 Aditi</div>
-            <div class="breadcrumb">
-                <a href="index.html">🏠 Home</a> / Allergy Checker
-            </div>
-            <div class="profile-container">
-                <button id="profileButton" onclick="toggleProfileMenu()">Profile</button>
-                <div id="profileMenu" class="profile-menu">
-                    <div class="user-info">
-                        <div class="user-name">
-                            <span id="loggedUserFName"></span> <span id="loggedUserLName"></span>
-                        </div>
-                        <div class="user-email" id="loggedUserEmail"></div>
-                    </div>
-                    <button id="myAccount">My-Account</button>
-                    <button id="logout">Logout</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% include "includes/header.html" %}
+    {% block breadcrumb %}
+        <a href="index.html">🏠 Home</a> / Allergy Checker
+    {% endblock %}
 
     <div class="container">
         <h1 class="page-title">🧠 Allergy Safety Checker</h1>
@@ -212,30 +194,32 @@
 
     <script>
         document.getElementById('allergyForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
+            e.preventDefault();
 
-    const allergies = document.getElementById('allergies').value;
-    const medicines = document.getElementById('medicines').value;
+            const allergies = document.getElementById('allergies').value.trim();
+            const medicines = document.getElementById('medicines').value.trim();
+            const resultDiv = document.getElementById('resultText');
+            document.getElementById('resultBox').classList.remove('hidden');
 
-    const resultDiv = document.getElementById('resultText');
-    document.getElementById('resultBox').classList.remove('hidden');
-    resultDiv.innerHTML = "Processing...";
+            // Client-side validation
+            if (!allergies || !medicines) {
+                resultDiv.innerHTML = "<span style='color:#dc2626;'>Please enter both your allergies and prescribed medicines.</span>";
+                return;
+            }
 
-    try {
-        const res = await fetch("/allergy_checker", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ allergies, medicines })
+            resultDiv.innerHTML = "Processing...";
+            try {
+                const res = await fetch("/allergy_checker", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ allergies, medicines })
+                });
+                const data = await res.json();
+                resultDiv.innerHTML = data.response; // Matches api_response() structure
+            } catch (error) {
+                resultDiv.innerHTML = "Error connecting to server.";
+            }
         });
-
-        const data = await res.json();
-        resultDiv.innerHTML = data.response; // Matches api_response() structure
-    } 
-    catch (error) {
-        resultDiv.innerHTML = "Error connecting to server.";
-    }
-    
-    });
 
     </script>
 
