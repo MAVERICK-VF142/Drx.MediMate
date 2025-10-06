@@ -415,6 +415,7 @@
                     🔍 Validate Your Prescription
                 </button>
             </form>
+            <div id="prescriptionFormError" style="color:#dc2626; margin-top:0.5rem; display:none;"></div>
         </div>
 
         <div id="resultBox" class="result-section hidden">
@@ -657,9 +658,13 @@
 
         function handlePrescriptionSubmit(event) {
             event.preventDefault();
+            const errorDiv = document.getElementById('prescriptionFormError');
+            errorDiv.style.display = 'none';
+            errorDiv.textContent = '';
 
             if (!imageDataInput.value) {
-                alert("Please capture an image first");
+                errorDiv.textContent = "Please capture or upload an image before submitting.";
+                errorDiv.style.display = 'block';
                 return false;
             }
 
@@ -684,7 +689,6 @@
             .then(data => {
                 const formatted = (data.result || "No result returned from AI.").replace(/\\(.?)\\*/g, "<strong>$1</strong>");
                 resultText.innerHTML = formatted;
-                
                 // Scroll to results
                 setTimeout(() => {
                     resultBox.scrollIntoView({ 

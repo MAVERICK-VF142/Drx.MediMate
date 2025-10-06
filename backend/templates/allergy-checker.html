@@ -212,30 +212,32 @@
 
     <script>
         document.getElementById('allergyForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
+            e.preventDefault();
 
-    const allergies = document.getElementById('allergies').value;
-    const medicines = document.getElementById('medicines').value;
+            const allergies = document.getElementById('allergies').value.trim();
+            const medicines = document.getElementById('medicines').value.trim();
+            const resultDiv = document.getElementById('resultText');
+            document.getElementById('resultBox').classList.remove('hidden');
 
-    const resultDiv = document.getElementById('resultText');
-    document.getElementById('resultBox').classList.remove('hidden');
-    resultDiv.innerHTML = "Processing...";
+            // Client-side validation
+            if (!allergies || !medicines) {
+                resultDiv.innerHTML = "<span style='color:#dc2626;'>Please enter both your allergies and prescribed medicines.</span>";
+                return;
+            }
 
-    try {
-        const res = await fetch("/allergy_checker", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ allergies, medicines })
+            resultDiv.innerHTML = "Processing...";
+            try {
+                const res = await fetch("/allergy_checker", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ allergies, medicines })
+                });
+                const data = await res.json();
+                resultDiv.innerHTML = data.response; // Matches api_response() structure
+            } catch (error) {
+                resultDiv.innerHTML = "Error connecting to server.";
+            }
         });
-
-        const data = await res.json();
-        resultDiv.innerHTML = data.response; // Matches api_response() structure
-    } 
-    catch (error) {
-        resultDiv.innerHTML = "Error connecting to server.";
-    }
-    
-    });
 
     </script>
 
