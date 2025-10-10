@@ -1,7 +1,7 @@
-
 import base64
 import os
 import io
+import re
 from PIL import Image
 from io import BytesIO
 import google.generativeai as genai
@@ -10,12 +10,9 @@ import markdown
 import logging
 import time
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeout
-
-
-
-# recent feature of cache
 from cachetools import TTLCache
 import threading
+import json
 
 # A cache with maxsize 100 items, and TTL of 600 seconds (10 minutes)
 drug_cache = TTLCache(maxsize=100, ttl=600)
@@ -23,10 +20,12 @@ drug_cache = TTLCache(maxsize=100, ttl=600)
 # Lock to prevent race conditions in threaded environments (e.g., Flask)
 cache_lock = threading.Lock()
 
+
 def get_cached_drug(drug_name):
     key = drug_name.strip().lower()
     with cache_lock:
         return drug_cache.get(key)
+
 
 def set_cached_drug(drug_name, response):
     key = drug_name.strip().lower()
@@ -34,23 +33,19 @@ def set_cached_drug(drug_name, response):
         drug_cache[key] = response
 
 
-
-
 def format_markdown_response(text):
     """Convert Markdown text to HTML for consistent, readable output"""
     if not text or text.startswith("❌"):
         return text  # Return error messages as-is
-    # Convert Markdown to HTML
     html = markdown.markdown(text, extensions=['extra', 'fenced_code'])
-    # Wrap in a styled div for better presentation
     return f'<div class="markdown-content">{html}</div>'
 
 
-# Load API key from environment variable (recommended) or hardcoded (less secure)
+# Load API key from environment variable
 genai.configure(api_key=os.getenv("GEMINI_KEY"))
 model = genai.GenerativeModel("gemini-2.5-flash")
 
-# Retry logic for Gemini calls
+
 def gemini_generate_with_retry(prompt, max_retries=3, delay=2, timeout=10):
     """
     Calls Gemini API with timeout and retry logic.
@@ -61,26 +56,20 @@ def gemini_generate_with_retry(prompt, max_retries=3, delay=2, timeout=10):
     while attempt < max_retries:
         try:
             logging.info(f"🌐 Gemini API Call Attempt {attempt + 1}")
-            
-            # Set up timeout using ThreadPoolExecutor
             with ThreadPoolExecutor(max_workers=1) as executor:
                 future = executor.submit(model.generate_content, prompt)
-                response = future.result(timeout=timeout)  # Timeout in seconds
-
-            # Check if response is valid
+                response = future.result(timeout=timeout)
             if response and hasattr(response, 'text') and response.text.strip():
                 logging.info("✅ Gemini API call successful.")
                 return response
             else:
                 logging.warning("⚠️ Empty or malformed response. Retrying...")
-
         except FuturesTimeout:
             logging.error(f"⏰ Gemini API call timed out after {timeout} seconds.")
         except Exception as e:
             logging.error(f"❌ Gemini API error: {str(e)}")
 
-        # Backoff delay before retry
-        wait_time = delay * (2 ** attempt)  # 2s, 4s, 8s...
+        wait_time = delay * (2 ** attempt)
         logging.info(f"⏳ Waiting {wait_time}s before retry attempt {attempt + 2}")
         time.sleep(wait_time)
         attempt += 1
@@ -88,12 +77,6 @@ def gemini_generate_with_retry(prompt, max_retries=3, delay=2, timeout=10):
     logging.critical("❌ All Gemini API retry attempts failed.")
     return None
 
-
-
-
-# ---------------------------
-# AI Functions
-# ---------------------------
 
 def get_drug_information(drug_name):
     prompt = (
@@ -124,20 +107,17 @@ def get_drug_information(drug_name):
         response = gemini_generate_with_retry(prompt)
         if response and hasattr(response, 'text'):
             text = response.text.strip()
-            set_cached_drug(drug_name, text) # <--- Store raw text in cache
+            set_cached_drug(drug_name, text)
             logging.info("✅ Cached new drug info response.")
-            return format_markdown_response(text) # <--- Still return formatted for display
-    
+            return format_markdown_response(text)
         else:
             logging.warning("No text in AI response.")
             return "❌ No response from AI."
     except Exception as e:
         logging.error(f"Exception in get_drug_information: {str(e)}")
         return f"❌ Error: {str(e)}"
-    
 
 
-# Function to get recommendations based on symptoms
 def get_symptom_recommendation(symptoms):
     prompt = (
         f"Given the symptoms: **{symptoms}**, recommend over-the-counter treatment options in Markdown format:\n"
@@ -168,6 +148,75 @@ def get_symptom_recommendation(symptoms):
         return f"❌ Error: {str(e)}"
 
 
+def drug_side_effect_checker(drug_name):
+    prompt = f'''
+    You are a medical knowledge assistant that predicts drug side effects.
+
+    Given the drug name: "{drug_name}", output ONLY a valid JSON object in the following format:
+
+    {{
+      "drug": "{drug_name}",
+      "common_side_effects": [
+        {{ "name": "Side effect name", "severity": "Mild|Moderate|Severe", "explanation": "Short medically accurate explanation" }}
+      ],
+      "rare_side_effects": [
+        {{ "name": "Side effect name", "severity": "Mild|Moderate|Severe", "explanation": "Short medically accurate explanation" }}
+      ]
+    }}
+
+    Guidelines:
+    - Use reliable, evidence-based medical knowledge.
+    - Separate common vs rare side effects clearly.
+    - Classify severity as only "Mild", "Moderate", or "Severe".
+    - Each explanation should be concise and factual (1-2 sentences).
+    - Do not include any extra commentary or text outside the JSON.
+    - If the drug is not recognized, return:
+    {{
+      "drug": "{drug_name}",
+      "common_side_effects": [],
+      "rare_side_effects": []
+    }}
+    '''
+
+    
+
+    try:
+        response = gemini_generate_with_retry(prompt)
+        if response and hasattr(response, 'text'):
+            text = response.text.strip()
+
+            # Clean up markdown if Gemini adds ```json
+            if text.startswith("```"):
+                text = re.sub(r"^```(json)?", "", text, flags=re.MULTILINE).strip()
+                text = re.sub(r"```$", "", text, flags=re.MULTILINE).strip()
+
+
+            try:
+                return json.loads(text)
+            except json.JSONDecodeError:
+                logging.error(f"❌ JSON parsing failed for Gemini output: {text}")
+                return {
+                    "drug": drug_name,
+                    "common_side_effects": [],
+                    "rare_side_effects": []
+                }
+        else:
+            logging.warning("❌ No text in AI response for drug side effects.")
+            return {
+                "drug": drug_name,
+                "common_side_effects": [],
+                "rare_side_effects": []
+            }
+    except Exception as e:
+        logging.error(f"❌ Exception in drug_side_effect_checker: {str(e)}")
+        return {
+            "drug": drug_name,
+            "common_side_effects": [],
+            "rare_side_effects": [],
+            "error": str(e)
+        }
+
+
 def analyze_image_with_gemini(image_data):
     try:
         if not image_data.startswith("data:image/"):
@@ -196,7 +245,7 @@ def analyze_image_with_gemini(image_data):
 
         logging.info("Sending prompt and image to Gemini AI.")
         response = gemini_generate_with_retry([prompt, image])
-        
+
         if response and hasattr(response, 'text'):
             text = response.text.strip()
             logging.info("AI analysis complete.")
@@ -209,7 +258,7 @@ def analyze_image_with_gemini(image_data):
         logging.error(f"❌ Error during image analysis: {str(e)}")
         return f"❌ Error during image analysis: {str(e)}"
 
-      
+
 def get_drug_comparison_summary(drug1, drug2):
     prompt = (
         f"Compare the drugs **{drug1}** and **{drug2}** side by side in a Markdown table.\n"
@@ -231,8 +280,8 @@ def get_drug_comparison_summary(drug1, drug2):
     if response and hasattr(response, 'text'):
         return response.text.strip()
     return "❌ Failed to generate comparison summary."
-  
-  
+
+
 def analyze_prescription_with_gemini(image_data):
     try:
         if not image_data.startswith("data:image/"):
@@ -240,16 +289,10 @@ def analyze_prescription_with_gemini(image_data):
             return "❌ Invalid image format uploaded."
 
         logging.info("Decoding and processing prescription image for validation...")
-        
-        # Clean base64 string
         if "," in image_data:
             image_data = image_data.split(",")[1]
-
-        # Decode base64 to binary
         image_bytes = base64.b64decode(image_data)
-
-        # Convert to PIL Image
-        image = Image.open(io.BytesIO(image_bytes)) 
+        image = Image.open(io.BytesIO(image_bytes))
 
         prompt = (
             "You are a medical assistant AI.\n"
@@ -293,7 +336,7 @@ def analyze_prescription_with_gemini(image_data):
     except Exception as e:
         logging.error(f"❌ Error during image analysis: {str(e)}")
         return f"❌ Error during image analysis: {str(e)}"
-    
+
 
 def analyze_allergies(allergies, medicines):
     prompt = f"""

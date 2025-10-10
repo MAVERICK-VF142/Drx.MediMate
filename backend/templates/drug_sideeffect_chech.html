@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Drug Side Effect Checker - Aditi Healthcare</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #0F2A4C;
+            --primary-medium: #1E40AF;
+            --primary-light: #3B82F6;
+            --secondary-light: #60A5FA;
+            --accent-blue: #0EA5E9;
+            --accent-purple: #8B5CF6;
+            --accent-emerald: #10B981;
+            --background-cream: #FEFCF5;
+            --background-light: #F8FAFC;
+            --card-white: #FFFFFF;
+            --text-dark: #1E293B;
+            --text-medium: #475569;
+            --text-light: #64748B;
+            --border-light: #E2E8F0;
+            --success-green: #10B981;
+            --warning-orange: #F59E0B;
+            --error-red: #EF4444;
+            --shadow-light: rgba(15, 42, 76, 0.08);
+            --shadow-medium: rgba(15, 42, 76, 0.12);
+            --shadow-heavy: rgba(15, 42, 76, 0.20);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: radial-gradient(ellipse at top, #1e40af0a 0%, transparent 50%),
+                radial-gradient(ellipse at bottom, #0ea5e90a 0%, transparent 50%),
+                linear-gradient(135deg, var(--background-cream) 0%, var(--background-light) 50%, #F1F5F9 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Sophisticated particle system */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: linear-gradient(45deg, var(--primary-light), var(--accent-blue));
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleFloat 20s infinite linear;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.3;
+            }
+
+            90% {
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Neural network background */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+            opacity: 0.05;
+        }
+
+        .neuron {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--primary-medium);
+            border-radius: 50%;
+            animation: neuronPulse 4s ease-in-out infinite;
+        }
+
+        .synapse {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary-medium), transparent);
+            animation: synapseFlow 3s ease-in-out infinite;
+        }
+
+        @keyframes neuronPulse {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
+        }
+
+        @keyframes synapseFlow {
+            0% {
+                opacity: 0;
+                transform: scaleX(0);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scaleX(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scaleX(0);
+            }
+        }
+
+        /* Premium glassmorphism header */
+        .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg,
+                    var(--primary-medium),
+                    var(--accent-blue),
+                    var(--accent-purple),
+                    var(--accent-emerald),
+                    var(--primary-medium));
+            background-size: 300% 100%;
+            animation: headerFlow 8s ease-in-out infinite;
+        }
+
+        @keyframes headerFlow {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            position: relative;
+        }
+
+        .logo-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary-medium) 0%, var(--accent-blue) 50%, var(--accent-purple) 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 32px rgba(30, 64, 175, 0.3);
+            animation: logoHover 6s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: logoSpin 4s linear infinite;
+        }
+
+        @keyframes logoHover {
+
+            0%,
+            100% {
+                transform: translateY(0) rotateY(0deg);
+            }
+
+            50% {
+                transform: translateY(-3px) rotateY(10deg);
+            }
+        }
+
+        @keyframes logoSpin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Smart breadcrumb with activity indicator */
+        .breadcrumb {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+            font-weight: 500;
+            background: rgba(248, 250, 252, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 1.25rem;
+            border-radius: 24px;
+            border: 1px solid rgba(226, 232, 240, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .activity-pulse {
+            width: 8px;
+            height: 8px;
+            background: var(--success-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        /* Advanced profile system */
+        .profile-container {
+            position: relative;
+        }
+
+        #profileButton {
+            background: linear-gradient(135deg, var(--primary-medium) 0%, var(--accent-blue) 100%);
+            color: white;
+            border: none;
+            padding: 0.875rem 1.75rem;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 16px rgba(30, 64, 175, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #profileButton::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        #profileButton:hover::before {
+            left: 100%;
+        }
+
+        #profileButton:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(30, 64, 175, 0.4);
+        }
+
+        .profile-menu {
+            position: absolute;
+            top: calc(100% + 1rem);
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 20px 64px rgba(0, 0, 0, 0.15);
+            padding: 2rem;
+            min-width: 320px;
+            display: none;
+            animation: profileMenuSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #myAccount { background: #38dc26; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; width: 100%; font-size: 0.9rem; font-weight: 500; margin-bottom: 5px; }
+        #myAccount:hover { background: #19a531; }
+
+
+        @keyframes profileMenuSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-16px) scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .profile-menu.show {
+            display: block;
+        }
+
+        /* Real-time typing indicator */
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-medium);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--primary-medium);
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes typingBounce {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+
+            40% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Dynamic hero section */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .page-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 30%, var(--accent-blue) 60%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            animation: titleReveal 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 2px;
+            animation: underlineExpand 1s ease 0.8s both;
+        }
+
+        @keyframes titleReveal {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.9);
+                filter: blur(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
+        @keyframes underlineExpand {
+            from {
+                width: 0;
+            }
+
+            to {
+                width: 120px;
+            }
+        }
+
+        .page-subtitle {
+            color: var(--text-medium);
+            font-size: 1.3rem;
+            font-weight: 400;
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: subtitleFade 1s ease 0.4s both;
+        }
+
+        @keyframes subtitleFade {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Interactive medical dashboard */
+        .medical-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+            animation: dashboardSlide 1s ease 0.6s both;
+        }
+
+        @keyframes dashboardSlide {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .dashboard-card:hover::before {
+            opacity: 1;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.15);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .dashboard-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, var(--primary-medium), var(--accent-blue));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgb(105, 98, 98);
+            font-size: 2rem;
+            box-shadow: 0 8px 24px rgba(30, 64, 175, 0.3);
+            animation: iconFloat 4s ease-in-out infinite;
+        }
+
+        .dashboard-icon:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .dashboard-icon:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .dashboard-icon:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        @keyframes iconFloat {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-6px) rotate(5deg);
+            }
+        }
+
+        .dashboard-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-desc {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Smart analysis card */
+        .card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 28px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 64px rgba(0, 0, 0, 0.1);
+            animation: cardReveal 1s ease 0.8s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-medium), var(--accent-blue), var(--accent-purple), var(--accent-emerald));
+            background-size: 300% 100%;
+            animation: cardTopFlow 6s ease-in-out infinite;
+        }
+
+        @keyframes cardTopFlow {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        @keyframes cardReveal {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Smart form elements */
+        .form-group {
+            margin-bottom: 2.5rem;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+            font-size: 1.2rem;
+        }
+
+        .label-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--background-light), var(--background-cream));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-medium);
+            border: 2px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        /* Advanced textarea with smart features */
+        .textarea-container {
+            position: relative;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 160px;
+            padding: 2rem;
+            border: 2px solid rgba(226, 232, 240, 0.5);
+            border-radius: 20px;
+            font-size: 1.05rem;
+            font-family: inherit;
+            resize: vertical;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(248, 250, 252, 0.5);
+            backdrop-filter: blur(10px);
+            color: var(--text-dark);
+            line-height: 1.7;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-medium);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 8px 32px rgba(59, 130, 246, 0.15);
+            background: rgba(255, 255, 255, 0.9);
+            transform: scale(1.01);
+        }
+
+        .char-counter {
+            position: absolute;
+            bottom: 1rem;
+            right: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Advanced microphone with visualization */
+        .mic-container {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-top: 1.5rem;
+        }
+
+        #mic-button {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--secondary-light) 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 16px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #mic-button:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.4);
+        }
+
+        .voice-visualization {
+            display: none;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .voice-bar {
+            width: 4px;
+            height: 20px;
+            background: var(--accent-blue);
+            border-radius: 2px;
+            animation: voiceWave 1.2s ease-in-out infinite;
+        }
+
+        .voice-bar:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .voice-bar:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .voice-bar:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .voice-bar:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        .voice-bar:nth-child(5) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes voiceWave {
+
+            0%,
+            100% {
+                height: 20px;
+                opacity: 0.6;
+            }
+
+            50% {
+                height: 40px;
+                opacity: 1;
+            }
+        }
+
+        /* Premium analyze button */
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-checker {
+            background: linear-gradient(135deg, var(--primary-medium) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            padding: 1.5rem 4rem;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 700;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 32px rgba(30, 64, 175, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-checker::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn-checker:hover::before {
+            left: 100%;
+        }
+
+        .btn-checker:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 16px 48px rgba(30, 64, 175, 0.4);
+        }
+
+        .btn-checker:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        /* Smart loading states */
+        .loading-wave {
+            display: inline-flex;
+            gap: 4px;
+        }
+
+        .loading-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: loadingWave 1.4s ease-in-out infinite;
+        }
+
+        .loading-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .loading-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes loadingWave {
+
+            0%,
+            60%,
+            100% {
+                transform: scale(0.8);
+                opacity: 0.6;
+            }
+
+            30% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        /* Premium results section */
+        .result-section {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 28px;
+            padding: 3rem;
+            border-left: 6px solid var(--success-green);
+            box-shadow: 0 20px 64px rgba(0, 0, 0, 0.1);
+            animation: resultReveal 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--success-green), var(--accent-blue), var(--accent-purple));
+            animation: resultProgress 2s ease-in-out;
+        }
+
+        @keyframes resultProgress {
+            from {
+                transform: scaleX(0);
+                transform-origin: left;
+            }
+
+            to {
+                transform: scaleX(1);
+                transform-origin: left;
+            }
+        }
+
+        @keyframes resultReveal {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+                filter: blur(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
+        .result-header {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .result-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--success-green), #059669);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            animation: resultIconSpin 3s ease-in-out infinite;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+        }
+
+        @keyframes resultIconSpin {
+
+            0%,
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+
+            50% {
+                transform: scale(1.1) rotate(180deg);
+            }
+        }
+
+        .result-box {
+            color: var(--text-medium);
+            line-height: 1.9;
+            padding: 2.5rem;
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(254, 252, 245, 0.8) 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(226, 232, 240, 0.5);
+            font-size: 1.05rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .result-box strong {
+            color: var(--text-dark);
+            font-weight: 700;
+            position: relative;
+        }
+
+        .result-box strong::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-medium), var(--accent-blue));
+            border-radius: 1px;
+            opacity: 0.3;
+        }
+
+        /* Advanced notification system */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .notification {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--text-dark);
+            padding: 1.5rem 2rem;
+            border-radius: 16px;
+            box-shadow: 0 20px 64px rgba(0, 0, 0, 0.15);
+            animation: notificationSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            min-width: 320px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notification::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--success-green);
+        }
+
+        .notification.error::before {
+            background: var(--error-red);
+        }
+
+        .notification.warning::before {
+            background: var(--warning-orange);
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: white;
+            background: var(--success-green);
+        }
+
+        .notification.error .notification-icon {
+            background: var(--error-red);
+        }
+
+        .notification.warning .notification-icon {
+            background: var(--warning-orange);
+        }
+
+        @keyframes notificationSlide {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Progress indicators */
+        .progress-container {
+            margin: 2rem 0;
+            background: rgba(226, 232, 240, 0.3);
+            border-radius: 12px;
+            height: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-medium), var(--accent-blue), var(--accent-purple));
+            border-radius: 12px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: progressShimmer 2s infinite;
+        }
+
+        @keyframes progressShimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Smart suggestions */
+        .suggestions-container {
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .suggestion-chip {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary-medium);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 0.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .suggestion-chip:hover {
+            background: var(--primary-medium);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Status indicators */
+        .status-widget {
+            position: absolute;
+            max-width: 200px;
+            top: 120px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--text-medium);
+            animation: statusFloat 4s ease-in-out infinite;
+        }
+/* Hide status widget on mobile devices */
+@media (max-width: 768px) {
+    .status-widget {
+        display: none !important;
+    }
+}
+
+/* Alternative: Hide on smaller screens (phones only, keep on tablets) */
+@media (max-width: 480px) {
+    .status-widget {
+        display: none !important;
+    }
+}
+
+/* More specific targeting for very small screens */
+@media screen and (max-width: 425px) {
+    .status-widget {
+        display: none !important;
+    }
+}
+/* Hide status widget for specific device widths */
+@media (max-width: 820px) {
+    .status-widget {
+        display: none !important;
+    }
+}
+
+/* Alternative: Target specific tablet/device widths */
+@media screen and (max-width: 1024px) {
+    .status-widget {
+        display: none !important;
+    }
+}
+
+/* Most specific: Hide for tablets and smaller devices */
+@media screen and (max-width: 912px) {
+    .status-widget {
+        display: none !important;
+    }
+}
+        @keyframes statusFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-4px);
+            }
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success-green);
+            animation: statusPulse 2s infinite;
+        }
+
+        @keyframes statusPulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        /* Hidden utility */
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 1.5rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .container {
+                padding: 2rem 1.5rem;
+            }
+
+            .page-title {
+                font-size: 2.5rem;
+            }
+
+            .page-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .card,
+            .result-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .medical-dashboard {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .btn-checker {
+                padding: 1.25rem 2rem;
+                font-size: 1.1rem;
+            }
+
+            .profile-menu {
+                min-width: 280px;
+                right: -50px;
+            }
+
+            .notification {
+                min-width: 280px;
+                right: 10px;
+            }
+
+            .status-widget {
+                left: 10px;
+                bottom: 10px;
+            }
+        }
+
+        /* Advanced animations */
+        @keyframes morphBackground {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .morph-bg {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: morphBackground 15s ease infinite;
+        }
+
+        /* Scroll animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background-cream: #0F172A;
+                --background-light: #1E293B;
+                --card-white: #334155;
+                --text-dark: #383a3c;
+                --text-medium: #4a7cb8;
+                --text-light: #94A3B8;
+                --border-light: #475569;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Particle system -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Neural network background -->
+    <div class="neural-bg" id="neuralBg"></div>
+
+    <!-- Notification container -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <!-- Status widget -->
+    <span class="status-widget">
+        <div class="status-dot"></div>
+        <span>AI System Online</span>
+    </span>
+
+    <!-- Premium header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <span>Aditi Healthcare</span>
+            </div>
+            <div class="breadcrumb">
+                <div class="activity-pulse"></div>
+                <a href="index.html"><i class="fas fa-home"></i> Home</a> / Drug Side Effect Checker
+            </div>
+            <div class="profile-container">
+                <button id="profileButton" onclick="toggleProfileMenu()">
+                    <i class="fas fa-user-md"></i>
+                    Profile
+                </button>
+                <div id="profileMenu" class="profile-menu">
+                    <div class="user-info">
+                        <div class="user-name">
+                            <span id="loggedUserFName"></span> <span id="loggedUserLName"></span>
+                        </div>
+                        <div class="user-email" id="loggedUserEmail"></div>
+                    </div>
+                    <button id="myAccount">My-Account</button>
+                    <button id="logout">
+                        <i class="fas fa-sign-out-alt" style="margin-right: 0.5rem;"></i>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="hero-section">
+            <h1 class="page-title">Drug Side Effect Checker</h1>
+            <p class="page-subtitle">Check possible side effects of any drug with AI-powered analysis</p>
+        </div>
+
+        <!-- Smart analysis card -->
+        <div class="card">
+            <div class="form-group">
+                <label for="drugName">
+                    <div class="label-icon">
+                        <i class="fas fa-pills"></i>
+                    </div>
+                    Enter Drug Name
+                </label>
+                <!-- Input field -->
+<input 
+    type="text" 
+    id="drugName" 
+    placeholder="e.g., Aspirin, Paracetamol, Ibuprofen"
+    style="width: 100%; padding: 14px; font-size: 1.1rem; border-radius: 8px; border: 1px solid #ccc;"
+>
+
+
+                <div class="typing-indicator" id="typingIndicator" style="display:none;">
+                    <i class="fas fa-keyboard"></i>
+                    <span>Analyzing drug...</span>
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-container hidden" id="progressContainer">
+                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+            </div>
+
+            <div class="btn-group">
+                <button id="checkBtn" class="btn-checker" onclick="checkSideEffects()">
+                    <i class="fas fa-search"></i>
+                    Check Side Effects
+                </button>
+            </div>
+        </div>
+
+        <!-- Results section -->
+        <div id="result" class="result-section hidden">
+            <div class="result-header">
+                <div class="result-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                AI Side Effect Report
+            </div>
+            <div class="result-box" id="aiResponse"></div>
+        </div>
+    </div>
+
+    <script>
+        // My-account link
+        document.getElementById('myAccount').addEventListener('click', function () {
+            window.location.href = '/my-account';  
+        });
+
+        function showNotification(message, type = 'success', duration = 4000) {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `<div class="notification-content">${message}</div>`;
+            container.appendChild(notification);
+            setTimeout(() => notification.remove(), duration);
+        }
+
+        function checkSideEffects() {
+            const drugName = document.getElementById("drugName").value.trim();
+            const button = document.getElementById("checkBtn");
+            const resultDiv = document.getElementById("result");
+            const aiResponse = document.getElementById("aiResponse");
+            const progressContainer = document.getElementById("progressContainer");
+            const progressBar = document.getElementById("progressBar");
+
+            if (!drugName) {
+                showNotification("Please enter a drug name to proceed.", "warning");
+                return;
+            }
+
+            button.disabled = true;
+            resultDiv.classList.add('hidden');
+            aiResponse.innerHTML = "";
+            progressContainer.classList.remove('hidden');
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 90) progress = 90;
+                progressBar.style.width = progress + '%';
+            }, 200);
+
+            fetch("/predict_side_effects", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ drug_name: drugName })
+            })
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                return res.json();
+            })
+            .then(data => {
+                clearInterval(progressInterval);
+                progressBar.style.width = '100%';
+                setTimeout(() => {
+                    let html = `<h3>${data.drug}</h3>`;
+                    if (data.common_side_effects?.length) {
+                        html += `<h4>Common Side Effects</h4><ul>`;
+                        data.common_side_effects.forEach(eff => {
+                            html += `<li><strong>${eff.name}</strong> 
+                                     (<span style="color:gray;">${eff.severity}</span>) - ${eff.explanation}</li>`;
+                        });
+                        html += `</ul>`;
+                    }
+                    if (data.rare_side_effects?.length) {
+                        html += `<h4>Rare Side Effects</h4><ul>`;
+                        data.rare_side_effects.forEach(eff => {
+                            html += `<li><strong>${eff.name}</strong> 
+                                     (<span style="color:gray;">${eff.severity}</span>) - ${eff.explanation}</li>`;
+                        });
+                        html += `</ul>`;
+                    }
+                    aiResponse.innerHTML = html;
+                    resultDiv.classList.remove('hidden');
+                    progressContainer.classList.add('hidden');
+                    showNotification("Analysis completed successfully", "success");
+                }, 500);
+            })
+            .catch(err => {
+                clearInterval(progressInterval);
+                progressContainer.classList.add('hidden');
+                   
+                aiResponse.innerHTML = `<p style="color:red;">Error fetching side effects. Please try again.</p>`;
+                resultDiv.classList.remove('hidden');
+                showNotification("Failed to fetch side effects.", "error");
+            })
+            .finally(() => {
+                button.disabled = false;
+                button.innerHTML = `<i class="fas fa-search"></i> Check Side Effects`;
+            });
+        }
+
+        // Particle & neural background
+        function initParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 20;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particlesContainer.appendChild(particle);
+            }
+        }
+        function initNeuralNetwork() {
+            const neuralBg = document.getElementById('neuralBg');
+            const neuronCount = 15;
+            for (let i = 0; i < neuronCount; i++) {
+                const neuron = document.createElement('div');
+                neuron.className = 'neuron';
+                neuron.style.left = Math.random() * 100 + '%';
+                neuron.style.top = Math.random() * 100 + '%';
+                neuralBg.appendChild(neuron);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            initParticles();
+            initNeuralNetwork();
+        });
+    </script>
+</body>
+
+
+</html>
