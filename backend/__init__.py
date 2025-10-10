@@ -1,37 +1,62 @@
-from flask import Flask
-from flask_cors import CORS
-import os
-import google.generativeai as genai
-from dotenv import load_dotenv
+import pytest
+# NO LONGER NEEDED: import sys, os
+# NO LONGER NEEDED: sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-load_dotenv()
+# Use a relative import to access the backend folder
+from . import create_app
 
+# -----------------------------
+# Setup test client
+# -----------------------------
+@pytest.fixture
+def client():
+    app = create_app()
+    app.config["TESTING"] = True
+    app.config["WTF_CSRF_ENABLED"] = False
+    with app.test_client() as client:
+        yield client
 
-def create_app():
-    app = Flask(__name__)
-    CORS(app)
-    from dotenv import load_dotenv
-    load_dotenv()
+# -----------------------------
+# Test home/index page
+# -----------------------------
+def test_index(client):
+    response = client.get("/")
+    assert response.status_code in (200, 302)
+    assert b"Welcome" in response.data or b"Drx" in response.data
 
-    # Load API key
-    api_key = os.getenv("GEMINI_KEY")
-    if not api_key:
-        raise EnvironmentError("❌ GEMINI_KEY not set.")
-    genai.configure(api_key=api_key)
+# -----------------------------
+# Test feedback API
+# -----------------------------
+def test_feedback_success(client):
+    response = client.post("/feedback", json={
+        "name": "Atharva",
+        "email": "atharva@test.com",
+        "message": "Great platform!"
+    })
+    assert response.status_code in (200, 201)
+    data = response.get_json()
+    assert data is not None
+    assert "success" in data.get("status", "").lower()
 
-   
-    # Blueprint imports
-    from .routes.auth_routes import auth_bp
-    from .routes.dashboard_routes import dashboard_bp
-    from .routes.feature_routes import feature_bp
-    from .routes.api_routes import api_bp
-    from .routes.error_handlers import errors_bp
+def test_feedback_missing_fields(client):
+    response = client.post("/feedback", json={"name": "Atharva"})
+    assert response.status_code in (400, 422)
+    data = response.get_json()
+    assert data is not None
+    assert "error" in data
 
-    # Register blueprints
-    app.register_blueprint(auth_bp)
-    app.register_blueprint(dashboard_bp)
-    app.register_blueprint(feature_bp)
-    app.register_blueprint(api_bp)
-    app.register_blueprint(errors_bp)
+# -----------------------------
+# Test login API
+# -----------------------------
+def test_login_invalid(client):
+    response = client.post("/login", json={"username": "wrong", "password": "wrong"})
+    assert response.status_code in (401, 403)
+    data = response.get_json()
+    assert "error" in data
 
-    return app
+# -----------------------------
+# Test unknown route
+# -----------------------------
+def test_404(client):
+    response = client.get("/this-route-does-not-exist")
+    assert response.status_code == 404
