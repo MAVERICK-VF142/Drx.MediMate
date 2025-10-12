@@ -33,10 +33,6 @@ def drug_comparison():
 
 # Additional feature routes that may be referenced in the dashboard
 
-@feature_bp.route('/inventory-management')
-def inventory():
-    return render_template('inventory_management.html')
-
 @feature_bp.route('/prescription-processing')
 def prescription():
     return render_template('prescription_processing.html')
@@ -58,5 +54,5 @@ def allergy():
     return render_template('allergy-checker.html')
 
 @feature_bp.route('/inventory-management')
-def allergy():
+def inventory_management():
     return render_template('inventory-management.html')
