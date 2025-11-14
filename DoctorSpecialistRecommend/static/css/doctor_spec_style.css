@@ -1,0 +1,27 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card {
+  border-radius: 1.25rem;
+}
+
+.symptom-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 0.5rem 1rem;
+  max-height: 420px;
+  overflow: auto;
+  padding: 0.5rem;
+  border: 1px solid #e7e7e7;
+  border-radius: 0.75rem;
+  background: #fff;
+}
+
+.form-check-label {
+  text-transform: none;
+}
+
+.table td, .table th {
+  vertical-align: middle;
+}
